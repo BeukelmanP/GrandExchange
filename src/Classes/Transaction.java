@@ -6,9 +6,15 @@ import java.util.*;
 public class Transaction {
 
     private double amount;
-    Collection<Bid> fromOwnerOf;
-    Auction toOwnerOf;
+    Bid bid;
+    Auction auction;
 
+    public Transaction(Auction auction){
+        this.auction = auction;
+        this.bid = auction.getBestBid();
+        this.amount = bid.getAmount();
+    }
+    
     /**
      * returns the total price
      *
@@ -24,7 +30,7 @@ public class Transaction {
      * @return Auction
      */
     public Auction getAuction() {
-        return toOwnerOf;
+        return auction;
     }
 
 }
