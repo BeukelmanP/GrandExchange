@@ -10,5 +10,18 @@ package Classes;
  * @author piete
  */
 public class User {
+
+    int BSN;
+    String username;
+    String password;
+    String alias;
+    String email;
+    boolean verified;
+    double saldo;
+
+    public User() {
+
+    }
+    
     
 }
