@@ -22,33 +22,34 @@ import static org.junit.Assert.*;
  *
  * @author kyle_
  */
-public class AuctionTest {
-
+public class StandardTest {
+    
     Auction auction;
-
-    public AuctionTest() {
+    
+    public StandardTest() {
     }
-
+    
     @BeforeClass
     public static void setUpClass() {
     }
-
+    
     @AfterClass
     public static void tearDownClass() {
     }
-
+    
     @Before
     public void setUp() {
         User user = new User("Kyle","PassWW");
         Date date = new Date();
         Product product = new Product(1932,"Riem","Mooi en handig voor elke maat");
         auction = new Standard(user,product,15,32,date);
+        
     }
-
+    
     @After
     public void tearDown() {
     }
-
+    
     /**
      * Test of getBestBid method, of class Auction. This test checks if result
      * is not null.
@@ -73,6 +74,7 @@ public class AuctionTest {
 
     /**
      * Test of sendMailRequest method, of class Auction.
+     * This tet checks if the method gives no errors
      */
     @Test
     public void testSendMailRequest() {
@@ -85,4 +87,5 @@ public class AuctionTest {
         }
 
     }
+    
 }
