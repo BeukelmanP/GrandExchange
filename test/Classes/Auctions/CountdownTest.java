@@ -9,7 +9,6 @@ import Classes.Bid;
 import Classes.Grand_Exchange;
 import Classes.Product;
 import Classes.User;
-import grandexchange.GrandExchange;
 import java.util.Date;
 import java.util.List;
 import junit.framework.Assert;
@@ -24,7 +23,7 @@ import static org.junit.Assert.*;
  *
  * @author kyle_
  */
-public class StandardTest {
+public class CountdownTest {
     
     Auction auction;
     User user;
@@ -33,7 +32,7 @@ public class StandardTest {
     Grand_Exchange gE;
     Bid bid;
     
-    public StandardTest() {
+    public CountdownTest() {
     }
     
     @BeforeClass
@@ -49,7 +48,7 @@ public class StandardTest {
         user = new User("Kyle","PassWW");
         date = new Date();
         product = new Product("1932","Riem","Mooi en handig voor elke maat");
-        auction = new Standard(user,product,15,32,date);
+        auction = new Countdown(user,product,15,45,75,75,56,56);
         bid = new Bid(user, 15);
         
         // adds a bid to the auction
@@ -59,11 +58,7 @@ public class StandardTest {
     @After
     public void tearDown() {
     }
-    
-    /**
-     * Test of getBestBid method, of class Auction. This test checks if result
-     * is not null.
-     */
+
     @Test
     public void testGetBestBid() {
         Bid result = auction.getBestBid();
@@ -84,7 +79,6 @@ public class StandardTest {
 
     /**
      * Test of sendMailRequest method, of class Auction.
-     * This tet checks if the method gives no errors
      */
     @Test
     public void testSendMailRequest() {

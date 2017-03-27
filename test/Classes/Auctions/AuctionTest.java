@@ -50,9 +50,10 @@ public class AuctionTest {
         date = new Date();
         product = new Product("1932","Riem","Mooi en handig voor elke maat");
         auction = new Standard(user,product,15,32,date);
-        
         bid = new Bid(user, 15);
-        //auction.addBid(bid);
+        
+        // adds a bid to the auction
+        auction.addBid(bid);
     }
 
     @After

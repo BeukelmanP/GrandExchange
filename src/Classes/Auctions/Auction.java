@@ -14,7 +14,7 @@ public abstract class Auction {
     private boolean instabuyable;
     private int productQuantity;
     private Bid currentBid;
-    Collection<Bid> bids;
+    List<Bid> bids;
     Product forSale;
 
     /**
@@ -73,7 +73,7 @@ public abstract class Auction {
      * @return List<Bid>
      */
     public List<Bid> getBids() {
-        return null;
+        return bids;
     }
 
     /**
