@@ -23,8 +23,8 @@ import static org.junit.Assert.*;
  *
  * @author kyle_
  */
-public class AuctionTest {
-
+public class CountdownTest {
+    
     Auction auction;
     User user;
     Date date;
@@ -32,38 +32,33 @@ public class AuctionTest {
     Grand_Exchange gE;
     Bid bid;
     
-
-    public AuctionTest() {
+    public CountdownTest() {
     }
-
+    
     @BeforeClass
     public static void setUpClass() {
     }
-
+    
     @AfterClass
     public static void tearDownClass() {
     }
-
+    
     @Before
     public void setUp() {
         user = new User("Kyle","PassWW");
         date = new Date();
         product = new Product("1932","Riem","Mooi en handig voor elke maat");
-        auction = new Standard(user,product,15,32,date);
+        auction = new Countdown(user,product,15,45,75,75,56,56);
         bid = new Bid(user, 15);
         
         // adds a bid to the auction
         auction.addBid(bid);
     }
-
+    
     @After
     public void tearDown() {
     }
 
-    /**
-     * Test of getBestBid method, of class Auction. This test checks if result
-     * is not null.
-     */
     @Test
     public void testGetBestBid() {
         Bid result = auction.getBestBid();
@@ -96,4 +91,5 @@ public class AuctionTest {
         }
 
     }
+    
 }

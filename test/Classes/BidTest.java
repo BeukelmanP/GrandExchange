@@ -44,7 +44,7 @@ public class BidTest {
         bidder = new User("henk", "test");
         P = new Product("123456789", "PennenSet", "Set van 20 pennen in rood(4), blauw(6), groen(4) en zwart(6)");
         auction = new Countdown(seller, P, 20, 100, 0.5, 10, 5);
-        bidding = new Bid(auction, bidder, 15);
+        bidding = new Bid(bidder, 15);
     }
 
     @After
@@ -53,17 +53,17 @@ public class BidTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorExeption() {
-        Bid bidding1 = new Bid(null, bidder, 10);
+        Bid bidding1 = new Bid(bidder, 10);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorExeption2() {
-        Bid bidding2 = new Bid(auction, null, 10);
+        Bid bidding2 = new Bid(null, 10);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorExeption3() {
-        Bid bidding3 = new Bid(auction, bidder, 0);
+        Bid bidding3 = new Bid(bidder, 0);
     }
 
     @Test

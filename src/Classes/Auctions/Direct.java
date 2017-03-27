@@ -20,7 +20,7 @@ public class Direct extends Auction {
 
     }
 
-    public Direct(User seller, Product product, int quantity, double price, double instabuyprice) {
+    public Direct(User seller, Product product, double price, int quantity, double instabuyprice) {
         super(seller, product, quantity, price, instabuyprice);
     }
 }
