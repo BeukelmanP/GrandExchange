@@ -16,6 +16,8 @@ public abstract class Auction {
     private Bid currentBid;
     Collection<Bid> bids;
     Product forSale;
+    StatusEnum status;
+    String description;
 
     /**
      *
