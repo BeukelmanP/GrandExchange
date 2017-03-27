@@ -28,7 +28,6 @@ public class User {
             // TODO: get data from database and fill in the properties
             this.username = username;
             this.password = password;
-            throw new UnsupportedOperationException("Not implemented yet.");
         }
         
         /**

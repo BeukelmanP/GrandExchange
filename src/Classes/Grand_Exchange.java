@@ -14,7 +14,11 @@ public class Grand_Exchange {
      * @param user : may not be null
      */
     public void addUser(User user) {
-
+        if (user == null) {
+            throw new IllegalArgumentException();
+        } else {
+            users.add(user);
+        }
     }
 
     /**
@@ -23,7 +27,11 @@ public class Grand_Exchange {
      * @param user : may not be null
      */
     public void removeUser(User user) {
-
+        if (user == null) {
+            throw new IllegalArgumentException();
+        } else {
+            users.remove(user);
+        }
     }
 
     /**
@@ -32,7 +40,11 @@ public class Grand_Exchange {
      * @param product : may not be null
      */
     public void addProduct(Product product) {
-
+        if (product == null) {
+            throw new IllegalArgumentException();
+        } else {
+            products.add(product);
+        }
     }
 
     /**
@@ -41,7 +53,11 @@ public class Grand_Exchange {
      * @param product : may not be null
      */
     public void removeProduct(Product product) {
-
+        if (product == null) {
+            throw new IllegalArgumentException();
+        } else {
+            products.remove(product);
+        }
     }
 
     /**
@@ -76,8 +92,8 @@ public class Grand_Exchange {
      *
      * @return List<Product>
      */
-    public List<Product> getProducts() {
-        return null;
+    public Collection<Product> getProducts() {
+        return products;
     }
 
 }

@@ -7,7 +7,7 @@ public class Transaction {
 
     private double amount;
     Collection<Bid> fromOwnerOf;
-    Collection<Auction> toOwnerOf;
+    Auction toOwnerOf;
 
     /**
      * returns the total price
@@ -15,7 +15,7 @@ public class Transaction {
      * @return double
      */
     public double getAmount() {
-        return 0;
+        return amount;
     }
 
     /**
@@ -24,7 +24,7 @@ public class Transaction {
      * @return Auction
      */
     public Auction getAuction() {
-        return null;
+        return toOwnerOf;
     }
 
 }
