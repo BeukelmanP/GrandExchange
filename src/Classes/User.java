@@ -1,5 +1,6 @@
 package Classes;
 
+import Classes.Auctions.Auction;
 import java.util.*;
 import Exceptions.*;
 
