@@ -59,6 +59,14 @@ public abstract class Auction {
         return null;
     }
 
+    public void addBid(Bid bid) {
+        if (bid == null) {
+            throw new IllegalArgumentException();
+        } else {
+            bids.add(bid);
+        }
+    }
+
     /**
      * gets all bids made on the auction
      *

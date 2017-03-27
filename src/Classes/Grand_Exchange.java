@@ -1,5 +1,6 @@
 package Classes;
 
+import Classes.Auctions.Auction;
 import Classes.User;
 import java.util.*;
 
@@ -7,6 +8,7 @@ public class Grand_Exchange {
 
     Collection<Product> products;
     Collection<User> users;
+    Collection<Auction> auctions;
 
     /**
      * adds user tot he collection of users
@@ -31,6 +33,20 @@ public class Grand_Exchange {
             throw new IllegalArgumentException();
         } else {
             users.remove(user);
+        }
+    }
+    public void addAuction(Auction auction) {
+        if (auction == null) {
+            throw new IllegalArgumentException();
+        } else {
+            auctions.add(auction);
+        }
+    }
+    public void removeAuction(Auction auction) {
+        if (auction == null) {
+            throw new IllegalArgumentException();
+        } else {
+            auctions.add(auction);
         }
     }
 
