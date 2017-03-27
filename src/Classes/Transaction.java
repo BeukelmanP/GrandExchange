@@ -1,6 +1,6 @@
 package Classes;
 
-import Classes.Auction;
+import Classes.Auctions.Auction;
 import java.util.*;
 
 public class Transaction {
