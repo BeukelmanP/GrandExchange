@@ -16,8 +16,8 @@ public class Bid {
      * @param placer : may not be null
      * @param amount : must be higher than 0
      */
-    public Bid(Auction auction, User placer, double amount) {
-        if (auction == null || placer == null || amount <= 0) {
+    public Bid(User placer, double amount) {
+        if (placer == null || amount <= 0) {
             throw new IllegalArgumentException();
         } else {
             this.placer = placer;

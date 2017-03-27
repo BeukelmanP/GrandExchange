@@ -6,8 +6,10 @@
 package Classes.Auctions;
 
 import Classes.Bid;
+import Classes.Grand_Exchange;
 import Classes.Product;
 import Classes.User;
+import grandexchange.GrandExchange;
 import java.util.Date;
 import java.util.List;
 import junit.framework.Assert;
@@ -41,9 +43,12 @@ public class StandardTest {
     public void setUp() {
         User user = new User("Kyle","PassWW");
         Date date = new Date();
-        Product product = new Product(1932,"Riem","Mooi en handig voor elke maat");
+        Product product = new Product("1932","Riem","Mooi en handig voor elke maat");
         auction = new Standard(user,product,15,32,date);
         
+        //GrandExchange gE = new GrandExchange();
+        Grand_Exchange gE = new Grand_Exchange();
+        gE.addAuction(auction);   
     }
     
     @After
