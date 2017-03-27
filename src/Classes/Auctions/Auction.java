@@ -15,7 +15,40 @@ public abstract class Auction {
     private int productQuantity;
     private Bid currentBid;
     Collection<Bid> bids;
-    Collection<Product> forSale;
+    Product forSale;
+
+    /**
+     *
+     * @param seller : seller of product
+     * @param product : product
+     * @param price : initial price of auction
+     * @param quantity : quantity
+     */
+    public Auction(User seller, Product product, double price, int quantity) {
+        this.seller = seller;
+        this.forSale = product;
+        this.currentPrice = price;
+        this.productQuantity = quantity;
+        this.instabuyable = false;
+    }
+
+    /**
+     *
+     * @param seller : seller of product
+     * @param product : product
+     * @param quantity : quantity
+     * @param price : initial price of auction
+     * @param instabuyprice : price to buy direct
+     */
+    public Auction(User seller, Product product, int quantity, double price, double instabuyprice) {
+        this.seller = seller;
+        this.forSale = product;
+        this.currentPrice = price;
+        this.productQuantity = quantity;
+        this.instabuyPrice = instabuyprice;
+        this.instabuyable = true;
+
+    }
 
     /**
      * returns the highest bid at the moment
@@ -37,6 +70,7 @@ public abstract class Auction {
 
     /**
      * send a request for email contact
+     *
      * @param emailRequester : may not be empty nor null
      */
     public void sendMailRequest(String emailRequester) {

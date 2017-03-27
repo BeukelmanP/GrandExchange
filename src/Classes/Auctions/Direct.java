@@ -5,10 +5,22 @@
  */
 package Classes.Auctions;
 
+import Classes.Product;
+import Classes.User;
+import java.util.Date;
+
 /**
  *
  * @author piete
  */
 public class Direct extends Auction {
-    
+
+    public Direct(User seller, Product product, double price, int quantity) {
+        super(seller, product, price, quantity);
+
+    }
+
+    public Direct(User seller, Product product, int quantity, double price, double instabuyprice) {
+        super(seller, product, quantity, price, instabuyprice);
+    }
 }
