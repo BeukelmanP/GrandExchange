@@ -6,6 +6,7 @@
 package Classes.Auctions;
 
 import Classes.Bid;
+import Classes.Grand_Exchange;
 import Classes.Product;
 import Classes.User;
 import java.util.Date;
@@ -25,6 +26,12 @@ import static org.junit.Assert.*;
 public class AuctionTest {
 
     Auction auction;
+    User user;
+    Date date;
+    Product product;
+    Grand_Exchange gE;
+    Bid bid;
+    
 
     public AuctionTest() {
     }
@@ -39,10 +46,13 @@ public class AuctionTest {
 
     @Before
     public void setUp() {
-        User user = new User("Kyle","PassWW");
-        Date date = new Date();
-        Product product = new Product(1932,"Riem","Mooi en handig voor elke maat");
+        user = new User("Kyle","PassWW");
+        date = new Date();
+        product = new Product("1932","Riem","Mooi en handig voor elke maat");
         auction = new Standard(user,product,15,32,date);
+        
+        bid = new Bid(user, 15);
+        //auction.addBid(bid);
     }
 
     @After
