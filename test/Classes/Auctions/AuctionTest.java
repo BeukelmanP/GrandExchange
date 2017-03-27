@@ -6,6 +6,9 @@
 package Classes.Auctions;
 
 import Classes.Bid;
+import Classes.Product;
+import Classes.User;
+import java.util.Date;
 import java.util.List;
 import junit.framework.Assert;
 import org.junit.After;
@@ -36,6 +39,10 @@ public class AuctionTest {
 
     @Before
     public void setUp() {
+        User user = new User("Kyle","PassWW");
+        Date date = new Date();
+        Product product = new Product(1932,"Riem","Mooi en handig voor elke maat");
+        auction = new Standard(user,product,15,32,date);
     }
 
     @After
