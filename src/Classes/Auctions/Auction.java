@@ -26,12 +26,14 @@ public abstract class Auction {
      * @param price : initial price of auction
      * @param quantity : quantity
      */
-    public Auction(User seller, Product product, double price, int quantity) {
+    public Auction(User seller, Product product, double price, int quantity,StatusEnum status, String description) {
         this.seller = seller;
         this.forSale = product;
         this.currentPrice = price;
         this.productQuantity = quantity;
         this.instabuyable = false;
+        this.status=status;
+        this.description=description;
     }
 
     /**
@@ -42,13 +44,15 @@ public abstract class Auction {
      * @param price : initial price of auction
      * @param instabuyprice : price to buy direct
      */
-    public Auction(User seller, Product product, int quantity, double price, double instabuyprice) {
+    public Auction(User seller, Product product, int quantity, double price, double instabuyprice,StatusEnum status, String description) {
         this.seller = seller;
         this.forSale = product;
         this.currentPrice = price;
         this.productQuantity = quantity;
         this.instabuyPrice = instabuyprice;
         this.instabuyable = true;
+        this.status=status;
+        this.description=description;
 
     }
 
