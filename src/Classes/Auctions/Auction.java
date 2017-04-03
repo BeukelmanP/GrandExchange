@@ -14,10 +14,10 @@ public abstract class Auction {
     private boolean instabuyable;
     private int productQuantity;
     private Bid currentBid;
-    List<Bid> bids;
-    Product forSale;
-    StatusEnum status;
-    String description;
+    private List<Bid> bids;
+    private Product forSale;
+    private StatusEnum status;
+    private String description;
 
     /**
      *
@@ -26,14 +26,14 @@ public abstract class Auction {
      * @param price : initial price of auction
      * @param quantity : quantity
      */
-    public Auction(User seller, Product product, double price, int quantity,StatusEnum status, String description) {
+    public Auction(User seller, Product product, double price, int quantity, StatusEnum status, String description) {
         this.seller = seller;
         this.forSale = product;
         this.currentPrice = price;
         this.productQuantity = quantity;
         this.instabuyable = false;
-        this.status=status;
-        this.description=description;
+        this.status = status;
+        this.description = description;
     }
 
     /**
@@ -44,15 +44,15 @@ public abstract class Auction {
      * @param price : initial price of auction
      * @param instabuyprice : price to buy direct
      */
-    public Auction(User seller, Product product, int quantity, double price, double instabuyprice,StatusEnum status, String description) {
+    public Auction(User seller, Product product, int quantity, double price, double instabuyprice, StatusEnum status, String description) {
         this.seller = seller;
         this.forSale = product;
         this.currentPrice = price;
         this.productQuantity = quantity;
         this.instabuyPrice = instabuyprice;
         this.instabuyable = true;
-        this.status=status;
-        this.description=description;
+        this.status = status;
+        this.description = description;
 
     }
 
@@ -90,4 +90,25 @@ public abstract class Auction {
     public void sendMailRequest(String emailRequester) {
 
     }
+
+    public Product getProduct() {
+        return forSale;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public StatusEnum getStatus() {
+        return status;
+    }
+
+    public Double getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+
 }

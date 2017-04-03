@@ -6,13 +6,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Controllers.AuctionController">
+<AnchorPane id="AnchorPane" fx:id="countdownBuyButton" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Controllers.AuctionController">
   <children>
-    <ImageView fx:id="imgView" cache="false" fitHeight="320.0" fitWidth="513.0" layoutX="26.0" layoutY="119.0" mouseTransparent="false" pickOnBounds="true" preserveRatio="false" smooth="true" style="-fx-background-color:black;">
-      <image>
-        <Image url="@../../../../School/PTS3/error-icon-3.png" />
-      </image>
-    </ImageView>
+    <Pane layoutX="27.0" layoutY="35.0" prefHeight="598.0000999999975" prefWidth="391.0">
+      <children>
+        <Label fx:id="productTitle" layoutX="19.0" layoutY="38.0" text="productTitle">
+          <font>
+            <Font size="30.0" />
+          </font>
+        </Label>
+        <Button fx:id="backButton" layoutX="18.0" layoutY="4.0" mnemonicParsing="false" text="Back" />
+        <ImageView fx:id="productImage" fitHeight="265.0" fitWidth="353.333344247177" layoutX="18.0" layoutY="89.0" pickOnBounds="true" preserveRatio="true" />
+        <TextArea fx:id="productDescription" layoutX="19.0" layoutY="394.0" prefHeight="74.0" prefWidth="353.0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&#10;" wrapText="true" />
+        <TextArea id="productDescription" fx:id="auctionDescription" layoutX="18.0" layoutY="481.0" prefHeight="74.0" prefWidth="353.0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&#10;" wrapText="true" />
+        <Label layoutX="19.0" layoutY="365.0" text="Status:" />
+        <Label fx:id="productStatus" layoutX="63.0" layoutY="365.0" text="..." />
+      </children>
+    </Pane>
+    <Pane id="countdownPane" layoutX="418.0" layoutY="35.0" prefHeight="555.0" prefWidth="327.0">
+      <children>
+        <Label layoutX="14.0" layoutY="14.0" text="Current Price:">
+          <font>
+            <Font size="15.0" />
+          </font>
+        </Label>
+        <Label id="currentPrice" fx:id="countdownCurrentPrice" layoutX="14.0" layoutY="34.0" text="...">
+          <font>
+            <Font size="25.0" />
+          </font>
+        </Label>
+        <Label fx:id="countdownAvailableUnits" layoutX="14.0" layoutY="67.0" text="units" />
+        <Button fx:id="countdownBuyBtn" layoutX="14.0" layoutY="163.0" mnemonicParsing="false" onMouseClicked="#countdownBuyButtonClick" text="Buy" />
+        <TextField fx:id="txtUnitstoBuy" layoutX="13.0" layoutY="141.0" prefWidth="76.0" />
+        <Label layoutX="17.0" layoutY="125.0" text="Units to buy:" />
+      </children>
+    </Pane>
   </children>
 </AnchorPane>
