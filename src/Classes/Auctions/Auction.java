@@ -18,6 +18,7 @@ public abstract class Auction {
     private Product forSale;
     private StatusEnum status;
     private String description;
+    private String[] imageURLs;
 
     /**
      *
@@ -26,7 +27,7 @@ public abstract class Auction {
      * @param price : initial price of auction
      * @param quantity : quantity
      */
-    public Auction(User seller, Product product, double price, int quantity, StatusEnum status, String description) {
+    public Auction(User seller, Product product, double price, int quantity, StatusEnum status, String description, String imageURLs) {
         this.seller = seller;
         this.forSale = product;
         this.currentPrice = price;
@@ -34,6 +35,7 @@ public abstract class Auction {
         this.instabuyable = false;
         this.status = status;
         this.description = description;
+        this.imageURLs = imageURLs.split(";");
     }
 
     /**
@@ -44,7 +46,7 @@ public abstract class Auction {
      * @param price : initial price of auction
      * @param instabuyprice : price to buy direct
      */
-    public Auction(User seller, Product product, int quantity, double price, double instabuyprice, StatusEnum status, String description) {
+    public Auction(User seller, Product product, int quantity, double price, double instabuyprice, StatusEnum status, String description, String imageURLs) {
         this.seller = seller;
         this.forSale = product;
         this.currentPrice = price;
@@ -53,7 +55,7 @@ public abstract class Auction {
         this.instabuyable = true;
         this.status = status;
         this.description = description;
-
+        this.imageURLs = imageURLs.split(";");
     }
 
     /**
@@ -109,6 +111,11 @@ public abstract class Auction {
 
     public int getProductQuantity() {
         return productQuantity;
+    }
+
+    public String[] getImageURLs() {
+
+        return null;
     }
 
 }

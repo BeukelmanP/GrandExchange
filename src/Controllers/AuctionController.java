@@ -10,14 +10,19 @@ import Classes.Auctions.Countdown;
 import Classes.Auctions.Direct;
 import Classes.Auctions.Standard;
 import Classes.Auctions.StatusEnum;
+import com.sun.deploy.util.StringUtils;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javax.swing.JOptionPane;
 
@@ -29,7 +34,7 @@ import javax.swing.JOptionPane;
 public class AuctionController implements Initializable {
 
     @FXML
-    private ImageView productImage;
+    private ImageView bigProductImage;
     @FXML
     private Label productTitle;
     @FXML
@@ -66,11 +71,19 @@ public class AuctionController implements Initializable {
         productDescription.setText(auction.getProduct().getDescription());
         auctionDescription.setText(auction.getDescription());
         productStatus.setText(setStatus(auction.getStatus()));
-
+        for (String URL : auction.getImageURLs()) {
+           /* ImageView a = new ImageView();
+            a.setImage(new Image(URL));
+            a.setOnMouseEntered(value);*/
+        }
         if (auction instanceof Countdown) {
             countdownAuction = (Countdown) auction;
             countdownCurrentPrice.setText("€" + auction.getCurrentPrice());
-            countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
+            if (auction.getProductQuantity() > 1) {
+                countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
+            } else if (auction.getProductQuantity() == 1) {
+                countdownAvailableUnits.setText("There is just 1 item left");
+            }
         }
     }
 
@@ -101,6 +114,11 @@ public class AuctionController implements Initializable {
         } else {
             JOptionPane.showMessageDialog(null, "Not supported yet");
         }
+    }
+
+    public void imageHover(Event e) {
+        ImageView i = (ImageView) e.getSource();
+        bigProductImage.setImage(i.getImage());
     }
 
 }

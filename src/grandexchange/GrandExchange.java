@@ -38,8 +38,8 @@ public class GrandExchange extends Application {
         AuctionController controller = loader.<AuctionController>getController();
         User user = new User("Kyle", "PassWW");
         Date date = new Date();
-        Product product = new Product("0479588001", "Riem", "PREMIUM QUALITY. Een smalle riem van suède met leren details. De riem heeft een metalen gesp. Breedte 3 cm. ");
-        Auction auction = new Countdown(user, product, 15, 20, 1, 600, 10,StatusEnum.New, "Het product komt nieuw in de verpakking");
+        Product product = new Product("0479588001", "Audi R8 4.2 V8 FSI CARBON", "De Audi R8 Coupé is de benchmark. Met een vermogen van 610 pk, een topsnelheid van 330 km/h en een acceleratie van 0 naar 100 km/h in 3,2 is de topversie - de Audi R8 V10 plus - goed voor adembenemende prestaties. Het scherpe design past daar goed bij. De Audi R8 Coupé is onmiskenbaar een bolide met race-DNA.");
+        Auction auction = new Countdown(user, product, 59999, 1, 1, 600, 10,StatusEnum.GoodAsNew, "Deze audi verkeerd in zeer goede staat, geen krasjes,deukjes. De binnenkant verkeerd eveneens in uitstekende staat.",null);
         Bid bid = new Bid(user, 15);
 //        auction.addBid(bid);
         //set demo auction
