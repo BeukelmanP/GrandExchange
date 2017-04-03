@@ -71,11 +71,11 @@ public class AuctionController implements Initializable {
         productDescription.setText(auction.getProduct().getDescription());
         auctionDescription.setText(auction.getDescription());
         productStatus.setText(setStatus(auction.getStatus()));
-        for (String URL : auction.getImageURLs()) {
-           /* ImageView a = new ImageView();
+        /*for (String URL : auction.getImageURLs()) {
+            ImageView a = new ImageView();
             a.setImage(new Image(URL));
-            a.setOnMouseEntered(value);*/
-        }
+            a.setOnMouseEntered(value);
+        }*/
         if (auction instanceof Countdown) {
             countdownAuction = (Countdown) auction;
             countdownCurrentPrice.setText("€" + auction.getCurrentPrice());

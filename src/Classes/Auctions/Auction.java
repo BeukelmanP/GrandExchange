@@ -35,7 +35,7 @@ public abstract class Auction {
         this.instabuyable = false;
         this.status = status;
         this.description = description;
-        this.imageURLs = imageURLs.split(";");
+        //this.imageURLs = imageURLs.split(";");
     }
 
     /**
@@ -55,7 +55,7 @@ public abstract class Auction {
         this.instabuyable = true;
         this.status = status;
         this.description = description;
-        this.imageURLs = imageURLs.split(";");
+       // this.imageURLs = imageURLs.split(";");
     }
 
     /**
