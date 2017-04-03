@@ -4,8 +4,15 @@
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AuctionController">
-    
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Controllers.AuctionController">
+  <children>
+    <ImageView fx:id="imgView" cache="false" fitHeight="320.0" fitWidth="513.0" layoutX="26.0" layoutY="119.0" mouseTransparent="false" pickOnBounds="true" preserveRatio="false" smooth="true" style="-fx-background-color:black;">
+      <image>
+        <Image url="@../../../../School/PTS3/error-icon-3.png" />
+      </image>
+    </ImageView>
+  </children>
 </AnchorPane>
