@@ -20,10 +20,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javax.swing.JOptionPane;
 
 /**
@@ -53,6 +57,8 @@ public class AuctionController implements Initializable {
     private Button countdownBuyBtn;
     @FXML
     private TextField txtUnitstoBuy;
+    @FXML
+    private ScrollPane imagesPane;
 
     Countdown countdownAuction;
     Direct directAuction;
@@ -71,11 +77,28 @@ public class AuctionController implements Initializable {
         productDescription.setText(auction.getProduct().getDescription());
         auctionDescription.setText(auction.getDescription());
         productStatus.setText(setStatus(auction.getStatus()));
-        /*for (String URL : auction.getImageURLs()) {
-            ImageView a = new ImageView();
-            a.setImage(new Image(URL));
-            a.setOnMouseEntered(value);
-        }*/
+        int i = 0;
+        Pane imagePane = new Pane();
+        imagePane.setPrefWidth(85 * auction.getImageURLs().length);
+        imagePane.setPrefHeight(70);
+        for (String URL : auction.getImageURLs()) {
+            ImageView image = new ImageView(new Image(URL));
+            image.setFitWidth(80);
+            image.setFitHeight(60);
+            image.relocate(85 * i, 5);
+            image.addEventHandler(MouseEvent.MOUSE_ENTERED,
+                    new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    ImageView i = (ImageView) e.getSource();
+                    bigProductImage.setImage(i.getImage());
+                }
+            });
+            bigProductImage.setImage(new Image(auction.getImageURLs()[0]));
+            imagePane.getChildren().add(image);
+            i++;
+        }
+        imagesPane.setContent(imagePane);
         if (auction instanceof Countdown) {
             countdownAuction = (Countdown) auction;
             countdownCurrentPrice.setText("€" + auction.getCurrentPrice());

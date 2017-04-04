@@ -10,44 +10,20 @@
 
 <AnchorPane id="AnchorPane" fx:id="countdownBuyButton" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Controllers.AuctionController">
   <children>
-    <Pane layoutX="0.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">
+    <Pane layoutX="4.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">
       <children>
-        <Label fx:id="productTitle" layoutX="19.0" layoutY="88.0" text="productTitle">
+        <Label fx:id="productTitle" layoutX="20.0" layoutY="57.0" text="productTitle">
           <font>
             <Font size="30.0" />
           </font>
         </Label>
-        <ImageView fx:id="productImage" fitHeight="265.0" fitWidth="353.333344247177" layoutX="19.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true" />
-        <TextArea fx:id="productDescription" layoutX="19.0" layoutY="483.0" prefHeight="74.0" prefWidth="367.0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&#10;" wrapText="true" />
-        <TextArea id="productDescription" fx:id="auctionDescription" layoutX="19.0" layoutY="564.0" prefHeight="74.0" prefWidth="366.9998779296875" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&#10;" wrapText="true" />
-        <Label layoutX="19.0" layoutY="455.0" text="Status:" />
-        <Label fx:id="productStatus" layoutX="63.0" layoutY="455.0" text="..." />
+        <TextArea fx:id="productDescription" layoutX="21.0" layoutY="511.0" prefHeight="74.0" prefWidth="367.0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&#10;" wrapText="true" />
+        <TextArea id="productDescription" fx:id="auctionDescription" layoutX="21.0" layoutY="592.0" prefHeight="74.0" prefWidth="366.9998779296875" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum&#10;" wrapText="true" />
+        <Label layoutX="21.0" layoutY="483.0" text="Status:" />
+        <Label fx:id="productStatus" layoutX="65.0" layoutY="483.0" text="..." />
         <Button fx:id="backButton" layoutX="26.0" layoutY="14.0" mnemonicParsing="false" text="Back" />
-        <ImageView id="productImage" fx:id="bigProductImage" fitHeight="239.99991807454455" fitWidth="361.0" layoutX="23.0" layoutY="135.0" pickOnBounds="true" preserveRatio="true">
-          <image>
-            <Image url="https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/TtgAAOSwDmBY39YC/$_85.JPG" backgroundLoading="true" />
-          </image>
-        </ImageView>
-        <ImageView id="productImage" fitHeight="67.5" fitWidth="88.0" layoutX="23.0" layoutY="387.0" onMouseEntered="#imageHover" pickOnBounds="true" preserveRatio="true">
-          <image>
-            <Image url="https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/OmMAAOSww3tY39YC/$_85.JPG" backgroundLoading="true" />
-          </image>
-        </ImageView>
-        <ImageView id="productImage" fitHeight="58.66652297973633" fitWidth="87.99978637694916" layoutX="114.0" layoutY="387.0" onMouseEntered="#imageHover" pickOnBounds="true" preserveRatio="true">
-          <image>
-            <Image url="https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/tUIAAOSwA29Y39YC/$_85.JPG" backgroundLoading="true" />
-          </image>
-        </ImageView>
-        <ImageView id="productImage" fitHeight="67.5" fitWidth="88.0" layoutX="205.0" layoutY="387.0" onMouseEntered="#imageHover" pickOnBounds="true" preserveRatio="true">
-          <image>
-            <Image url="https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/pK0AAOSwCU1Y39YC/$_85.JPG" backgroundLoading="true" />
-          </image>
-        </ImageView>
-        <ImageView id="productImage" fitHeight="67.5" fitWidth="88.0" layoutX="296.0" layoutY="387.0" onMouseEntered="#imageHover" pickOnBounds="true" preserveRatio="true">
-          <image>
-            <Image url="https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/Mh0AAOSwTM5Y39YB/$_85.JPG" backgroundLoading="true" />
-          </image>
-        </ImageView>
+        <ImageView id="productImage" fx:id="bigProductImage" fitHeight="243.9888421056013" fitWidth="367.0" layoutX="19.0" layoutY="104.0" pickOnBounds="true" preserveRatio="true" />
+        <ScrollPane fx:id="imagesPane" content="$null" hbarPolicy="AS_NEEDED" layoutX="20.0" layoutY="351.0" prefHeight="85.0" prefWidth="366.99977792969" vbarPolicy="NEVER" />
       </children>
     </Pane>
     <Pane id="countdownPane" layoutX="400.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0">
@@ -73,7 +49,6 @@
         </Label>
       </children>
     </Pane>
-    <HBox layoutX="500.0" layoutY="350.0" prefHeight="100.0" prefWidth="200.0" />
     <Pane layoutX="800.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">
       <children>
         <Label font="$x1" layoutX="14.0" layoutY="14.0" text="Seller" />
