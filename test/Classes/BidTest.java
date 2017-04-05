@@ -7,6 +7,7 @@ package Classes;
 
 import Classes.Auctions.Auction;
 import Classes.Auctions.Countdown;
+import Classes.Auctions.StatusEnum;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -43,7 +44,7 @@ public class BidTest {
         seller = new User("pieter", "test");
         bidder = new User("henk", "test");
         P = new Product("123456789", "PennenSet", "Set van 20 pennen in rood(4), blauw(6), groen(4) en zwart(6)");
-        auction = new Countdown(seller, P, 20, 100, 0.5, 10, 5);
+        auction = new Countdown(seller, P, 20, 100, 0.5, 10, 5,StatusEnum.New,"new Pens", "");
         bidding = new Bid(bidder, 15);
     }
 

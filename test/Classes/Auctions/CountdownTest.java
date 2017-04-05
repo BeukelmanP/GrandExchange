@@ -48,7 +48,7 @@ public class CountdownTest {
         user = new User("Kyle","PassWW");
         date = new Date();
         product = new Product("1932","Smalle suède riem ","Mooi en handig voor elke maat");
-        auction = new Countdown(user,product,15,45,75,75,56,56,StatusEnum.New,"Testtestetestetets");
+        auction = new Countdown(user,product,15,45,75,75,56,56,StatusEnum.New,"Testtestetestetets","");
         bid = new Bid(user, 15);
         
         // adds a bid to the auction
