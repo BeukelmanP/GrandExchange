@@ -10,11 +10,9 @@ import Classes.Auctions.Countdown;
 import Classes.Auctions.Direct;
 import Classes.Auctions.Standard;
 import Classes.Auctions.StatusEnum;
-import com.sun.deploy.util.StringUtils;
+import Classes.Bid;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,8 +24,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javax.swing.JOptionPane;
 
 /**
@@ -59,6 +57,8 @@ public class AuctionController implements Initializable {
     private TextField txtUnitstoBuy;
     @FXML
     private ScrollPane imagesPane;
+    @FXML
+    private ScrollPane recentPurchasesPane;
 
     Countdown countdownAuction;
     Direct directAuction;
@@ -107,6 +107,32 @@ public class AuctionController implements Initializable {
             } else if (auction.getProductQuantity() == 1) {
                 countdownAvailableUnits.setText("There is just 1 item left");
             }
+
+            Pane BidsPane = new Pane();
+            BidsPane.setPrefWidth(85 * auction.getImageURLs().length);
+            BidsPane.setPrefHeight(75 * auction.getBids().size());
+            int a = 0;
+            for (Bid b : auction.getBids()) {
+                Pane p = new Pane();
+                p.setPrefHeight(75);
+                p.setPrefWidth(371);
+                p.relocate(0, a * 75);
+                if ((a % 2) == 0) {
+                    p.setStyle("-fx-background-color: lightgrey ");
+                }
+                Label name = new Label();
+                name.setText(b.getPlacerUsername());
+                name.setFont(new Font("Arial",17));
+                Label price = new Label();
+                price.setText("Bought at a price of: €" + b.getAmount());
+                price.setFont(new Font("Arial",14));
+                name.relocate(10, 15);
+                price.relocate(10, 45);
+                p.getChildren().addAll(price,name);
+                BidsPane.getChildren().add(p);
+                a++;
+            }
+            recentPurchasesPane.setContent(BidsPane);
         }
     }
 
@@ -130,18 +156,20 @@ public class AuctionController implements Initializable {
     }
 
     public void countdownBuyButtonClick() {
-        double totalPrice = Double.parseDouble(txtUnitstoBuy.getText()) * countdownAuction.getCurrentPrice();
-        int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + countdownAuction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
-        if (reply == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(null, "Not supported yet");
-        } else {
-            JOptionPane.showMessageDialog(null, "Not supported yet");
-        }
-    }
+        if (Integer.parseInt(txtUnitstoBuy.getText()) <= countdownAuction.getProductQuantity() && Integer.parseInt(txtUnitstoBuy.getText()) > 0) {
+            double totalPrice = Double.parseDouble(txtUnitstoBuy.getText()) * countdownAuction.getCurrentPrice();
 
-    public void imageHover(Event e) {
-        ImageView i = (ImageView) e.getSource();
-        bigProductImage.setImage(i.getImage());
+            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + countdownAuction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(null, "Not supported yet");
+            } else {
+                JOptionPane.showMessageDialog(null, "Not supported yet");
+            }
+        } else if (Integer.parseInt(txtUnitstoBuy.getText()) <= 0) {
+            JOptionPane.showMessageDialog(null, "You can't buy less than 1 object");
+        } else {
+            JOptionPane.showMessageDialog(null, "You can't buy more objects than there are available");
+        }
     }
 
 }

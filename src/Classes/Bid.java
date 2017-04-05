@@ -34,7 +34,7 @@ public class Bid {
      * @return User
      */
     public String getPlacerUsername() {
-        return this.placer.toString();
+        return this.placer.getUsername();
     }
 
     /**

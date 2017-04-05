@@ -14,7 +14,7 @@ public abstract class Auction {
     private boolean instabuyable;
     private int productQuantity;
     private Bid currentBid;
-    private List<Bid> bids;
+    private ArrayList<Bid> bids;
     private Product forSale;
     private StatusEnum status;
     private String description;
@@ -36,6 +36,7 @@ public abstract class Auction {
         this.status = status;
         this.description = description;
         this.imageURLs = imageURLs.split(";");
+        bids = new ArrayList<>();
     }
 
     /**
@@ -80,7 +81,7 @@ public abstract class Auction {
      *
      * @return List<Bid>
      */
-    public List<Bid> getBids() {
+    public ArrayList<Bid> getBids() {
         return bids;
     }
 

@@ -10,7 +10,7 @@
 
 <AnchorPane id="AnchorPane" fx:id="countdownBuyButton" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Controllers.AuctionController">
   <children>
-    <Pane layoutX="4.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">
+    <Pane layoutX="0.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">
       <children>
         <Label fx:id="productTitle" layoutX="20.0" layoutY="57.0" text="productTitle">
           <font>
@@ -47,6 +47,8 @@
             <Font size="20.0" fx:id="x1" />
           </font>
         </Label>
+        <ScrollPane fx:id="recentPurchasesPane" content="$null" hbarPolicy="NEVER" layoutX="15.0" layoutY="287.0" prefHeight="415.0" prefWidth="371.0" />
+        <Label font="$x1" layoutX="14.0" layoutY="260.0" text="Recent Purchases:" />
       </children>
     </Pane>
     <Pane layoutX="800.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">
