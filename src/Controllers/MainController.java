@@ -71,18 +71,19 @@ public class MainController implements Initializable {
             Label price = new Label();
             price.setText("€" + a.getCurrentPrice());
             price.setFont(new Font("Arial", 20));
-            price.relocate(600, 120);
+            price.relocate(550, 120);
 
             Label seller = new Label();
             seller.setText(a.getSeller().getUsername());
             seller.setFont(new Font("Arial", 15));
-            seller.relocate(600, 20);
+            seller.relocate(550, 20);
 
             TextArea description = new TextArea();
             description.setPrefSize(200, 60);
             description.relocate(150, 65);
             description.setText(a.getDescription());
             description.wrapTextProperty().setValue(Boolean.TRUE);
+            description.setEditable(false);
 
             ImageView image = new ImageView(new Image(a.getImageURLs()[0]));
             image.setFitWidth(100);

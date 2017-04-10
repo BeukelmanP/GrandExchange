@@ -14,6 +14,7 @@ import Classes.Bid;
 import Classes.Grand_Exchange;
 import Classes.User;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -116,7 +117,7 @@ public class AuctionController implements Initializable {
         imagesPane.setContent(imagePane);
         if (auction instanceof Countdown) {
             countdownAuction = (Countdown) auction;
-            countdownCurrentPrice.setText("€" + auction.getCurrentPrice());
+            countdownCurrentPrice.setText("€" + countdownAuction.getCurrentPrice());
             if (auction.getProductQuantity() > 1) {
                 countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
             } else if (auction.getProductQuantity() == 1) {
@@ -163,7 +164,9 @@ public class AuctionController implements Initializable {
 
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + countdownAuction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
-                countdownAuction.addBid(new Bid(GX.loggedInUser, countdownAuction.getCurrentPrice()));
+                for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
+                    countdownAuction.addBid(new Bid(GX.loggedInUser, countdownAuction.getCurrentPrice()));
+                }
                 countdownAuction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));
                 setCountdownBuys(countdownAuction);
                 if (countdownAuction.getProductQuantity() > 1) {
