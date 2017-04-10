@@ -106,7 +106,8 @@ public class Connection {
                     status = StatusEnum.values()[myRs.getInt("status")];
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
-                    auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL);
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice);
                 }
                 
                 // In case of Direct 
@@ -119,7 +120,8 @@ public class Connection {
                     status = StatusEnum.values()[myRs.getInt("status")];
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
-                    auction = new Direct(id, user, product, price, quantity, status, description, imageURL);
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    auction = new Direct(id, user, product, price, quantity, status, description, imageURL, instabuyprice);
                 }
                 
                 if (myRs.getString("type").equals("standard")){
@@ -132,7 +134,8 @@ public class Connection {
                     status = StatusEnum.values()[myRs.getInt("status")];
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
-                    auction = new Standard(id,user,product,price,quantity,date,status,description,imageURL);
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    auction = new Standard(id,user,product,price,quantity,date,status,description,imageURL, instabuyprice);
                 }
 
                 auctions.add(auction);
