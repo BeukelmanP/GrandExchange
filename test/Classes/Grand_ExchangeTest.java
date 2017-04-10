@@ -33,13 +33,19 @@ public class Grand_ExchangeTest {
         TestUser = new User("Robin", "test");
 
     }
-
+/** 
+   * A user will be added
+   * the name can't be empty
+   */
     @Test
     public void TestaddUser() {
         GE.addUser(TestUser);
         assertEquals(TestUser.getUsername(), "Robin");
     }
-
+/** 
+   * A user will be removed.
+   * The name can't be empty
+   */
     @Test
     public void TestremoveUser() {
         GE.addUser(TestUser);
@@ -48,7 +54,10 @@ public class Grand_ExchangeTest {
         assertNull(TestUser.getUsername());
 
     }
-
+/** 
+   * a product will be added.
+   * 
+   */
     @Test
     public void TestAddProduct() {
         p = new Product("1234", "testprodcut", "gewoon een test");
@@ -56,7 +65,10 @@ public class Grand_ExchangeTest {
         assertEquals(p.getName(), "testproduct");
 
     }
-
+/** 
+   * a product will be removed.
+   *the product must exist.
+   */
     @Test
     public void TestRemoveProduct() {
         p = new Product("1234", "testprodcut", "gewoon een test");
@@ -65,7 +77,10 @@ public class Grand_ExchangeTest {
         assertNull(p.getName());
 
     }
-
+/** 
+   * a auction will be added.
+   * 
+   */
     @Test
     public void TestAddAuction() {
         p = new Product("1234", "testprodcut", "gewoon een test");
@@ -76,7 +91,10 @@ public class Grand_ExchangeTest {
         assertEquals(auc.size(), 1);
 
     }
-
+/** 
+   * a auction will be removed.
+   *
+   */
     @Test
     public void TestRemoveAuction() {
         Collection<Auction> auc;
@@ -88,7 +106,10 @@ public class Grand_ExchangeTest {
         assertEquals(auc.size(), 0);
 
     }
-
+/** 
+   * a transaction will be handled
+   * 
+   */
     @Test
     public void TesthandleTransaction() {
         trans = new Transaction(a);
