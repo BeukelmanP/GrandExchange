@@ -21,6 +21,7 @@ public class User {
     private String email;
     private boolean verified;
     private double saldo;
+    private String imageURL;
     private List<Bid> bids;
     private List<Auction> placedAuctions;
     private List<Queue_Purchase> placedOrders;
@@ -32,9 +33,10 @@ public class User {
      * @param username
      * @param Password 
      */
-    public User(String username, String Password) {
+    public User(String username, String Password, String imageURL) {
         this.username = username;
         this.password = password;
+        this.imageURL = imageURL;
         
         //User myUser = Database.Connection().getUser()
     }
@@ -43,7 +45,7 @@ public class User {
     /**
      * constructor for a user with everything manually inputted.
      */
-    public User(int BSN, String username, String password, String alias, String email, boolean verified, double saldo) {
+    public User(int BSN, String username, String password, String alias, String email, boolean verified, double saldo, String imageURL) {
         this.BSN = BSN;
         this.username = username;
         this.password = password;
@@ -51,6 +53,7 @@ public class User {
         this.email = email;
         this.verified = verified;
         this.saldo = saldo;
+        this.imageURL = imageURL;
         this.bids = new ArrayList<Bid>();
         this.placedAuctions = new ArrayList<Auction>();
         this.placedOrders = new ArrayList<Queue_Purchase>();
@@ -174,5 +177,9 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+    
+    public String getImageURL() {
+        return imageURL;
     }
 }

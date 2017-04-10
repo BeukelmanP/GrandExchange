@@ -38,6 +38,7 @@ public class Connection {
 
     
     static final String GET_FROM_AUCTIONS_SQL = "SELECT ? FROM auction WHERE ? = ?";
+    static final String GET_FROM_AUCTIONS = "SELECT * FROM auction";
     static final String GET_FROM_USER_ID = "SELECT * FROM user WHERE id = ?";
     static final String GET_FROM_USER_byLOGININFO = "SELECT * FROM user WHERE username = ? and password = ?";
     static final String GET_FROM_PRODUCT = "SELECT * FROM product WHERE id = ?";
@@ -50,7 +51,7 @@ public class Connection {
     public void getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            myConn = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/test?zeroDateTimeBehavior=convertToNull", "lesleya213_pts", "wachtwoord123");
+            myConn = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/lesleya213_pts?zeroDateTimeBehavior=convertToNull", "lesleya213_pts", "wachtwoord123");
             System.out.println("started connection to database...");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,13 +80,12 @@ public class Connection {
 
         try {
             getConnection();
-            pstmt = myConn.prepareStatement(GET_FROM_AUCTIONS_SQL);
-            pstmt.setString(1, selectFrom);
-            pstmt.setString(2, where);
-            pstmt.setString(3, is);
+            pstmt = myConn.prepareStatement(GET_FROM_AUCTIONS);
+//            pstmt.setString(1, selectFrom);
+//            pstmt.setString(2, where);
+//            pstmt.setString(3, is);
 
             myRs = pstmt.executeQuery();
-            myRs.next();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
@@ -156,29 +156,33 @@ public class Connection {
         String email;
         boolean verified;
         float saldo;
+        
+    PreparedStatement preparedStatement = null;
+    ResultSet resultset = null;
 
         if (myConn != null) {
 
             try {
-                pstmt = myConn.prepareStatement(GET_FROM_USER_ID);
-                pstmt.setInt(1, id);
-                myRs = pstmt.executeQuery();
-                myRs.next();
+                preparedStatement = myConn.prepareStatement(GET_FROM_USER_ID);
+                preparedStatement.setInt(1, id);
+                resultset = preparedStatement.executeQuery();
+                resultset.next();
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
                 Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             try {
-                bsn = myRs.getInt("bsn");
-                username = myRs.getString("username");
-                password = myRs.getString("password");
-                alias = myRs.getString("alias");
-                email = myRs.getString("email");
-                verified = myRs.getBoolean("verified");
-                saldo = myRs.getFloat("saldo");
+                bsn = resultset.getInt("bsn");
+                username = resultset.getString("username");
+                password = resultset.getString("password");
+                alias = resultset.getString("alias");
+                email = resultset.getString("email");
+                verified = resultset.getBoolean("verified");
+                saldo = resultset.getFloat("saldo");
+                String imgURL = resultset.getString("imageUrl");
 
-                user = new User(bsn, username, password, alias, email, verified, saldo);
+                user = new User(bsn, username, password, alias, email, verified, saldo, imgURL);
 
                 return user;
             } catch (SQLException ex) {
@@ -191,19 +195,11 @@ public class Connection {
             System.out.println("There is no existing connection");
         }
 
-        closeConnection();
         return user;
     }
 
     public User getUser(String username, String password) {
         User user = null;
-        int bsn;
-        String alias;
-        String email;
-        boolean verified;
-        float saldo;
-
-
             try {
                 getConnection();
                 pstmt = myConn.prepareStatement(GET_FROM_USER_byLOGININFO);
@@ -218,17 +214,19 @@ public class Connection {
             }
 
             try {
-                bsn = myRs.getInt("bsn");
-                username = myRs.getString("username");
-                password = myRs.getString("password");
-                alias = myRs.getString("alias");
-                email = myRs.getString("email");
-                verified = myRs.getBoolean("verified");
-                saldo = myRs.getFloat("saldo");
+                int bsn = myRs.getInt("bsn");
+                String usernm = myRs.getString("username");
+                String pass = myRs.getString("password");
+                String alias = myRs.getString("alias");
+                String email = myRs.getString("email");
+                boolean verified = myRs.getBoolean("verified");
+                double saldo = myRs.getDouble("saldo");
+                String imgURL = myRs.getString("imageUrl");
 
-                user = new User(bsn, username, password, alias, email, verified, saldo);
-
+                user = new User(bsn, usernm, pass, alias, email, verified, saldo, imgURL);
+                closeConnection();
                 return user;
+
             } catch (SQLException ex) {
                 Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println(ex.getMessage());
@@ -279,25 +277,29 @@ public class Connection {
         String name;
         String description;
         String gtin;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultset = null;
+        
+        
 
         if (myConn != null) {
 
             try {
-                pstmt = myConn.prepareStatement(GET_FROM_PRODUCT);
-                pstmt.setInt(1, productID);
-                myRs = pstmt.executeQuery();
-                myRs.next();
+                preparedStatement = myConn.prepareStatement(GET_FROM_PRODUCT);
+                preparedStatement.setInt(1, productID);
+                resultset = preparedStatement.executeQuery();
+                resultset.next();
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
                 Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             try {
-                name = myRs.getString("name");
-                description = myRs.getString("description");
-                gtin = myRs.getString("gtin");
+                name = resultset.getString("name");
+                description = resultset.getString("description");
+                gtin = resultset.getString("gtin");
 
-                product = new Product(name, description, gtin);
+                product = new Product(gtin,name, description);
 
                 return product;
             } catch (SQLException ex) {
@@ -308,7 +310,6 @@ public class Connection {
             getConnection();
             getProduct(productID);
         }
-        closeConnection();
         return product;
     }
 

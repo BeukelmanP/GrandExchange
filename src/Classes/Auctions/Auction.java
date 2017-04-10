@@ -3,11 +3,11 @@ package Classes.Auctions;
 import Classes.Bid;
 import Classes.Product;
 import Classes.User;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public abstract class Auction {
 
-    
     User seller;
     private int id;
     private Date timeCreated;
@@ -38,6 +38,7 @@ public abstract class Auction {
         this.id = id;
         this.seller = seller;
         this.product = product;
+        DecimalFormat decim = new DecimalFormat("#.00");
         this.currentPrice = price;
         this.productQuantity = quantity;
         this.instabuyable = false;
@@ -68,7 +69,8 @@ public abstract class Auction {
         this.instabuyable = true;
         this.status = status;
         this.description = description;
-       this.imageURLs = imageURLs.split(";");
+        this.imageURLs = imageURLs.split(";");
+        bids = new ArrayList<>();  
     }
 
     /**
@@ -130,12 +132,16 @@ public abstract class Auction {
         return productQuantity;
     }
 
+    public void setProductQuantity(int buyAmount) {
+        productQuantity = productQuantity - buyAmount;
+    }
+
     public String[] getImageURLs() {
 
         return imageURLs;
     }
-    
-     public User getSeller() {
+
+    public User getSeller() {
 
         return seller;
     }

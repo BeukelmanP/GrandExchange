@@ -11,7 +11,10 @@ import Classes.Auctions.Direct;
 import Classes.Auctions.Standard;
 import Classes.Auctions.StatusEnum;
 import Classes.Bid;
+import Classes.Grand_Exchange;
+import Classes.User;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -28,6 +31,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 
 /**
@@ -39,6 +43,10 @@ public class AuctionController implements Initializable {
 
     @FXML
     private ImageView bigProductImage;
+    @FXML
+    private ImageView sellerImage;
+    @FXML
+    private Label sellerName;
     @FXML
     private Label productTitle;
     @FXML
@@ -52,7 +60,7 @@ public class AuctionController implements Initializable {
     @FXML
     private TextArea auctionDescription;
     @FXML
-    private Button backButton;
+    private Button closeButton;
     @FXML
     private Button countdownBuyBtn;
     @FXML
@@ -65,6 +73,8 @@ public class AuctionController implements Initializable {
     Countdown countdownAuction;
     Direct directAuction;
     Standard standardAuction;
+    private User loggedInUser;
+    private Grand_Exchange GX;
 
     /**
      * Initializes the controller class.
@@ -74,7 +84,8 @@ public class AuctionController implements Initializable {
 
     }
 
-    public void setAuction(Auction auction) {
+    public void setUp(Auction auction, Grand_Exchange GX) {
+        this.GX = GX;
         productTitle.setText(auction.getProduct().getName());
         productDescription.setText(auction.getProduct().getDescription());
         auctionDescription.setText(auction.getDescription());
@@ -100,41 +111,22 @@ public class AuctionController implements Initializable {
             imagePane.getChildren().add(image);
             i++;
         }
+
+        sellerImage.setImage(new Image(auction.getSeller().getImageURL()));
+        sellerName.setText(auction.getSeller().getUsername());
         imagesPane.setContent(imagePane);
         if (auction instanceof Countdown) {
             countdownAuction = (Countdown) auction;
-            countdownCurrentPrice.setText("€" + auction.getCurrentPrice());
+            countdownCurrentPrice.setText("€" + countdownAuction.getCurrentPrice());
             if (auction.getProductQuantity() > 1) {
                 countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
             } else if (auction.getProductQuantity() == 1) {
                 countdownAvailableUnits.setText("There is just 1 item left");
+            } else if (auction.getProductQuantity() == 0) {
+                countdownAvailableUnits.setText("There are no items left, you missed it");
             }
+            setCountdownBuys(auction);
 
-            Pane BidsPane = new Pane();
-            BidsPane.setPrefWidth(371);
-            BidsPane.setPrefHeight(75 * auction.getBids().size());
-            int a = 0;
-            for (Bid b : auction.getBids()) {
-                Pane p = new Pane();
-                p.setPrefHeight(75);
-                p.setPrefWidth(371);
-                p.relocate(0, a * 75);
-                if ((a % 2) == 0) {
-                    p.setStyle("-fx-background-color: lightgrey ");
-                }
-                Label name = new Label();
-                name.setText(b.getPlacerUsername());
-                name.setFont(new Font("Arial", 17));
-                Label price = new Label();
-                price.setText("Bought at a price of: €" + b.getAmount());
-                price.setFont(new Font("Arial", 14));
-                name.relocate(10, 15);
-                price.relocate(10, 45);
-                p.getChildren().addAll(price, name);
-                BidsPane.getChildren().add(p);
-                a++;
-            }
-            recentPurchasesPane.setContent(BidsPane);
         }
 
         txtUnitstoBuy.textProperty().addListener(new ChangeListener<String>() {
@@ -172,15 +164,60 @@ public class AuctionController implements Initializable {
 
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + countdownAuction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, "Not supported yet");
+                for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
+                    countdownAuction.addBid(new Bid(GX.loggedInUser, countdownAuction.getCurrentPrice()));
+                }
+                countdownAuction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));
+                setCountdownBuys(countdownAuction);
+                if (countdownAuction.getProductQuantity() > 1) {
+                    countdownAvailableUnits.setText("There are " + countdownAuction.getProductQuantity() + " units available");
+                } else if (countdownAuction.getProductQuantity() == 1) {
+                    countdownAvailableUnits.setText("There is just 1 item left");
+                } else if (countdownAuction.getProductQuantity() == 0) {
+                    countdownAvailableUnits.setText("There are no items left, you missed it");
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "Not supported yet");
+                JOptionPane.showMessageDialog(null, "Canceled");
             }
         } else if (Integer.parseInt(txtUnitstoBuy.getText()) <= 0) {
             JOptionPane.showMessageDialog(null, "You can't buy less than 1 object");
         } else {
             JOptionPane.showMessageDialog(null, "You can't buy more objects than there are available");
         }
+    }
+
+    public void setCountdownBuys(Auction auction) {
+        Pane BuyPane = new Pane();
+        BuyPane.setPrefWidth(371);
+        BuyPane.setPrefHeight(75 * auction.getBids().size());
+        int a = 0;
+        for (Bid b : auction.getBids()) {
+            Pane p = new Pane();
+            p.setPrefHeight(75);
+            p.setPrefWidth(371);
+            p.relocate(0, a * 75);
+            if ((a % 2) == 0) {
+                p.setStyle("-fx-background-color: lightgrey ");
+            }
+            Label name = new Label();
+            name.setText(b.getPlacerUsername());
+            name.setFont(new Font("Arial", 17));
+            Label price = new Label();
+            price.setText("Bought at a price of: €" + b.getAmount());
+            price.setFont(new Font("Arial", 14));
+            name.relocate(10, 15);
+            price.relocate(10, 45);
+            p.getChildren().addAll(price, name);
+            BuyPane.getChildren().add(p);
+            a++;
+        }
+        recentPurchasesPane.setContent(BuyPane);
+    }
+
+    @FXML
+    private void closeButtonClick() {
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        stage.close();
     }
 
 }

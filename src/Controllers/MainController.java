@@ -6,6 +6,7 @@
 package Controllers;
 
 import Classes.Auctions.Auction;
+import Classes.Grand_Exchange;
 import Classes.User;
 import java.io.IOException;
 import java.net.URL;
@@ -39,6 +40,7 @@ public class MainController implements Initializable {
     @FXML
     private ScrollPane auctionsPane;
 
+    private Grand_Exchange GX;
     /**
      * Initializes the controller class.
      */
@@ -47,12 +49,13 @@ public class MainController implements Initializable {
         // TODO
     }
 
-    public void setUp(User u, ArrayList<Auction> auctions) {
+    public void setUp(Grand_Exchange GX) {
+        this.GX = GX;
         Pane allAuctions = new Pane();
         allAuctions.setPrefWidth(800);
-        allAuctions.setPrefHeight(150 * auctions.size());
+        allAuctions.setPrefHeight(150 * GX.getAuctions().size());
         int i = 0;
-        for (Auction a : auctions) {
+        for (Auction a : GX.getAuctions()) {
             Pane Auction = new Pane();
             Auction.setPrefWidth(800);
             Auction.setPrefHeight(150);
@@ -68,18 +71,19 @@ public class MainController implements Initializable {
             Label price = new Label();
             price.setText("€" + a.getCurrentPrice());
             price.setFont(new Font("Arial", 20));
-            price.relocate(600, 120);
+            price.relocate(550, 120);
 
             Label seller = new Label();
             seller.setText(a.getSeller().getUsername());
             seller.setFont(new Font("Arial", 15));
-            seller.relocate(600, 20);
+            seller.relocate(550, 20);
 
             TextArea description = new TextArea();
             description.setPrefSize(200, 60);
             description.relocate(150, 65);
             description.setText(a.getDescription());
             description.wrapTextProperty().setValue(Boolean.TRUE);
+            description.setEditable(false);
 
             ImageView image = new ImageView(new Image(a.getImageURLs()[0]));
             image.setFitWidth(100);
@@ -111,7 +115,7 @@ public class MainController implements Initializable {
         Scene newScene;
         newScene = new Scene(loader.load());
         AuctionController controller = loader.<AuctionController>getController();
-        controller.setAuction(a);
+        controller.setUp(a,GX);
         Stage inputStage = new Stage();
         inputStage.setScene(newScene);
         inputStage.showAndWait();
