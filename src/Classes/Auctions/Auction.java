@@ -24,10 +24,13 @@ public abstract class Auction {
 
     /**
      *
-     * @param seller : seller of product
-     * @param product : product
-     * @param price : initial price of auction
-     * @param quantity : quantity
+     * @param seller
+     * @param product
+     * @param price
+     * @param quantity
+     * @param status
+     * @param description
+     * @param imageURLs
      */
     public Auction(int id, User seller, Product product, double price, int quantity, StatusEnum status, String description, String imageURLs) {
         this.id = id;
@@ -44,11 +47,14 @@ public abstract class Auction {
 
     /**
      *
-     * @param seller : seller of product
-     * @param product : product
-     * @param quantity : quantity
-     * @param price : initial price of auction
-     * @param instabuyprice : price to buy direct
+     * @param seller
+     * @param product
+     * @param quantity
+     * @param price
+     * @param instabuyprice
+     * @param status
+     * @param description
+     * @param imageURLs
      */
     public Auction(User seller, Product product, int quantity, double price, double instabuyprice, StatusEnum status, String description, String imageURLs) {
         this.seller = seller;
@@ -71,6 +77,10 @@ public abstract class Auction {
         return null;
     }
 
+    /**
+     *
+     * @param bid
+     */
     public void addBid(Bid bid) {
         if (bid == null) {
             throw new IllegalArgumentException();
@@ -120,6 +130,11 @@ public abstract class Auction {
     public String[] getImageURLs() {
 
         return imageURLs;
+    }
+    
+     public User getSeller() {
+
+        return seller;
     }
 
 }

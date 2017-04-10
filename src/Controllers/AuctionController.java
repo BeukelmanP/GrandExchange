@@ -13,6 +13,8 @@ import Classes.Auctions.StatusEnum;
 import Classes.Bid;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -109,7 +111,7 @@ public class AuctionController implements Initializable {
             }
 
             Pane BidsPane = new Pane();
-            BidsPane.setPrefWidth(85 * auction.getImageURLs().length);
+            BidsPane.setPrefWidth(371);
             BidsPane.setPrefHeight(75 * auction.getBids().size());
             int a = 0;
             for (Bid b : auction.getBids()) {
@@ -122,18 +124,27 @@ public class AuctionController implements Initializable {
                 }
                 Label name = new Label();
                 name.setText(b.getPlacerUsername());
-                name.setFont(new Font("Arial",17));
+                name.setFont(new Font("Arial", 17));
                 Label price = new Label();
                 price.setText("Bought at a price of: €" + b.getAmount());
-                price.setFont(new Font("Arial",14));
+                price.setFont(new Font("Arial", 14));
                 name.relocate(10, 15);
                 price.relocate(10, 45);
-                p.getChildren().addAll(price,name);
+                p.getChildren().addAll(price, name);
                 BidsPane.getChildren().add(p);
                 a++;
             }
             recentPurchasesPane.setContent(BidsPane);
         }
+
+        txtUnitstoBuy.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    txtUnitstoBuy.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
     }
 
     public String setStatus(StatusEnum status) {
