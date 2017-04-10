@@ -197,13 +197,6 @@ public class Connection {
 
     public User getUser(String username, String password) {
         User user = null;
-        int bsn;
-        String alias;
-        String email;
-        boolean verified;
-        float saldo;
-
-
             try {
                 getConnection();
                 pstmt = myConn.prepareStatement(GET_FROM_USER_byLOGININFO);
@@ -218,17 +211,19 @@ public class Connection {
             }
 
             try {
-                bsn = myRs.getInt("bsn");
-                username = myRs.getString("username");
-                password = myRs.getString("password");
-                alias = myRs.getString("alias");
-                email = myRs.getString("email");
-                verified = myRs.getBoolean("verified");
-                saldo = myRs.getFloat("saldo");
+                int bsn = myRs.getInt("bsn");
+                String usernm = myRs.getString("username");
+                String pass = myRs.getString("password");
+                String alias = myRs.getString("alias");
+                String email = myRs.getString("email");
+                boolean verified = myRs.getBoolean("verified");
+                double saldo = myRs.getDouble("saldo");
+                String imgURL = myRs.getString("imageUrl");
 
-                user = new User(bsn, username, password, alias, email, verified, saldo);
-
+                user = new User(bsn, usernm, pass, alias, email, verified, saldo);
+                closeConnection();
                 return user;
+
             } catch (SQLException ex) {
                 Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println(ex.getMessage());

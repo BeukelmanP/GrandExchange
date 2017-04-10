@@ -99,7 +99,7 @@ public class Grand_Exchange {
      * @param password : may not be empty nor null
      */
     public boolean login(String username, String password) {
-        this.loggedInUser = new Database.Connection().getUser(username, password);
+        this.loggedInUser = con.getUser(username, password);
         if (this.loggedInUser != null)
         {
             System.out.println(loggedInUser + " is logged in");
