@@ -43,7 +43,7 @@ public class GrandExchange extends Application {
 //working insert
 //INSERT INTO user(bsn, username, password, alias, email, verified, saldo) VALUES (6, 'user6', 'password', 'xUser6', 'user6@example.com', 0, 600.0);
         // conn.setUser_REGISTER(000007, "user7", "password", "xUser7", "user7@example.com", 700);
-
+/*
         ArrayList<Auction> auctions = new ArrayList<>();
         User user = new User("Kyle", "PassWW", "https://www.aap.nl/uploads/Regina.jpg");
         User user7 = new User("Pieter", "PassWW", "https://www.aap.nl/uploads/Linda_1.jpg");
@@ -75,7 +75,7 @@ public class GrandExchange extends Application {
         auctions.add(auction3);
         auctions.add(auction4);
         auctions.add(auction5);
-
+*/
         /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Auction.fxml"));
         Parent root = loader.load();
         AuctionController controller = loader.<AuctionController>getController();

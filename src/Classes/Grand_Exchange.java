@@ -12,7 +12,7 @@ public class Grand_Exchange {
     ArrayList<Auction> auctions;
     Connection con;
     
-    public User loggedInUser;
+    public User loggedInUser = new User("AAP","test","http://www.jamiemagazine.nl/upload/artikel/jm/banaan-vierkant.jpg");
 
     public Grand_Exchange() {
         products = new ArrayList<>();
@@ -21,7 +21,7 @@ public class Grand_Exchange {
         con = new Connection();
         
         //Gets all existing auctions.
-        auctions = con.getAuctions("*", "''", "''");
+        auctions = con.getAuctions("*", "auction", "''");
         
     }
 

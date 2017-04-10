@@ -65,6 +65,7 @@ public abstract class Auction {
         this.status = status;
         this.description = description;
         this.imageURLs = imageURLs.split(";");
+        bids = new ArrayList<>();
     }
 
     /**

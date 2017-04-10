@@ -163,7 +163,9 @@ public class AuctionController implements Initializable {
 
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + countdownAuction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
-                countdownAuction.addBid(new Bid(GX.loggedInUser, countdownAuction.getCurrentPrice()));
+                for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
+                    countdownAuction.addBid(new Bid(GX.loggedInUser, countdownAuction.getCurrentPrice()));
+                }
                 countdownAuction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));
                 setCountdownBuys(countdownAuction);
                 if (countdownAuction.getProductQuantity() > 1) {
