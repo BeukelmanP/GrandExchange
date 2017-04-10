@@ -21,7 +21,7 @@ public class Grand_Exchange {
         con = new Connection();
         
         //Gets all existing auctions.
-        //auctions = con.getAuctions("*", "''", "''");
+        auctions = con.getAuctions("*", "''", "''");
         
     }
 
