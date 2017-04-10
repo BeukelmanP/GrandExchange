@@ -9,6 +9,7 @@ import Classes.Auctions.Auction;
 import Classes.Auctions.Countdown;
 import Classes.Auctions.StatusEnum;
 import Classes.Bid;
+import Classes.Grand_Exchange;
 import Classes.Product;
 import Classes.User;
 import Controllers.AuctionController;
@@ -35,21 +36,21 @@ public class GrandExchange extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-     //   Connection conn = new Connection();
-      //  conn.getConnection();
+        //   Connection conn = new Connection();
+        //  conn.getConnection();
         //User user1 = conn.getUser(000001);
         //User user2 = conn.getUser("user2", "password");
 //working insert
 //INSERT INTO user(bsn, username, password, alias, email, verified, saldo) VALUES (6, 'user6', 'password', 'xUser6', 'user6@example.com', 0, 600.0);
-       // conn.setUser_REGISTER(000007, "user7", "password", "xUser7", "user7@example.com", 700);
+        // conn.setUser_REGISTER(000007, "user7", "password", "xUser7", "user7@example.com", 700);
 
         ArrayList<Auction> auctions = new ArrayList<>();
-        User user = new User("Kyle", "PassWW");
-        User user7 = new User("Pieter", "PassWW");
-        User user3 = new User("Robin", "PassWW");
-        User user4 = new User("Lesley", "PassWW");
-        User user5 = new User("Jorian", "PassWW");
-        User user6 = new User("Sam", "PassWW");
+        User user = new User("Kyle", "PassWW", "https://www.aap.nl/uploads/Regina.jpg");
+        User user7 = new User("Pieter", "PassWW", "https://www.aap.nl/uploads/Linda_1.jpg");
+        User user3 = new User("Robin", "PassWW", "https://www.hmcdn.eu/ImageRepository/Converted/310/3109b54c-90b4-4463-8435-bd533a69cf38.jpg.ashx?w=300");
+        User user4 = new User("Lesley", "PassWW", "http://media.mkbservicedesk.nl/3b6b898c3880e711b48725d00826606f.jpg");
+        User user5 = new User("Jorian", "PassWW", "https://pbs.twimg.com/profile_images/2284561206/image_400x400.jpg");
+        User user6 = new User("Sam", "PassWW", "http://www.lachkaarten.com/images/kaarten/armeaap.jpg");
         Date date = new Date();
         Product product = new Product("0479588001", "Audi R8 4.2 V8 FSI CARBON", "De Audi R8 Coupé is de benchmark. Met een vermogen van 610 pk, een topsnelheid van 330 km/h en een acceleratie van 0 naar 100 km/h in 3,2 is de topversie - de Audi R8 V10 plus - goed voor adembenemende prestaties. Het scherpe design past daar goed bij. De Audi R8 Coupé is onmiskenbaar een bolide met race-DNA.");
         Auction auction = new Countdown(user, product, 59999, 1, 1, 600, 10, StatusEnum.GoodAsNew, "Deze audi verkeerd in zeer goede staat, geen krasjes,deukjes. De binnenkant verkeerd eveneens in uitstekende staat.", "https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/TtgAAOSwDmBY39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/tUIAAOSwA29Y39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/OmMAAOSww3tY39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/pK0AAOSwCU1Y39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/Mh0AAOSwTM5Y39YB/$_85.JPG");
@@ -59,12 +60,12 @@ public class GrandExchange extends Application {
         Bid bid4 = new Bid(user4, 63000);
         Bid bid5 = new Bid(user5, 64000);
         Bid bid6 = new Bid(user6, 65000);
-        auction.addBid(bid);
-        auction.addBid(bid2);
-        auction.addBid(bid3);
-        auction.addBid(bid4);
-        auction.addBid(bid5);
         auction.addBid(bid6);
+        auction.addBid(bid5);
+        auction.addBid(bid4);
+        auction.addBid(bid3);
+        auction.addBid(bid2);
+        auction.addBid(bid);
         Auction auction2 = new Countdown(user4, product, 59999, 1, 1, 600, 10, StatusEnum.GoodAsNew, "Deze audi verkeerd in zeer goede staat, geen krasjes,deukjes. De binnenkant verkeerd eveneens in uitstekende staat.", "https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/TtgAAOSwDmBY39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/tUIAAOSwA29Y39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/OmMAAOSww3tY39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/pK0AAOSwCU1Y39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/Mh0AAOSwTM5Y39YB/$_85.JPG");
         Auction auction3 = new Countdown(user3, product, 59999, 1, 1, 600, 10, StatusEnum.GoodAsNew, "Deze audi verkeerd in zeer goede staat, geen krasjes,deukjes. De binnenkant verkeerd eveneens in uitstekende staat.", "https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/TtgAAOSwDmBY39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/tUIAAOSwA29Y39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/OmMAAOSww3tY39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/pK0AAOSwCU1Y39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/Mh0AAOSwTM5Y39YB/$_85.JPG");
         Auction auction4 = new Countdown(user5, product, 59999, 1, 1, 600, 10, StatusEnum.GoodAsNew, "Deze audi verkeerd in zeer goede staat, geen krasjes,deukjes. De binnenkant verkeerd eveneens in uitstekende staat.", "https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/TtgAAOSwDmBY39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/tUIAAOSwA29Y39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/OmMAAOSww3tY39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/pK0AAOSwCU1Y39YC/$_85.JPG;https://i.marktplaats.com/00/s/NjgzWDEwMjQ=/z/Mh0AAOSwTM5Y39YB/$_85.JPG");
@@ -74,7 +75,7 @@ public class GrandExchange extends Application {
         auctions.add(auction3);
         auctions.add(auction4);
         auctions.add(auction5);
-        
+
         /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Auction.fxml"));
         Parent root = loader.load();
         AuctionController controller = loader.<AuctionController>getController();
@@ -84,13 +85,12 @@ public class GrandExchange extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("Auction");
         primaryStage.show();
-        */
-        
+         */
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Main.fxml"));
         Parent root = loader.load();
         MainController controller = loader.<MainController>getController();
-        
-        controller.setUp(user,auctions);
+        Grand_Exchange GX = new Grand_Exchange();
+        controller.setUp(GX);
 
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("Main");
