@@ -14,46 +14,55 @@ public abstract class Auction {
     private boolean instabuyable;
     private int productQuantity;
     private Bid currentBid;
-    List<Bid> bids;
-    Product forSale;
-    StatusEnum status;
-    String description;
+    private ArrayList<Bid> bids;
+    private Product forSale;
+    private StatusEnum status;
+    private String description;
+    private String[] imageURLs;
 
     /**
      *
-     * @param seller : seller of product
-     * @param product : product
-     * @param price : initial price of auction
-     * @param quantity : quantity
+     * @param seller
+     * @param product
+     * @param price
+     * @param quantity
+     * @param status
+     * @param description
+     * @param imageURLs
      */
-    public Auction(User seller, Product product, double price, int quantity,StatusEnum status, String description) {
+    public Auction(User seller, Product product, double price, int quantity, StatusEnum status, String description, String imageURLs) {
         this.seller = seller;
         this.forSale = product;
         this.currentPrice = price;
         this.productQuantity = quantity;
         this.instabuyable = false;
-        this.status=status;
-        this.description=description;
+        this.status = status;
+        this.description = description;
+        this.imageURLs = imageURLs.split(";");
+        bids = new ArrayList<>();
     }
 
     /**
      *
-     * @param seller : seller of product
-     * @param product : product
-     * @param quantity : quantity
-     * @param price : initial price of auction
-     * @param instabuyprice : price to buy direct
+     * @param seller
+     * @param product
+     * @param quantity
+     * @param price
+     * @param instabuyprice
+     * @param status
+     * @param description
+     * @param imageURLs
      */
-    public Auction(User seller, Product product, int quantity, double price, double instabuyprice,StatusEnum status, String description) {
+    public Auction(User seller, Product product, int quantity, double price, double instabuyprice, StatusEnum status, String description, String imageURLs) {
         this.seller = seller;
         this.forSale = product;
         this.currentPrice = price;
         this.productQuantity = quantity;
         this.instabuyPrice = instabuyprice;
         this.instabuyable = true;
-        this.status=status;
-        this.description=description;
-
+        this.status = status;
+        this.description = description;
+       this.imageURLs = imageURLs.split(";");
     }
 
     /**
@@ -65,6 +74,10 @@ public abstract class Auction {
         return null;
     }
 
+    /**
+     *
+     * @param bid
+     */
     public void addBid(Bid bid) {
         if (bid == null) {
             throw new IllegalArgumentException();
@@ -78,7 +91,7 @@ public abstract class Auction {
      *
      * @return List<Bid>
      */
-    public List<Bid> getBids() {
+    public ArrayList<Bid> getBids() {
         return bids;
     }
 
@@ -90,4 +103,35 @@ public abstract class Auction {
     public void sendMailRequest(String emailRequester) {
 
     }
+
+    public Product getProduct() {
+        return forSale;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public StatusEnum getStatus() {
+        return status;
+    }
+
+    public Double getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+
+    public String[] getImageURLs() {
+
+        return imageURLs;
+    }
+    
+     public User getSeller() {
+
+        return seller;
+    }
+
 }

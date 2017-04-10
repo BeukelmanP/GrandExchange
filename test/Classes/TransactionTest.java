@@ -7,6 +7,7 @@ package Classes;
 
 import Classes.Auctions.Auction;
 import Classes.Auctions.Standard;
+import Classes.Auctions.StatusEnum;
 import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -29,7 +30,7 @@ public class TransactionTest {
         User testUser = new User("lesley","wachtwoord");
         Product testProduct = new Product("123456789","FIFA 17","beschrijving");
         Date endDate = new Date(2017,3,29);
-        testAuction = new Standard(testUser,testProduct,22.50,1,endDate);
+        testAuction = new Standard(testUser,testProduct,22.50,1,endDate,StatusEnum.GoodAsNew, "Hasn't been used got it double", "");
         testTransaction = new Transaction(testAuction);
     }
     

@@ -5,9 +5,29 @@
  */
 package Controllers;
 
+import Classes.Auctions.Auction;
+import Classes.User;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 /**
  * FXML Controller class
@@ -16,12 +36,84 @@ import javafx.fxml.Initializable;
  */
 public class MainController implements Initializable {
 
+    @FXML
+    private ScrollPane auctionsPane;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+
+    public void setUp(User u, ArrayList<Auction> auctions) {
+        Pane allAuctions = new Pane();
+        allAuctions.setPrefWidth(800);
+        allAuctions.setPrefHeight(150 * auctions.size());
+        int i = 0;
+        for (Auction a : auctions) {
+            Pane Auction = new Pane();
+            Auction.setPrefWidth(800);
+            Auction.setPrefHeight(150);
+            Auction.relocate(0, 150 * i);
+            if ((i % 2) == 0) {
+                Auction.setStyle("-fx-background-color: lightgrey ");
+            }
+            Label productName = new Label();
+            productName.setText(a.getProduct().getName());
+            productName.setFont(new Font("Arial", 25));
+            productName.relocate(150, 25);
+
+            Label price = new Label();
+            price.setText("€" + a.getCurrentPrice());
+            price.setFont(new Font("Arial", 20));
+            price.relocate(600, 120);
+
+            Label seller = new Label();
+            seller.setText(a.getSeller().getUsername());
+            seller.setFont(new Font("Arial", 15));
+            seller.relocate(600, 20);
+
+            TextArea description = new TextArea();
+            description.setPrefSize(200, 60);
+            description.relocate(150, 65);
+            description.setText(a.getDescription());
+            description.wrapTextProperty().setValue(Boolean.TRUE);
+
+            ImageView image = new ImageView(new Image(a.getImageURLs()[0]));
+            image.setFitWidth(100);
+            image.setFitHeight(100);
+            image.relocate(25, 25);
+            image.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                    new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    ImageView i = (ImageView) e.getSource();
+                    try {
+                        showAuction(a);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+
+            Auction.getChildren().addAll(productName, image, price, seller, description);
+            allAuctions.getChildren().add(Auction);
+
+            i++;
+        }
+        auctionsPane.setContent(allAuctions);
+    }
+
+    public void showAuction(Auction a) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Auction.fxml"));
+        Scene newScene;
+        newScene = new Scene(loader.load());
+        AuctionController controller = loader.<AuctionController>getController();
+        controller.setAuction(a);
+        Stage inputStage = new Stage();
+        inputStage.setScene(newScene);
+        inputStage.showAndWait();
+    }
 }
