@@ -13,6 +13,7 @@ import Classes.Grand_Exchange;
 import Classes.Product;
 import Classes.User;
 import Controllers.AuctionController;
+import Controllers.LoginController;
 import Controllers.MainController;
 import java.io.IOException;
 import java.util.Date;

@@ -107,7 +107,8 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
-                    auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice);
+                    date = myRs.getDate("timecreated");
+                    auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
                 }
                 
                 // In case of Direct 
@@ -241,13 +242,14 @@ public class Connection {
 
     public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, double saldo) 
     {
+        getConnection();
+        
         if (myConn != null) 
         {
             try 
             {
                 boolean verified = false;
 
-                getConnection();
                 pstmt = myConn.prepareStatement(SET_USER_NEW);
                 pstmt.setInt(1, bsn);
                 pstmt.setString(2, username);
