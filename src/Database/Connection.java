@@ -50,7 +50,7 @@ public class Connection {
     public void getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            myConn = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/test?zeroDateTimeBehavior=convertToNull", "lesleya213_pts", "wachtwoord123");
+            myConn = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/lesleya213_pts?zeroDateTimeBehavior=convertToNull", "lesleya213_pts", "wachtwoord123");
             System.out.println("started connection to database...");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
@@ -234,12 +234,14 @@ public class Connection {
         return user;
     }
 
-    public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, double saldo) {
-        User user = null;
-        boolean verified = false;
+    public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, double saldo) 
+    {
+        if (myConn != null) 
+        {
+            try 
+            {
+                boolean verified = false;
 
-        if (myConn != null) {
-            try {
                 getConnection();
                 pstmt = myConn.prepareStatement(SET_USER_NEW);
                 pstmt.setInt(1, bsn);
@@ -250,23 +252,28 @@ public class Connection {
                 pstmt.setBoolean(6, verified);
                 pstmt.setDouble(7, saldo);
 
-                pstmt.executeUpdate();
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("failed to register new user");
+                if (pstmt.executeUpdate() > 0)
+                {
+                    System.out.println("succesfully registered new user with username: " + username);
+                    return true;
+                }
+                else
+                {
+                    System.out.println("Couldn't insert new user. Rows are unaffected.");
+                    return true;                
+                }
+            } 
+                catch (SQLException ex) {
+                System.out.println("failed to register new user. SQLException");
                 closeConnection();
                 return false;
             }
-            System.out.println("succesfully registered new user with username: " + username);
-            closeConnection();
-            return true;
-        } else {
-            System.out.println("failed to register new user");
-            closeConnection();
+        }
+        else
+        {
+            System.out.println("failed to register new user. No connection to database.");
             return false;
         }
-        
     }
 
     private Product getProduct(int productID) {
