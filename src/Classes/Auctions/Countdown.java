@@ -25,8 +25,8 @@ public class Countdown extends Auction {
         this.minPrice= minprice;
     }
 
-    public Countdown(int id,User seller, Product product, int quantity , double price, double priceloweringAmount, double priceloweringDelay, double minprice,StatusEnum status, String description,String imageURLs) {
-        super(id, seller, product, price, quantity,status,description,imageURLs);
+    public Countdown(int id,User seller, Product product, int quantity , double price, double priceloweringAmount, double priceloweringDelay, double minprice,StatusEnum status, String description,String imageURLs, double instabuy) {
+        super(id, seller, product, price, quantity,status,description,imageURLs, instabuy);
         this.priceloweringAmount= priceloweringAmount;
         this.priceloweringDelay=priceloweringDelay;
         this.minPrice= minprice;

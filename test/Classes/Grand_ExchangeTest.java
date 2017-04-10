@@ -84,7 +84,7 @@ public class Grand_ExchangeTest {
     @Test
     public void TestAddAuction() {
         p = new Product("1234", "testprodcut", "gewoon een test");
-        a = new Auction(TestUser, p, 15, 2, goed, "test");
+        a = new Auction(TestUser, p, 15, 2, goed, "test",10);
         GE.addAuction(a);
         Collection<Auction> auc;
         auc = GE.getAuctions();
@@ -99,7 +99,7 @@ public class Grand_ExchangeTest {
     public void TestRemoveAuction() {
         Collection<Auction> auc;
         auc = GE.getAuctions();
-        a = new Auction(TestUser, p, 15, 2, goed, "test");
+        a = new Auction(TestUser, p, 15, 2, goed, "test",10);
         GE.addAuction(a);
         assertEquals(auc.size(), 1);
         GE.removeAuction(a);

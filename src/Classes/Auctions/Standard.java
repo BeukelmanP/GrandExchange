@@ -17,8 +17,8 @@ public class Standard extends Auction {
 
     private Date timeEnd;
 
-    public Standard(int id, User seller, Product product, double price, int quantity, Date timeEnd,StatusEnum status, String description,String imageURLs) {
-        super(id, seller, product, price, quantity,status,description,imageURLs);
+    public Standard(int id, User seller, Product product, double price, int quantity, Date timeEnd,StatusEnum status, String description,String imageURLs, double instabuy) {
+        super(id, seller, product, price, quantity,status,description,imageURLs,instabuy);
         this.timeEnd = timeEnd;
 
     }

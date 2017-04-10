@@ -49,7 +49,7 @@ public class StandardTest {
         user = new User("Kyle","PassWW");
         date = new Date();
         product = new Product("1932","Riem","Mooi en handig voor elke maat");
-        auction = new Standard(user,product,15,32,date,StatusEnum.New,"","");
+        auction = new Standard(user,product,15,32,date,StatusEnum.New,"","", 10);
         bid = new Bid(user, 15);
         
         // adds a bid to the auction
