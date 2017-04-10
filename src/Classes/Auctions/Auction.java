@@ -7,7 +7,9 @@ import java.util.*;
 
 public abstract class Auction {
 
+    
     User seller;
+    private int id;
     private Date timeCreated;
     private double currentPrice;
     private double instabuyPrice;
@@ -15,7 +17,7 @@ public abstract class Auction {
     private int productQuantity;
     private Bid currentBid;
     private ArrayList<Bid> bids;
-    private Product forSale;
+    private Product product;
     private StatusEnum status;
     private String description;
     private String[] imageURLs;
@@ -27,9 +29,10 @@ public abstract class Auction {
      * @param price : initial price of auction
      * @param quantity : quantity
      */
-    public Auction(User seller, Product product, double price, int quantity, StatusEnum status, String description, String imageURLs) {
+    public Auction(int id, User seller, Product product, double price, int quantity, StatusEnum status, String description, String imageURLs) {
+        this.id = id;
         this.seller = seller;
-        this.forSale = product;
+        this.product = product;
         this.currentPrice = price;
         this.productQuantity = quantity;
         this.instabuyable = false;
@@ -49,7 +52,7 @@ public abstract class Auction {
      */
     public Auction(User seller, Product product, int quantity, double price, double instabuyprice, StatusEnum status, String description, String imageURLs) {
         this.seller = seller;
-        this.forSale = product;
+        this.product = product;
         this.currentPrice = price;
         this.productQuantity = quantity;
         this.instabuyPrice = instabuyprice;
@@ -95,7 +98,7 @@ public abstract class Auction {
     }
 
     public Product getProduct() {
-        return forSale;
+        return product;
     }
 
     public String getDescription() {

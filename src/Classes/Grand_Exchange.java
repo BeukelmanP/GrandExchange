@@ -7,13 +7,22 @@ import Database.*;
 
 public class Grand_Exchange {
 
-    Collection<Product> products;
-    Collection<User> users;
-    Collection<Auction> auctions;
+    ArrayList<Product> products;
+    ArrayList<User> users;
+    ArrayList<Auction> auctions;
+    Connection con;
     
     public User loggedInUser;
 
     public Grand_Exchange() {
+        products = new ArrayList<>();
+        users = new ArrayList<>();
+        auctions = new ArrayList<>();
+        con = new Connection();
+        
+        //Gets all existing auctions.
+        auctions = con.getAuctions("*", "''", "''");
+        
     }
 
     
