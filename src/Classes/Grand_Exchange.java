@@ -3,13 +3,20 @@ package Classes;
 import Classes.Auctions.Auction;
 import Classes.User;
 import java.util.*;
+import Database.*;
 
 public class Grand_Exchange {
 
     Collection<Product> products;
     Collection<User> users;
     Collection<Auction> auctions;
+    
+    public User loggedInUser;
 
+    public Grand_Exchange() {
+    }
+
+    
     /**
      * adds user tot he collection of users
      *
@@ -82,8 +89,18 @@ public class Grand_Exchange {
      * @param username : may not be empty nor null
      * @param password : may not be empty nor null
      */
-    public void login(String username, String password) {
-
+    public boolean login(String username, String password) {
+        this.loggedInUser = new Database.Connection().getUser(username, password);
+        if (this.loggedInUser != null)
+        {
+            System.out.println(loggedInUser + " is logged in");
+            return true;
+        }
+        else
+        {
+            System.out.println("no user is logged in");
+            return false;
+        }
     }
 
     /**
@@ -91,7 +108,8 @@ public class Grand_Exchange {
      *
      */
     public void logout() {
-
+        this.loggedInUser = null;
+        System.out.println("logged out user");
     }
 
     /**

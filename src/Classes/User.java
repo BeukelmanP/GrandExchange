@@ -3,6 +3,7 @@ package Classes;
 import Classes.Auctions.Auction;
 import java.util.*;
 import Exceptions.*;
+import Database.*;
 
 /**
  * The User class represents a user from our application.
@@ -25,12 +26,37 @@ public class User {
     private List<Queue_Purchase> placedOrders;
     private List<Transaction> transactions;
 
+    /**
+     * constructor for a user that gets initialized by supplying his name and password.
+     * his info is then taken from the server
+     * @param username
+     * @param Password 
+     */
     public User(String username, String Password) {
-        // TODO: get data from database and fill in the properties
         this.username = username;
         this.password = password;
+        
+        //User myUser = Database.Connection().getUser()
     }
 
+    
+    /**
+     * constructor for a user with everything manually inputted.
+     */
+    public User(int BSN, String username, String password, String alias, String email, boolean verified, double saldo) {
+        this.BSN = BSN;
+        this.username = username;
+        this.password = password;
+        this.alias = alias;
+        this.email = email;
+        this.verified = verified;
+        this.saldo = saldo;
+        this.bids = new ArrayList<Bid>();
+        this.placedAuctions = new ArrayList<Auction>();
+        this.placedOrders = new ArrayList<Queue_Purchase>();
+        this.transactions = new ArrayList<Transaction>();
+    }   
+    
     /**
      * Adds feedback to another user.
      *
