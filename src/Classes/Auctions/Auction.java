@@ -10,7 +10,6 @@ public abstract class Auction {
 
     User seller;
     private int id;
-    private Date timeCreated;
     private double currentPrice;
     private double instabuyPrice;
     private boolean instabuyable;
