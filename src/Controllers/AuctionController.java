@@ -14,6 +14,7 @@ import Classes.Bid;
 import Classes.Grand_Exchange;
 import Classes.User;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -116,7 +117,7 @@ public class AuctionController implements Initializable {
         imagesPane.setContent(imagePane);
         if (auction instanceof Countdown) {
             countdownAuction = (Countdown) auction;
-            countdownCurrentPrice.setText("€" + auction.getCurrentPrice());
+            countdownCurrentPrice.setText("€" + countdownAuction.getCurrentPrice());
             if (auction.getProductQuantity() > 1) {
                 countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
             } else if (auction.getProductQuantity() == 1) {
