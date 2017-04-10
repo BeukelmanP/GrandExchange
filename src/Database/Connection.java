@@ -177,8 +177,9 @@ public class Connection {
                 email = myRs.getString("email");
                 verified = myRs.getBoolean("verified");
                 saldo = myRs.getFloat("saldo");
+                String imgURL = myRs.getString("imageUrl");
 
-                user = new User(bsn, username, password, alias, email, verified, saldo);
+                user = new User(bsn, username, password, alias, email, verified, saldo, imgURL);
 
                 return user;
             } catch (SQLException ex) {
@@ -220,7 +221,7 @@ public class Connection {
                 double saldo = myRs.getDouble("saldo");
                 String imgURL = myRs.getString("imageUrl");
 
-                user = new User(bsn, usernm, pass, alias, email, verified, saldo);
+                user = new User(bsn, usernm, pass, alias, email, verified, saldo, imgURL);
                 closeConnection();
                 return user;
 
