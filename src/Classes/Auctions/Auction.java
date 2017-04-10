@@ -7,7 +7,6 @@ import java.util.*;
 
 public abstract class Auction {
 
-    
     User seller;
     private int id;
     private Date timeCreated;
@@ -65,7 +64,7 @@ public abstract class Auction {
         this.instabuyable = true;
         this.status = status;
         this.description = description;
-       this.imageURLs = imageURLs.split(";");
+        this.imageURLs = imageURLs.split(";");
     }
 
     /**
@@ -127,12 +126,16 @@ public abstract class Auction {
         return productQuantity;
     }
 
+    public void setProductQuantity(int buyAmount) {
+        productQuantity = productQuantity - buyAmount;
+    }
+
     public String[] getImageURLs() {
 
         return imageURLs;
     }
-    
-     public User getSeller() {
+
+    public User getSeller() {
 
         return seller;
     }
