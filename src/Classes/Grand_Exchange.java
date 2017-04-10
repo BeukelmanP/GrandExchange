@@ -111,5 +111,10 @@ public class Grand_Exchange {
     public Collection<Product> getProducts() {
         return products;
     }
+    
+    public Collection<Auction> getAuctions()
+    {
+        return auctions;
+    }
 
 }
