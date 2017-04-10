@@ -18,15 +18,15 @@ public class Countdown extends Auction {
     private double priceloweringDelay;
     private double minPrice;
 
-    public Countdown(User seller, Product product, int quantity, int price, double instabuyprice,double priceloweringAmount, double priceloweringDelay, double minprice,StatusEnum status, String description,String imageURLs) {
+    public Countdown(User seller, Product product, int quantity, double price, double instabuyprice,double priceloweringAmount, double priceloweringDelay, double minprice,StatusEnum status, String description,String imageURLs) {
         super(seller, product, quantity, price, instabuyprice,status,description,imageURLs);
         this.priceloweringAmount= priceloweringAmount;
         this.priceloweringDelay=priceloweringDelay;
         this.minPrice= minprice;
     }
 
-    public Countdown(User seller, Product product, int price, int quantity ,double priceloweringAmount, double priceloweringDelay, double minprice,StatusEnum status, String description,String imageURLs) {
-        super(seller, product, price, quantity,status,description,imageURLs);
+    public Countdown(int id,User seller, Product product, int quantity , double price, double priceloweringAmount, double priceloweringDelay, double minprice,StatusEnum status, String description,String imageURLs) {
+        super(id, seller, product, price, quantity,status,description,imageURLs);
         this.priceloweringAmount= priceloweringAmount;
         this.priceloweringDelay=priceloweringDelay;
         this.minPrice= minprice;
