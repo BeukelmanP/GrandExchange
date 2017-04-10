@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author piete
+ * @author pieter
  */
 public class BidTest {
 
@@ -66,7 +66,10 @@ public class BidTest {
     public void testConstructorExeption3() {
         Bid bidding3 = new Bid(bidder, 0);
     }
-
+/** 
+   * The name of the bid player will be retrieved
+   * 
+   */
     @Test
     public void testGetPlacerUsername() {
         System.out.println("Test Method: getPlacerUsername:");
@@ -75,7 +78,10 @@ public class BidTest {
         System.out.println("Actual: " + Actual + " Expected: " + Expected + "\n");
         assertEquals(Actual, Expected);
     }
-
+/** 
+   * Gets the amount of the bid
+   * 
+   */
     @Test
     public void testGetAmount() {
         System.out.println("Test Method: getAmount:");
@@ -85,6 +91,10 @@ public class BidTest {
         assertEquals(Actual, Expected, 0.00005);
     }
 
+    /** 
+   * Gets the auction of the placed bid.
+   * 
+   */
     @Test
     public void testGetAuction() {
         System.out.println("Test Method: getAuction:");
