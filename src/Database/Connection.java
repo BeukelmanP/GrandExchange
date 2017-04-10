@@ -106,7 +106,9 @@ public class Connection {
                     status = StatusEnum.values()[myRs.getInt("status")];
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
-                    auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL);
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    date = myRs.getDate("timecreated");
+                    auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
                 }
                 
                 // In case of Direct 
@@ -119,7 +121,8 @@ public class Connection {
                     status = StatusEnum.values()[myRs.getInt("status")];
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
-                    auction = new Direct(id, user, product, price, quantity, status, description, imageURL);
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    auction = new Direct(id, user, product, price, quantity, status, description, imageURL, instabuyprice);
                 }
                 
                 if (myRs.getString("type").equals("standard")){
@@ -132,7 +135,8 @@ public class Connection {
                     status = StatusEnum.values()[myRs.getInt("status")];
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
-                    auction = new Standard(id,user,product,price,quantity,date,status,description,imageURL);
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    auction = new Standard(id,user,product,price,quantity,date,status,description,imageURL, instabuyprice);
                 }
 
                 auctions.add(auction);
@@ -236,13 +240,16 @@ public class Connection {
         return user;
     }
 
-    public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, double saldo) {
-        User user = null;
-        boolean verified = false;
+    public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, double saldo) 
+    {
+        getConnection();
+        
+        if (myConn != null) 
+        {
+            try 
+            {
+                boolean verified = false;
 
-        if (myConn != null) {
-            try {
-                getConnection();
                 pstmt = myConn.prepareStatement(SET_USER_NEW);
                 pstmt.setInt(1, bsn);
                 pstmt.setString(2, username);
@@ -252,23 +259,28 @@ public class Connection {
                 pstmt.setBoolean(6, verified);
                 pstmt.setDouble(7, saldo);
 
-                pstmt.executeUpdate();
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("failed to register new user");
+                if (pstmt.executeUpdate() > 0)
+                {
+                    System.out.println("succesfully registered new user with username: " + username);
+                    return true;
+                }
+                else
+                {
+                    System.out.println("Couldn't insert new user. Rows are unaffected.");
+                    return true;                
+                }
+            } 
+                catch (SQLException ex) {
+                System.out.println("failed to register new user. SQLException");
                 closeConnection();
                 return false;
             }
-            System.out.println("succesfully registered new user with username: " + username);
-            closeConnection();
-            return true;
-        } else {
-            System.out.println("failed to register new user");
-            closeConnection();
+        }
+        else
+        {
+            System.out.println("failed to register new user. No connection to database.");
             return false;
         }
-        
     }
 
     private Product getProduct(int productID) {

@@ -15,8 +15,8 @@ import java.util.Date;
  */
 public class Direct extends Auction {
 
-    public Direct(int id,User seller, Product product, double price, int quantity,StatusEnum status, String description,String imageURLs) {
-        super(id, seller, product, price, quantity,status,description,imageURLs);
+    public Direct(int id,User seller, Product product, double price, int quantity,StatusEnum status, String description,String imageURLs, double instabuy) {
+        super(id, seller, product, price, quantity,status,description,imageURLs, instabuy);
 
     }
 

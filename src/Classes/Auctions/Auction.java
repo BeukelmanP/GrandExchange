@@ -20,6 +20,7 @@ public abstract class Auction {
     private StatusEnum status;
     private String description;
     private String[] imageURLs;
+    private double instabuy;
 
     /**
      *
@@ -30,8 +31,9 @@ public abstract class Auction {
      * @param status
      * @param description
      * @param imageURLs
+     * @param instabuy
      */
-    public Auction(int id, User seller, Product product, double price, int quantity, StatusEnum status, String description, String imageURLs) {
+    public Auction(int id, User seller, Product product, double price, int quantity, StatusEnum status, String description, String imageURLs, double instabuy) {
         this.id = id;
         this.seller = seller;
         this.product = product;
@@ -43,6 +45,7 @@ public abstract class Auction {
         this.description = description;
         this.imageURLs = imageURLs.split(";");
         bids = new ArrayList<>();
+        this.instabuy = instabuy;
     }
 
     /**
