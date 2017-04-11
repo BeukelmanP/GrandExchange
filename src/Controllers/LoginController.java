@@ -5,6 +5,8 @@
  */
 package Controllers;
 
+import Classes.Grand_Exchange;
+import Classes.User;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,48 +25,49 @@ import javafx.stage.Stage;
  */
 public class LoginController implements Initializable {
 
+    @FXML
+    AnchorPane currentPane;
 
+    Grand_Exchange GX = new Grand_Exchange();
 
-        private Database.Connection conn = new Database.Connection();
-        @FXML
-        AnchorPane currentPane;
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+    }
 
-        /**
-         * Initializes the controller class.
-         */
-        @Override
-        public void initialize(URL url, ResourceBundle rb) {
-            // TODO
-        }
+    @FXML
+    TextField textfield_username;
+    @FXML
+    TextField textfield_password;
 
-        @FXML
-        TextField textfield_username;
-        @FXML
-        TextField textfield_password;
-
-        @FXML
-        public void button_loginUser() throws IOException {
-            if (conn.getUser(textfield_username.getText(), textfield_password.getText()) != null) {
-                Stage newStage = new Stage();
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Welcome.fxml"));
-                Parent root = loader.load();
-                newStage.setScene(new Scene(root));
-                newStage.show();
-
-                Stage currentStage = (Stage) currentPane.getScene().getWindow();
-                currentStage.close();
-            }
-        }
-
-        @FXML
-        public void button_registerUser() throws IOException {
-            Stage newStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Registration.fxml"));
-            Parent root = loader.load();
-            newStage.setScene(new Scene(root));
-            newStage.showAndWait();
-
-            //Stage currentStage = (Stage)currentPane.getScene().getWindow();
-            //currentStage.close();
+    @FXML
+    public void button_loginUser() throws IOException {
+        if (GX.login(textfield_username.getText(), textfield_password.getText())) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Main.fxml"));
+            Scene newScene;
+            newScene = new Scene(loader.load());
+            MainController controller = loader.<MainController>getController();
+            controller.setUp(GX);
+            Stage inputStage = new Stage();
+            inputStage.setScene(newScene);
+            inputStage.showAndWait();
+            Stage stage = (Stage)textfield_username.getScene().getWindow();
+            stage.close();
         }
     }
+
+    @FXML
+    public void button_registerUser() throws IOException {
+        Stage newStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Registration.fxml"));
+        Parent root = loader.load();
+        newStage.setScene(new Scene(root));
+        newStage.showAndWait();
+
+        //Stage currentStage = (Stage)currentPane.getScene().getWindow();
+        //currentStage.close();
+    }
+}
