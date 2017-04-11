@@ -39,7 +39,13 @@ public class MainController implements Initializable {
 
     @FXML
     private ScrollPane auctionsPane;
-
+    @FXML
+    private ImageView loggedInUserImage;
+    @FXML 
+    private ScrollPane scrollPaneBiddedAuctions;
+    @FXML 
+    private ScrollPane scrollPaneWonBought;
+    
     private Grand_Exchange GX;
     /**
      * Initializes the controller class.
@@ -108,6 +114,8 @@ public class MainController implements Initializable {
             i++;
         }
         auctionsPane.setContent(allAuctions);
+        
+        loggedInUserImage.setImage(new Image(GX.loggedInUser.getImageURL()));
     }
 
     public void showAuction(Auction a) throws IOException {

@@ -76,8 +76,8 @@ public class GrandExchange extends Application {
         auctions.add(auction3);
         auctions.add(auction4);
         auctions.add(auction5);
-*/
-        /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Auction.fxml"));
+         */
+ /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Auction.fxml"));
         Parent root = loader.load();
         AuctionController controller = loader.<AuctionController>getController();
         
@@ -91,7 +91,7 @@ public class GrandExchange extends Application {
         Parent root = loader.load();
 
         primaryStage.setScene(new Scene(root));
-        primaryStage.setTitle("Main");
+        //primaryStage.setTitle("Grand Exchange-Login");
         primaryStage.show();
     }
 

@@ -4,10 +4,17 @@
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Controllers.MainController">
   <children>
     <ScrollPane fx:id="auctionsPane" content="$null" hbarPolicy="NEVER" layoutX="500.0" layoutY="0.0" prefHeight="800.0" prefWidth="700.0" />
+    <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" prefWidth="113.0" text="Settings" />
+    <ScrollPane fx:id="scrollPaneBiddedAuctions" content="$null" layoutX="15.0" layoutY="330.0" prefHeight="214.0" prefWidth="474.0" />
+    <Label layoutX="14.0" layoutY="314.0" text="Auctions You've placed a bid on:" />
+    <ScrollPane fx:id="scrollPaneWonBought" content="$null" layoutX="15.0" layoutY="572.0" prefHeight="214.0" prefWidth="474.0" />
+    <Label layoutX="15.0" layoutY="556.0" text="Auctions You've won / Bought:" />
+    <ImageView fx:id="loggedInUserImage" fitHeight="150.0" fitWidth="150.0" layoutX="14.0" layoutY="43.0" pickOnBounds="true" preserveRatio="false" />
   </children>
 </AnchorPane>

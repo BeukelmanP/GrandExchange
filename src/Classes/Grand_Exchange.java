@@ -12,7 +12,7 @@ public class Grand_Exchange {
     ArrayList<Auction> auctions;
     Connection con;
     
-    public User loggedInUser = new User("AAP","test","http://www.jamiemagazine.nl/upload/artikel/jm/banaan-vierkant.jpg");
+    public User loggedInUser;// = new User("AAP","test","http://www.jamiemagazine.nl/upload/artikel/jm/banaan-vierkant.jpg");
 
     public Grand_Exchange() {
         products = new ArrayList<>();

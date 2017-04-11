@@ -28,14 +28,14 @@ public class LoginController implements Initializable {
     @FXML
     AnchorPane currentPane;
 
-    Grand_Exchange GX = new Grand_Exchange();
+    Grand_Exchange GX;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        GX = new Grand_Exchange();
     }
 
     @FXML
@@ -53,8 +53,9 @@ public class LoginController implements Initializable {
             controller.setUp(GX);
             Stage inputStage = new Stage();
             inputStage.setScene(newScene);
+            inputStage.setTitle("Grand Exchange");
             inputStage.showAndWait();
-            Stage stage = (Stage)textfield_username.getScene().getWindow();
+            Stage stage = (Stage) textfield_username.getScene().getWindow();
             stage.close();
         }
     }
@@ -66,7 +67,8 @@ public class LoginController implements Initializable {
         Parent root = loader.load();
         newStage.setScene(new Scene(root));
         newStage.showAndWait();
-
+        Stage stage = (Stage) currentPane.getScene().getWindow();
+        stage.close();
         //Stage currentStage = (Stage)currentPane.getScene().getWindow();
         //currentStage.close();
     }
