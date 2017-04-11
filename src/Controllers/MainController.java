@@ -6,20 +6,25 @@
 package Controllers;
 
 import Classes.Auctions.Auction;
+import Classes.CategoryEnum;
 import Classes.Grand_Exchange;
 import Classes.User;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -41,12 +46,17 @@ public class MainController implements Initializable {
     private ScrollPane auctionsPane;
     @FXML
     private ImageView loggedInUserImage;
-    @FXML 
+    @FXML
+    private ComboBox comboBoxCategory;
+    @FXML
+    private ListView lstCategory;
+    @FXML
     private ScrollPane scrollPaneBiddedAuctions;
-    @FXML 
+    @FXML
     private ScrollPane scrollPaneWonBought;
-    
+
     private Grand_Exchange GX;
+
     /**
      * Initializes the controller class.
      */
@@ -114,8 +124,10 @@ public class MainController implements Initializable {
             i++;
         }
         auctionsPane.setContent(allAuctions);
-        
+
         loggedInUserImage.setImage(new Image(GX.loggedInUser.getImageURL()));
+
+        comboBoxCategory.getItems().setAll(CategoryEnum.values());
     }
 
     public void showAuction(Auction a) throws IOException {
@@ -123,9 +135,28 @@ public class MainController implements Initializable {
         Scene newScene;
         newScene = new Scene(loader.load());
         AuctionController controller = loader.<AuctionController>getController();
-        controller.setUp(a,GX);
+        controller.setUp(a, GX);
         Stage inputStage = new Stage();
         inputStage.setScene(newScene);
         inputStage.showAndWait();
+    }
+
+    public void CategorySelected(Event E) {
+        ComboBox C = (ComboBox) E.getSource();
+        int i = C.getSelectionModel().getSelectedIndex();
+
+        if (!lstCategory.getItems().contains(CategoryEnum.values()[i])) {
+            lstCategory.getItems().add(CategoryEnum.values()[i]);
+
+            Collections.sort(lstCategory.getItems());
+        }
+    }
+
+    public void CategoryDelete(Event E) {
+        ListView lst = (ListView) E.getSource();
+        int selected = lstCategory.getSelectionModel().getSelectedIndex();
+        if (selected >= 0 && selected < lstCategory.getItems().size()) {
+            lstCategory.getItems().remove(selected);
+        }
     }
 }

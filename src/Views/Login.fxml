@@ -10,12 +10,12 @@
 <AnchorPane id="AnchorPane" fx:id="currentPane" prefHeight="375.2405090332031" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Controllers.LoginController">
   <children>
     <TextField fx:id="textfield_username" layoutX="106.0" layoutY="57.0" prefHeight="25.0" prefWidth="149.0" promptText="username" />
-    <TextField fx:id="textfield_password" layoutX="106.0" layoutY="90.0" prefHeight="25.0" prefWidth="149.0" promptText="password" />
     <Label layoutX="36.0" layoutY="61.0" text="Username" />
     <Label layoutX="36.0" layoutY="94.0" text="Password" />
     <Button fx:id="button_login" layoutX="204.0" layoutY="123.0" mnemonicParsing="false" onAction="#button_loginUser" prefHeight="25.0" text="Login" />
     <Button fx:id="button_gotoRegistration" layoutX="157.0" layoutY="21.0" mnemonicParsing="false" onAction="#button_registerUser" prefHeight="25.0" prefWidth="97.0" text="No Account?" />
     <Label fx:id="label_errorMsg" layoutX="36.0" layoutY="127.0" text="&lt;Label for error messages&gt;" textFill="RED" />
     <ImageView fitHeight="208.24050903320312" fitWidth="218.0" focusTraversable="true" layoutX="37.0" layoutY="159.0" pickOnBounds="true" preserveRatio="false" />
+    <PasswordField fx:id="textfield_password" layoutX="106.0" layoutY="91.0" prefWidth="149.0" />
   </children>
 </AnchorPane>
