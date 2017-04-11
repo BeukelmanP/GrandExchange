@@ -126,7 +126,6 @@ public class MainController implements Initializable {
         auctionsPane.setContent(allAuctions);
 
         loggedInUserImage.setImage(new Image(GX.loggedInUser.getImageURL()));
-
         comboBoxCategory.getItems().setAll(CategoryEnum.values());
     }
 
