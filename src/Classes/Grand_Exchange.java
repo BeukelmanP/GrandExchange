@@ -105,8 +105,8 @@ public class Grand_Exchange {
     public boolean login(String username, String password) {
         this.loggedInUser = con.getUser(username, password);
         if (this.loggedInUser != null) {
-            System.out.println(loggedInUser + " is logged in");
-            Load();
+            System.out.println("user with username " + loggedInUser.getUsername() + " is logged in");
+            Load(); 
             return true;
         } else {
             System.out.println("no user is logged in");

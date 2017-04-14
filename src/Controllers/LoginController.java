@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javax.annotation.Resource;
 
 /**
  *
@@ -47,11 +48,13 @@ public class LoginController implements Initializable {
     public void button_loginUser() throws IOException {
         if (GX.login(textfield_username.getText(), textfield_password.getText())) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Main.fxml"));
-            Scene newScene;
-            newScene = new Scene(loader.load());
-            MainController controller = loader.<MainController>getController();
+            Parent root = loader.load();
+            
+            MainController controller = (MainController)loader.getController();
             controller.setUp(GX);
+            
             Stage inputStage = new Stage();
+            Scene newScene = new Scene(root);
             inputStage.setScene(newScene);
             inputStage.setTitle("Grand Exchange");
             inputStage.showAndWait();
