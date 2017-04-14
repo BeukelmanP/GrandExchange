@@ -41,7 +41,7 @@ public class Connection {
     static final String GET_FROM_AUCTIONS_SQL = "SELECT ? FROM auction WHERE ? = ?";
     static final String GET_FROM_AUCTIONS = "SELECT * FROM auction";
     static final String GET_FROM_USER_ID = "SELECT * FROM user WHERE id = ?";
-    static final String GET_FROM_USER_byLOGININFO = "SELECT * FROM user WHERE username = ? and password = ?";
+    static final String GET_FROM_USER_BYLOGININFO = "SELECT * FROM user WHERE BINARY username = ? and BINARY password = ?";
     static final String GET_FROM_PRODUCT = "SELECT * FROM product WHERE id = ?";
     static final String SET_USER_NEW = "INSERT INTO user(bsn, username, password, alias, email, verified, saldo) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -207,7 +207,7 @@ public class Connection {
         User user = null;
             try {
                 getConnection();
-                pstmt = myConn.prepareStatement(GET_FROM_USER_byLOGININFO);
+                pstmt = myConn.prepareStatement(GET_FROM_USER_BYLOGININFO);
                 pstmt.setString(1, username);
                 pstmt.setString(2, password);
 
@@ -293,8 +293,6 @@ public class Connection {
         PreparedStatement preparedStatement = null;
         ResultSet resultset = null;
         
-        
-
         if (myConn != null) {
 
             try {
