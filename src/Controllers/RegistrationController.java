@@ -7,6 +7,7 @@ package Controllers;
 
 import Database.Connection;
 import static java.awt.SystemColor.text;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,9 +16,13 @@ import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -27,7 +32,7 @@ import javafx.scene.layout.AnchorPane;
 public class RegistrationController implements Initializable {
 
     private Database.Connection conn = new Database.Connection();
-    @FXML AnchorPane currentPane;
+    @FXML AnchorPane currentPane; //id you've given to the backgroundpane of the .FXML scene
     
     @FXML TextField textfield_bsn;
     @FXML TextField textfield_username;
@@ -61,5 +66,16 @@ public class RegistrationController implements Initializable {
         {
             System.out.println("BSN field must constain a number");
         }
+    }
+    
+    @FXML public void button_goBack() throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Login.fxml"));
+        Parent root = loader.load();
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(root));
+        newStage.show();
+        Stage stage = (Stage) currentPane.getScene().getWindow();
+        stage.close();
     }
 }
