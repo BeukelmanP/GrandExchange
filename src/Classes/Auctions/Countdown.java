@@ -54,6 +54,14 @@ public class Countdown extends Auction {
         return creationDate;
     }
     
+    public double getPriceLoweringAmount() {
+        return priceloweringAmount;
+    }
+    
+    public double getPriceLoweringDelay() {
+        return priceloweringDelay;
+    }
+    
    
 
 }

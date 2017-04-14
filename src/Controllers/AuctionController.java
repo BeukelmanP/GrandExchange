@@ -17,13 +17,17 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -33,6 +37,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javax.swing.JOptionPane;
 
 /**
@@ -72,12 +77,17 @@ public class AuctionController implements Initializable {
     private ScrollPane imagesPane;
     @FXML
     private ScrollPane recentPurchasesPane;
+    @FXML
+    private ProgressBar minutesBar;
 
     Countdown countdownAuction;
     Direct directAuction;
     Standard standardAuction;
     private User loggedInUser;
     private Grand_Exchange GX;
+
+    Timeline timeline;
+    int timeSeconds;
 
     /**
      * Initializes the controller class.
@@ -123,19 +133,49 @@ public class AuctionController implements Initializable {
             countdownCurrentPrice.setText("€" + countdownAuction.getCurrentPrice());
             long now = System.currentTimeMillis();
             long then = countdownAuction.getCreationDate().getTime();
-            CreateDate.setText(((now - then) / 1000 / 60) + " Minutes");
             long periods_passed = (long) Math.floor(((now - then) / 1000 / 60 / 20));
             long next_period_begin = ((periods_passed + 1) * 1000 * 60 * 20) + countdownAuction.getCreationDate().getTime();
             Timestamp newDate = new Timestamp(next_period_begin);
-             CreateDate.setText(newDate.getMonth()+"/"+newDate.getDay()+"  "+newDate.getHours()+":"+newDate.getMinutes()+":"+newDate.getSeconds());
+            CreateDate.setText(newDate.getMonth() + "/" + newDate.getDay() + "  " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds());
+            timeline = new Timeline();
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            long duration = (next_period_begin - System.currentTimeMillis()) / 1000;
+            timeSeconds = (int) duration;
+            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler() {
 
-            if (auction.getProductQuantity() > 1) {
+                @Override
+                public void handle(Event event) {
+                    timeSeconds--;
+                    int minutesToGo = (int) Math.floor(timeSeconds / 60);
+                    int secondsToGo = timeSeconds - (minutesToGo * 60);
+                    if (secondsToGo < 10) {
+                        CreateDate.setText(minutesToGo + ":0" + secondsToGo);
+                    } else {
+                        CreateDate.setText(minutesToGo + ":" + secondsToGo);
+                    }
+                    if (minutesToGo <= 0) {
+                        minutesBar.setProgress(-1);
+                    } else {
+                        minutesBar.setProgress(timeSeconds / (countdownAuction.getPriceLoweringDelay() * 60));
+                    }
+                    if (timeSeconds <= 0) {
+                        timeline.stop();
+                    }
+                }
+            }));
+            timeline.playFromStart();
+
+            if (auction.getProductQuantity()
+                    > 1) {
                 countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
-            } else if (auction.getProductQuantity() == 1) {
+            } else if (auction.getProductQuantity()
+                    == 1) {
                 countdownAvailableUnits.setText("There is just 1 item left");
-            } else if (auction.getProductQuantity() == 0) {
+            } else if (auction.getProductQuantity()
+                    == 0) {
                 countdownAvailableUnits.setText("There are no items left, you missed it");
             }
+
             setCountdownBuys(auction);
 
         }
