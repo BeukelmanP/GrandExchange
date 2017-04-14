@@ -43,7 +43,7 @@ public class Connection {
     static final String GET_FROM_USER_ID = "SELECT * FROM user WHERE id = ?";
     static final String GET_FROM_USER_BYLOGININFO = "SELECT * FROM user WHERE BINARY username = ? and BINARY password = ?";
     static final String GET_FROM_PRODUCT = "SELECT * FROM product WHERE id = ?";
-    static final String SET_USER_NEW = "INSERT INTO user(bsn, username, password, alias, email, verified, saldo) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    static final String SET_USER_NEW = "INSERT INTO user(bsn, username, password, alias, email, verified, imageURL, saldo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     public Connection() {
 
@@ -241,7 +241,7 @@ public class Connection {
         return user;
     }
 
-    public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, double saldo) 
+    public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, String imageUrl, double saldo) 
     {
         getConnection();
         
@@ -258,7 +258,8 @@ public class Connection {
                 pstmt.setString(4, alias);
                 pstmt.setString(5, email);
                 pstmt.setBoolean(6, verified);
-                pstmt.setDouble(7, saldo);
+                pstmt.setString(7, imageUrl);
+                pstmt.setDouble(8, saldo);
 
                 if (pstmt.executeUpdate() > 0)
                 {
@@ -273,6 +274,7 @@ public class Connection {
             } 
                 catch (SQLException ex) {
                 System.out.println("failed to register new user. SQLException");
+                ex.printStackTrace();
                 closeConnection();
                 return false;
             }

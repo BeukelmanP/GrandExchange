@@ -32,44 +32,41 @@ import javafx.stage.Stage;
 public class RegistrationController implements Initializable {
 
     private Database.Connection conn = new Database.Connection();
-    @FXML AnchorPane currentPane; //id you've given to the backgroundpane of the .FXML scene
-    
-    @FXML TextField textfield_bsn;
-    @FXML TextField textfield_username;
-    @FXML TextField textfield_password;
-    @FXML TextField textfield_email;
-    @FXML TextField textfield_alias;
-    
+    @FXML
+    AnchorPane currentPane; //id you've given to the backgroundpane of the .FXML scene
+
+    @FXML
+    TextField textfield_bsn;
+    @FXML
+    TextField textfield_username;
+    @FXML
+    TextField textfield_password;
+    @FXML
+    TextField textfield_email;
+    @FXML
+    TextField textfield_alias;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
-    @FXML public void button_registerUser()
-    {   
-        try
-        {
+    }
+
+    @FXML
+    public void button_registerUser() throws IOException {
+        try {
             int bsn = Integer.parseInt(textfield_bsn.getText().trim());
-            if (bsn > 999999)
-            {
-                System.out.println("BSN must be exactly 6 characters long");
-            }
-            else
-            {
-                conn.setUser_REGISTER(bsn, textfield_username.getText(), textfield_password.getText(), textfield_alias.getText(), textfield_email.getText(), 0);
-            }
-        }
-        catch(NumberFormatException e)
-        {
+            conn.setUser_REGISTER(bsn, textfield_username.getText(), textfield_password.getText(), textfield_alias.getText(), textfield_email.getText(), null, 0);
+        } catch (NumberFormatException ex) {
             System.out.println("BSN field must constain a number");
+            ex.printStackTrace();
         }
     }
-    
-    @FXML public void button_goBack() throws IOException
-    {
+
+    @FXML
+    public void button_goBack() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Login.fxml"));
         Parent root = loader.load();
         Stage newStage = new Stage();
