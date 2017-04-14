@@ -11,7 +11,7 @@ public class Grand_Exchange {
     ArrayList<User> users;
     ArrayList<Auction> auctions;
     Connection con;
-    
+
     public User loggedInUser;// = new User("AAP","test","http://www.jamiemagazine.nl/upload/artikel/jm/banaan-vierkant.jpg");
 
     public Grand_Exchange() {
@@ -19,13 +19,15 @@ public class Grand_Exchange {
         users = new ArrayList<>();
         auctions = new ArrayList<>();
         con = new Connection();
-        
+
         //Gets all existing auctions.
         auctions = con.getAuctions("*", "auction", "''");
-        
     }
 
-    
+    public void Load() {
+
+    }
+
     /**
      * adds user tot he collection of users
      *
@@ -51,6 +53,7 @@ public class Grand_Exchange {
             users.remove(user);
         }
     }
+
     public void addAuction(Auction auction) {
         if (auction == null) {
             throw new IllegalArgumentException();
@@ -58,6 +61,7 @@ public class Grand_Exchange {
             auctions.add(auction);
         }
     }
+
     public void removeAuction(Auction auction) {
         if (auction == null) {
             throw new IllegalArgumentException();
@@ -100,13 +104,11 @@ public class Grand_Exchange {
      */
     public boolean login(String username, String password) {
         this.loggedInUser = con.getUser(username, password);
-        if (this.loggedInUser != null)
-        {
+        if (this.loggedInUser != null) {
             System.out.println(loggedInUser + " is logged in");
+            Load();
             return true;
-        }
-        else
-        {
+        } else {
             System.out.println("no user is logged in");
             return false;
         }
@@ -138,9 +140,8 @@ public class Grand_Exchange {
     public Collection<Product> getProducts() {
         return products;
     }
-    
-    public Collection<Auction> getAuctions()
-    {
+
+    public Collection<Auction> getAuctions() {
         return auctions;
     }
 

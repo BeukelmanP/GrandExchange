@@ -49,6 +49,7 @@
         </Label>
         <ScrollPane fx:id="recentPurchasesPane" content="$null" hbarPolicy="NEVER" layoutX="15.0" layoutY="294.0" prefHeight="415.0" prefWidth="371.0" />
         <Label font="$x1" layoutX="14.0" layoutY="260.0" text="Recent Purchases:" />
+        <Label fx:id="CreateDate" layoutX="15.0" layoutY="136.0" text="Label" />
       </children>
     </Pane>
     <Pane layoutX="800.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">

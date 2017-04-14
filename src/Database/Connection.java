@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -68,7 +69,7 @@ public class Connection {
         User user;
         Product product;
         int quantity;
-        Date date;
+        Timestamp date;
         double price;
         double instabuyprice;
         double priceloweringAmount;
@@ -107,7 +108,7 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
-                    date = myRs.getDate("timecreated");
+                    date = myRs.getTimestamp("timecreated");
                     auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
                 }
                 
@@ -131,7 +132,7 @@ public class Connection {
                     product = getProduct(myRs.getInt("productID"));
                     price = myRs.getDouble("currentprice");
                     quantity = myRs.getInt("productquantity");
-                    date = myRs.getDate("timeend");
+                    date = myRs.getTimestamp("timeend");
                     status = StatusEnum.values()[myRs.getInt("status")];
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");

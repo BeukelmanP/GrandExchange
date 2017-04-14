@@ -3,6 +3,8 @@ package Classes.Auctions;
 import Classes.Bid;
 import Classes.Product;
 import Classes.User;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -62,14 +64,14 @@ public abstract class Auction {
     public Auction(User seller, Product product, int quantity, double price, double instabuyprice, StatusEnum status, String description, String imageURLs) {
         this.seller = seller;
         this.product = product;
-        this.currentPrice = price;
+        this.currentPrice = round(price,2);
         this.productQuantity = quantity;
         this.instabuyPrice = instabuyprice;
         this.instabuyable = true;
         this.status = status;
         this.description = description;
         this.imageURLs = imageURLs.split(";");
-        bids = new ArrayList<>();  
+        bids = new ArrayList<>();
     }
 
     /**
@@ -91,6 +93,10 @@ public abstract class Auction {
         } else {
             bids.add(bid);
         }
+    }
+
+    public void setCurrentPrice(double newPrice) {
+        currentPrice = round(newPrice,2);
     }
 
     /**
@@ -145,4 +151,13 @@ public abstract class Auction {
         return seller;
     }
 
+    public static double round(double value, int places) {
+        if (places < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 }

@@ -14,6 +14,7 @@ import Classes.Bid;
 import Classes.Grand_Exchange;
 import Classes.User;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
@@ -55,6 +56,8 @@ public class AuctionController implements Initializable {
     private Label countdownCurrentPrice;
     @FXML
     private Label countdownAvailableUnits;
+    @FXML
+    private Label CreateDate;
     @FXML
     private TextArea productDescription;
     @FXML
@@ -118,6 +121,14 @@ public class AuctionController implements Initializable {
         if (auction instanceof Countdown) {
             countdownAuction = (Countdown) auction;
             countdownCurrentPrice.setText("€" + countdownAuction.getCurrentPrice());
+            long now = System.currentTimeMillis();
+            long then = countdownAuction.getCreationDate().getTime();
+            CreateDate.setText(((now - then) / 1000 / 60) + " Minutes");
+            long periods_passed = (long) Math.floor(((now - then) / 1000 / 60 / 20));
+            long next_period_begin = ((periods_passed + 1) * 1000 * 60 * 20) + countdownAuction.getCreationDate().getTime();
+            Timestamp newDate = new Timestamp(next_period_begin);
+             CreateDate.setText(newDate.getMonth()+"/"+newDate.getDay()+"  "+newDate.getHours()+":"+newDate.getMinutes()+":"+newDate.getSeconds());
+
             if (auction.getProductQuantity() > 1) {
                 countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
             } else if (auction.getProductQuantity() == 1) {
