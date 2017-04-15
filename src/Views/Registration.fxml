@@ -16,7 +16,7 @@
       <Label layoutX="20.0" layoutY="146.0" text="email" />
       <Label layoutX="20.0" layoutY="178.0" text="alias" />
       <Button fx:id="button_createAccount" layoutX="83.0" layoutY="209.0" mnemonicParsing="false" onAction="#button_registerUser" text="Create new account" />
-      <Label fx:id="label_errorMsg" layoutX="83.0" layoutY="244.0" text="&lt;Label for error messages&gt;" textFill="RED" />
+      <Label fx:id="label_errorMsg" layoutX="43.0" layoutY="243.0" text="&lt;Label for error messages&gt;" textFill="RED" visible="false" />
       <TextField fx:id="textfield_bsn" layoutX="82.0" layoutY="45.0" />
       <TextField fx:id="textfield_username" layoutX="82.0" layoutY="76.0" />
       <TextField fx:id="textfield_password" layoutX="82.0" layoutY="110.0" />

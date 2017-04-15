@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -43,6 +44,8 @@ public class LoginController implements Initializable {
     TextField textfield_username;
     @FXML
     TextField textfield_password;
+    @FXML
+    Label label_errorMsg;
 
     @FXML
     public void button_loginUser() throws IOException {
@@ -60,6 +63,11 @@ public class LoginController implements Initializable {
             inputStage.show();
             Stage stage = (Stage) textfield_username.getScene().getWindow();
             stage.close();
+        }
+        else
+        {
+            label_errorMsg.setVisible(true);
+            label_errorMsg.setText("Failed to login. \n try a different username/password \n or \n check your internet connection");
         }
     }
 

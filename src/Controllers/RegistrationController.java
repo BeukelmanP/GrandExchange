@@ -5,7 +5,9 @@
  */
 package Controllers;
 
+import Classes.User;
 import Database.Connection;
+import javafx.scene.paint.Color;
 import static java.awt.SystemColor.text;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +24,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 /**
@@ -45,6 +48,10 @@ public class RegistrationController implements Initializable {
     TextField textfield_email;
     @FXML
     TextField textfield_alias;
+    @FXML
+    Label label_errorMsg;
+
+    String errorMsg;
 
     /**
      * Initializes the controller class.
@@ -56,12 +63,57 @@ public class RegistrationController implements Initializable {
 
     @FXML
     public void button_registerUser() throws IOException {
+        this.errorMsg = "Failed to register user:";
+        this.label_errorMsg.setTextFill(Color.RED);
         try {
-            int bsn = Integer.parseInt(textfield_bsn.getText().trim());
-            conn.setUser_REGISTER(bsn, textfield_username.getText(), textfield_password.getText(), textfield_alias.getText(), textfield_email.getText(), null, 0);
+
+            if (textfield_bsn.getText().trim().isEmpty() || textfield_username.getText().trim().isEmpty() || textfield_password.getText().trim().isEmpty() || textfield_email.getText().trim().isEmpty() || textfield_alias.getText().trim().isEmpty()) {
+                System.out.println("-All fields must be filled");
+                this.errorMsg += "\n -All fields must be filled";
+                this.label_errorMsg.setText(errorMsg);
+                this.label_errorMsg.setVisible(true);
+            } else {
+                int bsn = Integer.parseInt(textfield_bsn.getText().trim());
+                String username = textfield_username.getText().trim();
+                String password = textfield_password.getText().trim();
+                String alias = textfield_alias.getText().trim();
+                String email = textfield_email.getText().trim();
+
+                Connection conn = new Connection();
+                boolean duplicateBSN = conn.hasDuplicateBSN(bsn);
+                boolean duplicateUsername = conn.hasDuplicateUsername(username);
+                boolean duplicateAlias = conn.hasDuplicateAlias(alias);
+                boolean duplicateEmail = conn.hasDuplicateEmail(email);
+
+                System.out.println("Starting registration...");
+
+                if (duplicateBSN) {
+                    this.errorMsg += "\n -BSN is already used";
+                }
+                if (duplicateUsername) {
+                    this.errorMsg += "\n -Username is already used";
+                }
+                if (duplicateAlias) {
+                    this.errorMsg += "\n -Alias is already used";
+                }
+                if (duplicateEmail) {
+                    this.errorMsg += "\n -Email is already used";
+                }
+                this.label_errorMsg.setText(errorMsg);
+                this.label_errorMsg.setVisible(true);
+
+                if (!duplicateBSN && !duplicateUsername && !duplicateAlias && !duplicateEmail) {
+                    conn.setUser_REGISTER(bsn, username, password, alias, email, null, 0);
+                    this.label_errorMsg.setText("Succesfully registered new user!");
+                    this.label_errorMsg.setTextFill(Color.GREEN);
+                }
+            }
+
         } catch (NumberFormatException ex) {
-            System.out.println("BSN field must constain a number");
-            ex.printStackTrace();
+            System.out.println("-BSN field must constain a number");
+            this.errorMsg += "\n -BSN field must constain a number";
+            this.label_errorMsg.setText(errorMsg);
+            this.label_errorMsg.setVisible(true);
         }
     }
 

@@ -239,6 +239,133 @@ public class Connection {
         return user;
     }
 
+    public boolean hasDuplicateBSN(int checkValue) {
+        Boolean hasDuplicate = false;
+        int count = 0;
+
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement("SELECT * FROM user WHERE bsn = ?");
+            pstmt.setInt(1, checkValue);
+            myRs = pstmt.executeQuery();
+
+            while (myRs.next()) {
+                ++count;
+            }
+            if (count > 0) {
+                hasDuplicate = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            int bsn = myRs.getInt("bsn");
+            closeConnection();
+            hasDuplicate = true;
+        } catch (SQLException ex) {
+            closeConnection();
+        }
+
+        return hasDuplicate;
+    }
+
+    public boolean hasDuplicateUsername(String checkValue) {
+        Boolean hasDuplicate = false;
+        int count = 0;
+
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement("SELECT * FROM user WHERE username = ?");
+            pstmt.setString(1, checkValue);
+            myRs = pstmt.executeQuery();
+
+            while (myRs.next()) {
+                ++count;
+            }
+            if (count > 0) {
+                hasDuplicate = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            String username = myRs.getString("username");
+            closeConnection();
+            hasDuplicate = true;
+        } catch (SQLException ex) {
+            closeConnection();
+        }
+
+        return hasDuplicate;
+    }
+
+    public boolean hasDuplicateEmail(String checkValue) {
+        Boolean hasDuplicate = false;
+        int count = 0;
+
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement("SELECT * FROM user WHERE email = ?");
+            pstmt.setString(1, checkValue);
+            myRs = pstmt.executeQuery();
+
+            while (myRs.next()) {
+                ++count;
+            }
+            if (count > 0) {
+                hasDuplicate = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            String email = myRs.getString("email");
+            closeConnection();
+            hasDuplicate = true;
+        } catch (SQLException ex) {
+            closeConnection();
+        }
+
+        return hasDuplicate;
+    }
+
+    public boolean hasDuplicateAlias(String checkValue) {
+        Boolean hasDuplicate = false;
+        int count = 0;
+
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement("SELECT * FROM user WHERE alias = ?");
+            pstmt.setString(1, checkValue);
+            myRs = pstmt.executeQuery();
+
+            while (myRs.next()) {
+                ++count;
+            }
+            if (count > 0) {
+                hasDuplicate = true;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            String alias = myRs.getString("alias");
+            closeConnection();
+            hasDuplicate = true;
+        } catch (SQLException ex) {
+            closeConnection();
+        }
+
+        return hasDuplicate;
+    }
+    
     public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, String imageUrl, double saldo) {
         getConnection();
 
