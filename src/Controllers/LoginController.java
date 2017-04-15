@@ -49,15 +49,15 @@ public class LoginController implements Initializable {
         if (GX.login(textfield_username.getText(), textfield_password.getText())) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Main.fxml"));
             Parent root = loader.load();
-            
-            MainController controller = (MainController)loader.getController();
+
+            MainController controller = (MainController) loader.getController();
             controller.setUp(GX);
-            
+
             Stage inputStage = new Stage();
             Scene newScene = new Scene(root);
             inputStage.setScene(newScene);
             inputStage.setTitle("Grand Exchange");
-            inputStage.showAndWait();
+            inputStage.show();
             Stage stage = (Stage) textfield_username.getScene().getWindow();
             stage.close();
         }

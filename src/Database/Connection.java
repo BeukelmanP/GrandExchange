@@ -37,27 +37,28 @@ public class Connection {
     private Auction auction;
     ArrayList<Auction> auctions;
 
-    
     static final String GET_FROM_AUCTIONS_SQL = "SELECT ? FROM auction WHERE ? = ?";
     static final String GET_FROM_AUCTIONS = "SELECT * FROM auction";
     static final String GET_FROM_USER_ID = "SELECT * FROM user WHERE id = ?";
     static final String GET_FROM_USER_BYLOGININFO = "SELECT * FROM user WHERE BINARY username = ? and BINARY password = ?";
     static final String GET_FROM_PRODUCT = "SELECT * FROM product WHERE id = ?";
     static final String SET_USER_NEW = "INSERT INTO user(bsn, username, password, alias, email, verified, imageURL, saldo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    static final String REMOVE_USER_BYBSN = "DELETE FROM user WHERE bsn = ?";
 
     public Connection() {
 
     }
 
-    public void getConnection() {
+    public boolean getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             myConn = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/lesleya213_pts?zeroDateTimeBehavior=convertToNull", "lesleya213_pts", "wachtwoord123");
             System.out.println("started connection to database...");
+            return true;
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Failed to start connection to database...");
-
+            return false;
         }
     }
 
@@ -111,7 +112,7 @@ public class Connection {
                     date = myRs.getTimestamp("timecreated");
                     auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
                 }
-                
+
                 // In case of Direct 
                 if (myRs.getString("type").equals("direct")) {
                     id = myRs.getInt("id");
@@ -125,8 +126,8 @@ public class Connection {
                     instabuyprice = myRs.getDouble("instabuyprice");
                     auction = new Direct(id, user, product, price, quantity, status, description, imageURL, instabuyprice);
                 }
-                
-                if (myRs.getString("type").equals("standard")){
+
+                if (myRs.getString("type").equals("standard")) {
                     id = myRs.getInt("id");
                     user = getUser(myRs.getInt("sellerID"));
                     product = getProduct(myRs.getInt("productID"));
@@ -137,7 +138,7 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
-                    auction = new Standard(id,user,product,price,quantity,date,status,description,imageURL, instabuyprice);
+                    auction = new Standard(id, user, product, price, quantity, date, status, description, imageURL, instabuyprice);
                 }
 
                 auctions.add(auction);
@@ -147,7 +148,7 @@ public class Connection {
             System.out.println(ex.getMessage());
             System.out.println("Je bent fucked.");
         }
-        
+
         closeConnection();
         return auctions;
     }
@@ -161,9 +162,9 @@ public class Connection {
         String email;
         boolean verified;
         float saldo;
-        
-    PreparedStatement preparedStatement = null;
-    ResultSet resultset = null;
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultset = null;
 
         if (myConn != null) {
 
@@ -196,7 +197,6 @@ public class Connection {
             }
 
         } else {
-            System.out.println("failed to get user with id:" + id);
             System.out.println("There is no existing connection");
         }
 
@@ -205,82 +205,110 @@ public class Connection {
 
     public User getUser(String username, String password) {
         User user = null;
-            try {
-                getConnection();
-                pstmt = myConn.prepareStatement(GET_FROM_USER_BYLOGININFO);
-                pstmt.setString(1, username);
-                pstmt.setString(2, password);
 
-                myRs = pstmt.executeQuery();
-                myRs.next();
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement(GET_FROM_USER_BYLOGININFO);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
 
-            try {
-                int bsn = myRs.getInt("bsn");
-                String usernm = myRs.getString("username");
-                String pass = myRs.getString("password");
-                String alias = myRs.getString("alias");
-                String email = myRs.getString("email");
-                boolean verified = myRs.getBoolean("verified");
-                double saldo = myRs.getDouble("saldo");
-                String imgURL = myRs.getString("imageUrl");
+            myRs = pstmt.executeQuery();
+            myRs.next();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-                user = new User(bsn, usernm, pass, alias, email, verified, saldo, imgURL);
-                closeConnection();
-                return user;
+        try {
+            int bsn = myRs.getInt("bsn");
+            String usernm = myRs.getString("username");
+            String pass = myRs.getString("password");
+            String alias = myRs.getString("alias");
+            String email = myRs.getString("email");
+            boolean verified = myRs.getBoolean("verified");
+            double saldo = myRs.getDouble("saldo");
+            String imgURL = myRs.getString("imageUrl");
 
-            } catch (SQLException ex) {
-                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println(ex.getMessage());
-            }
-            
-        closeConnection();
+            user = new User(bsn, usernm, pass, alias, email, verified, saldo, imgURL);
+            closeConnection();
+        } catch (SQLException ex) {
+            System.out.println("User not found");
+            closeConnection();
+        }
+
         return user;
     }
 
-    public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, String imageUrl, double saldo) 
-    {
+    public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, String imageUrl, double saldo) {
         getConnection();
-        
-        if (myConn != null) 
-        {
-            try 
-            {
-                boolean verified = false;
 
-                pstmt = myConn.prepareStatement(SET_USER_NEW);
+        if (myConn != null) {
+            if (getUser(username, password) == null) {
+                try {
+                    getConnection();
+                    boolean verified = false;
+                    pstmt = myConn.prepareStatement(SET_USER_NEW);
+                    pstmt.setInt(1, bsn);
+                    pstmt.setString(2, username);
+                    pstmt.setString(3, password);
+                    pstmt.setString(4, alias);
+                    pstmt.setString(5, email);
+                    pstmt.setBoolean(6, verified);
+                    pstmt.setString(7, imageUrl);
+                    pstmt.setDouble(8, saldo);
+
+                    if (pstmt.executeUpdate() > 0) {
+                        System.out.println("succesfully registered new user with username: " + username);
+                        return true;
+                    } else {
+                        System.out.println("Couldn't insert new user. Rows are unaffected.");
+                        return false;
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("failed to register new user. SQLException");
+                    ex.printStackTrace();
+                    closeConnection();
+                    return false;
+                }
+            } else {
+                System.out.println("Registration of duplicate user isn't allowed.");
+                return false;
+            }
+        } else {
+            System.out.println("failed to register new user. No connection to database.");
+            return false;
+        }
+    }
+
+    /**
+     * removes a user with given bsn note: doesn't delete any objects yet that
+     * the user created (e.g. auctions, bids, feedbacks)
+     *
+     * @param bsn
+     * @return
+     */
+    public Boolean removeUser_BYBSN(int bsn) {
+        getConnection();
+
+        if (myConn != null) {
+            try {
+                pstmt = myConn.prepareStatement(REMOVE_USER_BYBSN);
                 pstmt.setInt(1, bsn);
-                pstmt.setString(2, username);
-                pstmt.setString(3, password);
-                pstmt.setString(4, alias);
-                pstmt.setString(5, email);
-                pstmt.setBoolean(6, verified);
-                pstmt.setString(7, imageUrl);
-                pstmt.setDouble(8, saldo);
 
-                if (pstmt.executeUpdate() > 0)
-                {
-                    System.out.println("succesfully registered new user with username: " + username);
+                if (pstmt.executeUpdate() > 0) {
+                    System.out.println("succesfully deleted user with bsn: " + bsn);
+                    return true;
+                } else {
+                    System.out.println("Couldn't delete user because User with bsn: " + bsn + " doesn't exist in the database");
                     return true;
                 }
-                else
-                {
-                    System.out.println("Couldn't insert new user. Rows are unaffected.");
-                    return true;                
-                }
-            } 
-                catch (SQLException ex) {
+            } catch (SQLException ex) {
                 System.out.println("failed to register new user. SQLException");
                 ex.printStackTrace();
                 closeConnection();
                 return false;
             }
-        }
-        else
-        {
+        } else {
             System.out.println("failed to register new user. No connection to database.");
             return false;
         }
@@ -294,7 +322,7 @@ public class Connection {
         String gtin;
         PreparedStatement preparedStatement = null;
         ResultSet resultset = null;
-        
+
         if (myConn != null) {
 
             try {
@@ -312,7 +340,7 @@ public class Connection {
                 description = resultset.getString("description");
                 gtin = resultset.getString("gtin");
 
-                product = new Product(gtin,name, description);
+                product = new Product(gtin, name, description);
 
                 return product;
             } catch (SQLException ex) {
@@ -326,16 +354,17 @@ public class Connection {
         return product;
     }
 
-    private void closeConnection() {
+    private boolean closeConnection() {
         try {
             myRs.close();
             myConn.close();
             pstmt.close();
             System.out.println("Closing connection to database...");
+            return true;
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
-;
 }

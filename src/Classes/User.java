@@ -31,9 +31,33 @@ public class User {
      * constructor for a user that gets initialized by supplying his name and password.
      * his info is then taken from the server
      * @param username
-     * @param Password 
+     * @param password
      */
-    public User(String username, String Password, String imageURL) {
+    public User(String username, String password) {
+        Connection conn = new Connection();
+        User myUser = conn.getUser(username, password);
+        
+        this.BSN = myUser.BSN;
+        this.username = myUser.username;
+        this.password = myUser.password;
+        this.alias = myUser.alias;
+        this.email = myUser.email;
+        this.verified = myUser.verified;
+        this.saldo = myUser.saldo;
+        this.imageURL = myUser.imageURL;
+        this.bids = myUser.bids;
+        this.placedAuctions = myUser.placedAuctions;
+        this.placedOrders = myUser.placedOrders;
+        this.transactions = myUser.transactions;
+    }
+    
+    /**
+     * constructor for a user that gets initialized by supplying his name and password.
+     * @param username
+     * @param password
+     * @param imageURL
+     */
+    public User(String username, String password, String imageURL) {
         this.username = username;
         this.password = password;
         this.imageURL = imageURL;

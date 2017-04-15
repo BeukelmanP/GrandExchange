@@ -132,7 +132,6 @@ public class MainController implements Initializable {
         catch(NullPointerException ex)
         {
             System.out.println("LoggedInUser doesn't have an imageURL yet");
-            ex.printStackTrace();
         }
         comboBoxCategory.getItems().setAll(CategoryEnum.values());
     }
