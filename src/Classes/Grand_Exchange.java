@@ -22,6 +22,7 @@ public class Grand_Exchange implements Observer {
 
         //Gets all existing auctions.
         auctions = con.getAuctions("*", "auction", "''");
+        products = con.getProducts();
 
         DatabaseListener dbListener = new DatabaseListener();
         dbListener.addObserver(this);
@@ -139,8 +140,28 @@ public class Grand_Exchange implements Observer {
      *
      * @return List<Product>
      */
-    public Collection<Product> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
+    }
+    
+    public ArrayList<Product> getProducts(String name, CategoryEnum category) {
+        ArrayList<Product> tempList = new ArrayList<>();
+        String productName = name.toLowerCase();
+        for(Product p : products){
+            if(productName.equals("")){
+                if (p.getCategory().equals(category)){
+                    tempList.add(p);
+                }
+            }            
+            else if(p.getName().contains(productName) && p.getCategory().equals(category)){
+                tempList.add(p);
+            }
+            else if (p.getName().contains(productName)){
+                tempList.add(p);
+            }
+        }
+        
+        return tempList;
     }
 
     public Collection<Auction> getAuctions() {
