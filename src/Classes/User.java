@@ -14,6 +14,7 @@ import Database.*;
 public class User {
 
     Grand_Exchange manages;
+    private int userID;
     private int BSN;
     private String username;
     private String password;
@@ -37,6 +38,7 @@ public class User {
         Connection conn = new Connection();
         User myUser = conn.getUser(username, password);
         
+        this.userID = myUser.userID;
         this.BSN = myUser.BSN;
         this.username = myUser.username;
         this.password = myUser.password;
@@ -69,7 +71,7 @@ public class User {
     /**
      * constructor for a user with everything manually inputted.
      */
-    public User(int BSN, String username, String password, String alias, String email, boolean verified, double saldo, String imageURL) {
+    public User(int userID, int BSN, String username, String password, String alias, String email, boolean verified, double saldo, String imageURL) {
         this.BSN = BSN;
         this.username = username;
         this.password = password;
@@ -83,6 +85,11 @@ public class User {
         this.placedOrders = new ArrayList<Queue_Purchase>();
         this.transactions = new ArrayList<Transaction>();
     }   
+    
+    public int getUserID() {
+        return userID;
+    }
+
     
     /**
      * Adds feedback to another user.

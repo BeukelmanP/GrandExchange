@@ -4,6 +4,7 @@ import Classes.Auctions.Auction;
 import Classes.User;
 import java.util.*;
 import Database.*;
+import java.sql.SQLException;
 
 public class Grand_Exchange implements Observer {
 
@@ -13,6 +14,10 @@ public class Grand_Exchange implements Observer {
     Connection con;
 
     public User loggedInUser;// = new User("AAP","test","http://www.jamiemagazine.nl/upload/artikel/jm/banaan-vierkant.jpg");
+
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
 
     public Grand_Exchange() {
         products = new ArrayList<>();
@@ -145,6 +150,19 @@ public class Grand_Exchange implements Observer {
 
     public Collection<Auction> getAuctions() {
         return auctions;
+    }
+    
+    public boolean InstabuyItem(int amount, int auctionID, int buyerID) throws SQLException {
+        try {
+            System.out.println("amount :" + amount + " AID: " + auctionID + "BID: " + buyerID);
+            con.InstabuyItem(amount, auctionID, 1);
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+        
+        
+        
     }
 
     public void updateAuctionsFromDB(ArrayList<Integer> newAuctionIDs) {
