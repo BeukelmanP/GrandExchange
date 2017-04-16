@@ -99,21 +99,25 @@ public class DatabaseListener extends Observable {
         @Override
         public void run() {
             while (true) {
+                boolean execute = true;
                 try {
 
-                    boolean execute = myStmt.execute();
+                    if(execute == myStmt.execute()){
+                        System.out.println("resultSet Found !");
+                    }
 
                     if (myStmt.getInt(1) >= 1) {
                         updateList();
                         setChanged();
                         notifyObservers(getUpdateList());
                     } else {
+                        System.out.println(myStmt.getInt(1));
                         System.out.println("No new auctions !");
                     }
 
                     Thread.sleep(5000);
                 } catch (Exception exc) {
-                    exc.printStackTrace();
+                    System.out.println(exc.getMessage());
                     close(conn, myStmt);
                     System.out.println("Listener Thread interrupted.");
                 }
