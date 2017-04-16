@@ -189,6 +189,7 @@ public class AuctionController implements Initializable {
 
          if (auction instanceof Standard) {
             this.type = "standard";
+            this.minutesBar.setVisible(false);
             auctiontype.setText("Standard Auction");
             standardAuction = (Standard) auction;
             countdownCurrentPrice.setText("€" + standardAuction.getCurrentPrice());
