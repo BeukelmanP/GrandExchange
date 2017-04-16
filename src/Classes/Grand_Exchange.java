@@ -22,7 +22,6 @@ public class Grand_Exchange implements Observer {
 
         //Gets all existing auctions.
         auctions = con.getAuctions("*", "auction", "''");
-        products = con.get
 
         DatabaseListener dbListener = new DatabaseListener();
         dbListener.addObserver(this);
