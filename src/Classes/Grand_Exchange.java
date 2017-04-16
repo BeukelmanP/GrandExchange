@@ -22,9 +22,9 @@ public class Grand_Exchange implements Observer {
 
         //Gets all existing auctions.
         auctions = con.getAuctions("*", "auction", "''");
-        
-        //DatabaseListener dbListener = new DatabaseListener();
-        //dbListener.addObserver(this);
+
+        DatabaseListener dbListener = new DatabaseListener();
+        dbListener.addObserver(this);
     }
 
     public void Load() {
@@ -146,31 +146,40 @@ public class Grand_Exchange implements Observer {
     public Collection<Auction> getAuctions() {
         return auctions;
     }
-    
+
     public void updateAuctionsFromDB(ArrayList<Integer> newAuctionIDs) {
         Auction tempAuction;
-        for (int i : newAuctionIDs)
-        {   
-            tempAuction = con.getAuction(i);
-            for(Auction A : auctions){
-                if(A.getId() == tempAuction.getId()){
-                    auctions.set(auctions.indexOf(A), tempAuction);
-                    System.out.println(A.getProduct().getName() + "Replaced in list.");
+        for (int i : newAuctionIDs) {
+                tempAuction = con.getAuction(i);
+                
+                if (tempAuction == null) {
+                    System.out.println("Auction is null");
+                    }
+
+                for (Auction A : auctions) {
+                    if (A.getId() == tempAuction.getId()) {
+                        auctions.set(auctions.indexOf(A), tempAuction);
+                        System.out.println(tempAuction.getProduct().getName() + "Replaced in list.");
+                    }
+                }
+                if(!auctions.contains(tempAuction) && tempAuction != null){
+                    auctions.add(tempAuction);
+                    System.out.println(tempAuction.getProduct().getName() + "New Auction added to list.");
                 }
             }
         }
-    }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        ArrayList<Integer> tempList = (ArrayList<Integer>) arg;
-        System.out.println("New auctions found.");
-        updateAuctionsFromDB(tempList);
-        
-    }
+        @Override
+        public void update (Observable o, Object arg) {
+            ArrayList<Integer> tempList = (ArrayList<Integer>) arg;
+            System.out.println("New auctions found.");
+            updateAuctionsFromDB(tempList);
+        }
 
     
-    public void updateAuction(Auction auction){
+    
+
+    public void updateAuction(Auction auction) {
         con.updateAuction(auction);
     }
 }
