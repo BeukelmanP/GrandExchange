@@ -64,6 +64,8 @@ public class AuctionController implements Initializable {
     @FXML
     private Label countdownAvailableUnits;
     @FXML
+    private Label instabuyTextid;
+    @FXML
     private Label CreateDate;
     @FXML
     private TextArea productDescription;
@@ -81,6 +83,13 @@ public class AuctionController implements Initializable {
     private ScrollPane recentPurchasesPane;
     @FXML
     private ProgressBar minutesBar;
+    @FXML
+    private Button countdownBidBuyBtn;
+    @FXML
+    private TextField txtUnitstoBuyBid;
+    @FXML
+    private TextField txtBidPrice;
+          
 
     Countdown countdownAuction;
     Direct directAuction;
@@ -131,6 +140,19 @@ public class AuctionController implements Initializable {
         sellerImage.setImage(new Image(auction.getSeller().getImageURL()));
         sellerName.setText(auction.getSeller().getUsername());
         imagesPane.setContent(imagePane);
+        
+        
+        // Checks if auction has instabuy.
+        if(auction.isInstabuyable() == true) {
+            countdownBuyBtn.setDisable(false);
+            txtUnitstoBuy.setDisable(false);
+        }
+        else
+        {
+            countdownBuyBtn.setDisable(true);
+            txtUnitstoBuy.setDisable(true);
+        }
+        
         
         //Checks if auction is of instance Countdown
         if (auction instanceof Countdown) {
@@ -285,6 +307,8 @@ public class AuctionController implements Initializable {
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + auction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
                 for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
+                    // ZET HET IN DE DATABASE
+                    
                     auction.addBid(new Bid(GX.loggedInUser, auction.getCurrentPrice()));
                 }
                 auction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));

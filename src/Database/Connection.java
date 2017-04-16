@@ -36,6 +36,7 @@ public class Connection {
     private ResultSet myRs = null;
     private Auction auction;
     ArrayList<Auction> auctions;
+    ArrayList<Product> products;
 
     static final String GET_FROM_AUCTIONS_SQL = "SELECT ? FROM auction WHERE ? = ?";
     static final String GET_FROM_AUCTIONS = "SELECT * FROM auction";
@@ -45,6 +46,7 @@ public class Connection {
     static final String SET_USER_NEW = "INSERT INTO user(bsn, username, password, alias, email, verified, imageURL, saldo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     static final String REMOVE_USER_BYBSN = "DELETE FROM user WHERE bsn = ?";
     static final String GET_AUCTION_BY_ID = "SELECT * FROM auction WHERE id = ?";
+    static final String GET_FROM_PRODUCTS = "SELECT * FROM product";
     public Connection() {
 
     }
@@ -239,6 +241,45 @@ public class Connection {
         closeConnection();
         return auctions;
     }
+    
+    public ArrayList<Product> getProducts() {
+
+        this.products = new ArrayList<>();
+        Product product;
+        int id;
+        String name;
+        String description;
+        String gtin;
+
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement(GET_FROM_PRODUCTS);
+
+            myRs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            while (myRs.next()) {
+                    id = myRs.getInt("id");
+                    name = myRs.getString("name");
+                    description = myRs.getString("description");
+                    gtin = myRs.getString("gtin");
+                    product = new Product(gtin, name, description);
+                
+                products.add(product);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Product ding connection ophalen failed ofzo.");
+        }
+
+        closeConnection();
+        return products;
+    }
+
 
     public User getUser(int id) {
         User user = null;
