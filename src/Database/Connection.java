@@ -356,7 +356,7 @@ public class Connection {
             boolean verified = myRs.getBoolean("verified");
             double saldo = myRs.getDouble("saldo");
             String imgURL = myRs.getString("imageUrl");
-
+            
             user = new User(bsn, usernm, pass, alias, email, verified, saldo, imgURL);
             closeConnection();
         } catch (SQLException ex) {
@@ -366,6 +366,7 @@ public class Connection {
 
         return user;
     }
+    
 
     public boolean hasDuplicateBSN(int checkValue) {
         Boolean hasDuplicate = false;
