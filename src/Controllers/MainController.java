@@ -21,6 +21,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -164,5 +165,18 @@ public class MainController implements Initializable {
         if (selected >= 0 && selected < lstCategory.getItems().size()) {
             lstCategory.getItems().remove(selected);
         }
+    }
+    
+    @FXML
+    public void button_Logout() throws IOException {
+        GX.logout();
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Login.fxml"));
+        Parent root = loader.load();
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(root));
+        newStage.show();
+        Stage stage = (Stage) auctionsPane.getScene().getWindow();
+        stage.close();
     }
 }
