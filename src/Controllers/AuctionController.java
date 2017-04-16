@@ -128,6 +128,8 @@ public class AuctionController implements Initializable {
         sellerImage.setImage(new Image(auction.getSeller().getImageURL()));
         sellerName.setText(auction.getSeller().getUsername());
         imagesPane.setContent(imagePane);
+        
+        //Checks if auction is of instance Countdown
         if (auction instanceof Countdown) {
             countdownAuction = (Countdown) auction;
             countdownCurrentPrice.setText("€" + countdownAuction.getCurrentPrice());

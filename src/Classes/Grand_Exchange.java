@@ -5,7 +5,7 @@ import Classes.User;
 import java.util.*;
 import Database.*;
 
-public class Grand_Exchange {
+public class Grand_Exchange implements Observer {
 
     ArrayList<Product> products;
     ArrayList<User> users;
@@ -22,6 +22,9 @@ public class Grand_Exchange {
 
         //Gets all existing auctions.
         auctions = con.getAuctions("*", "auction", "''");
+        
+        DatabaseListener dbListener = new DatabaseListener();
+        dbListener.addObserver(this);
     }
 
     public void Load() {
@@ -142,6 +145,11 @@ public class Grand_Exchange {
 
     public Collection<Auction> getAuctions() {
         return auctions;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        //TODO, receives list with auctions that have to be updated and retrieved from database.
     }
 
 }

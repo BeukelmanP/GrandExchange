@@ -11,8 +11,7 @@ public class Bid {
     private Auction auction;
 
     /**
-     *
-     * @param auction : may not be null
+     * 
      * @param placer : may not be null
      * @param amount : must be higher than 0
      */
