@@ -14,6 +14,7 @@ import Classes.Bid;
 import Classes.Grand_Exchange;
 import Classes.User;
 import java.net.URL;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
@@ -107,11 +108,13 @@ public class AuctionController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        
     }
 
     public void setUp(Auction auction, Grand_Exchange GX) {
         this.GX = GX;
+        this.GX.login("BeukelmanP", "TEST123");
+        loggedInUser = GX.getLoggedInUser();
         productTitle.setText(auction.getProduct().getName());
         productDescription.setText(auction.getProduct().getDescription());
         auctionDescription.setText(auction.getDescription());
@@ -150,8 +153,8 @@ public class AuctionController implements Initializable {
         }
         else
         {
-            countdownBuyBtn.setDisable(true);
-            txtUnitstoBuy.setDisable(true);
+            //countdownBuyBtn.setDisable(true);
+            //txtUnitstoBuy.setDisable(true);
         }
         
         
@@ -292,7 +295,7 @@ public class AuctionController implements Initializable {
         }
     }
 
-    public void countdownBuyButtonClick() {
+    public void countdownBuyButtonClick() throws SQLException {
         Auction auction = null;
         if(this.type == "countdown"){
             auction = this.countdownAuction;
@@ -308,8 +311,7 @@ public class AuctionController implements Initializable {
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + auction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
                 for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
-                    // ZET HET IN DE DATABASE
-                    
+                    GX.InstabuyItem(Integer.valueOf(txtUnitstoBuy.getText()), auction.getId(), loggedInUser.getUserID());
                     auction.addBid(new Bid(GX.loggedInUser, auction.getCurrentPrice()));
                 }
                 auction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));

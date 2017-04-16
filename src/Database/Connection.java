@@ -12,6 +12,7 @@ import Classes.Auctions.Standard;
 import Classes.Auctions.StatusEnum;
 import Classes.Product;
 import Classes.User;
+import java.sql.CallableStatement;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -283,6 +284,7 @@ public class Connection {
 
     public User getUser(int id) {
         User user = null;
+        int userID;
         int bsn;
         String username;
         String password;
@@ -307,6 +309,7 @@ public class Connection {
             }
 
             try {
+                userID = resultset.getInt("id");
                 bsn = resultset.getInt("bsn");
                 username = resultset.getString("username");
                 password = resultset.getString("password");
@@ -316,7 +319,7 @@ public class Connection {
                 saldo = resultset.getFloat("saldo");
                 String imgURL = resultset.getString("imageUrl");
 
-                user = new User(bsn, username, password, alias, email, verified, saldo, imgURL);
+                user = new User(userID,bsn, username, password, alias, email, verified, saldo, imgURL);
 
                 return user;
             } catch (SQLException ex) {
@@ -348,6 +351,7 @@ public class Connection {
         }
 
         try {
+            int userID = myRs.getInt("id");
             int bsn = myRs.getInt("bsn");
             String usernm = myRs.getString("username");
             String pass = myRs.getString("password");
@@ -356,8 +360,8 @@ public class Connection {
             boolean verified = myRs.getBoolean("verified");
             double saldo = myRs.getDouble("saldo");
             String imgURL = myRs.getString("imageUrl");
-            
-            user = new User(bsn, usernm, pass, alias, email, verified, saldo, imgURL);
+
+            user = new User(userID, bsn, usernm, pass, alias, email, verified, saldo, imgURL);
             closeConnection();
         } catch (SQLException ex) {
             System.out.println("User not found");
@@ -493,6 +497,55 @@ public class Connection {
         }
 
         return hasDuplicate;
+    }
+    
+    /**
+     * Instabuy on a auction. This will make a new transaction and lowers the amount of the items
+     * in the auction.
+     * @param amount The amount of items the User want to buy.
+     * @param auctionID The ID of the auction.
+     * @param userID The ID of the sser. 
+     * @return true if succesfully added to the database, false if it failed to add info to the database.
+     * @throws SQLException if statement failed to add info to the database.
+     */
+    public Boolean InstabuyItem(int amount, int auctionID, int userID) throws SQLException {
+        getConnection();
+        
+        
+        User user = getUser(userID);
+        Auction auction = getAuction(auctionID);
+        
+        // Checks if User exsists
+        if(user != null) {
+            // Checks if Saldo is high enough
+            if(user.getSaldo() >= auction.getCurrentPrice()) {
+                try {
+                    myConn = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/lesleya213_pts?noAccessToProcedureBodies=true", "lesleya213_pts", "wachtwoord123");
+                    CallableStatement myStmt = myConn.prepareCall("{call instabuy(?,?,?)}");
+                    myStmt.setInt(1, amount);
+                    myStmt.setInt(2, auctionID);
+                    myStmt.setInt(3, userID);
+                    
+                    myStmt.execute();
+                    System.out.println("GELUKT!!");
+                    closeConnection();
+                    return true;
+                } catch(SQLException ex) {
+                    closeConnection();
+                    
+                     System.out.println(ex);
+                    return false;
+                }
+            } else {
+                closeConnection();
+                 System.out.println("Te weinig Saldo!");
+                return false;
+            }
+        } else {
+             System.out.println("User is Null");
+            closeConnection();
+            return false;
+        }
     }
     
     public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, String imageUrl, double saldo) {

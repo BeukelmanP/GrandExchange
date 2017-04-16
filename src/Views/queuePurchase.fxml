@@ -17,7 +17,7 @@
          </font>
       </Label>
       <ScrollPane fx:id="scrollPaneBiddedAuctions" content="$null" layoutX="4.0" layoutY="466.0" prefHeight="214.0" prefWidth="254.0" />
-      <ComboBox fx:id="comboBoxCategory" layoutX="85.0" layoutY="45.0" onAction="#CategorySelected" prefHeight="25.0" prefWidth="156.0">
+      <ComboBox fx:id="comboBoxCategory" layoutX="85.0" layoutY="45.0" onAction="#handleComboBoxAction" prefHeight="25.0" prefWidth="156.0">
          <items>
             <FXCollections fx:factory="observableArrayList">
                <String fx:value="Item 1" />
@@ -36,7 +36,7 @@
             <Font size="15.0" fx:id="x111" />
          </font>
       </Label>
-      <TextField layoutX="85.0" layoutY="12.0" prefHeight="25.0" prefWidth="156.0" />
+      <TextField fx:id="textFieldProductName" layoutX="85.0" layoutY="12.0" prefHeight="25.0" prefWidth="156.0" />
       <ScrollPane fx:id="productsPane" content="$null" hbarPolicy="NEVER" layoutX="301.0" prefHeight="680.0" prefWidth="426.0" />
       <Button layoutX="15.0" layoutY="404.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="147.0" text="Create queue Purchase" />
       <TextField layoutX="87.0" layoutY="271.0" prefHeight="25.0" prefWidth="147.0" />
@@ -68,5 +68,6 @@
          </font>
       </Label>
       <ListView fx:id="lstCategory" layoutX="16.0" layoutY="81.0" onMouseClicked="#CategoryDelete" prefHeight="142.0" prefWidth="228.0" />
+      <Button layoutX="18.0" layoutY="235.0" mnemonicParsing="false" onAction="#searchProduct" prefHeight="25.0" prefWidth="147.0" text="Search Product" />
    </children>
 </AnchorPane>

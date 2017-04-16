@@ -50,7 +50,7 @@ public class MainController implements Initializable {
     @FXML
     private ImageView loggedInUserImage;
     @FXML
-    private ComboBox comboBoxCategory;
+    private ComboBox<CategoryEnum> comboBoxCategory;
     @FXML
     private ListView lstCategory;
     @FXML

@@ -10,10 +10,12 @@ import Classes.Grand_Exchange;
 import Classes.Product;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -23,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -44,8 +47,17 @@ public class QueuePurchaseController implements Initializable {
     
     @FXML
     private ScrollPane productsPane;
+    
+    @FXML
+    private TextField textFieldProductName;
+    
+    @FXML
+    private ComboBox<CategoryEnum> comboBoxCategory;
+    
 
     private Grand_Exchange GX;
+    private ArrayList<Product> products;
+    private CategoryEnum selectedCategory;
 
     /**
      * Initializes the controller class.
@@ -60,12 +72,17 @@ public class QueuePurchaseController implements Initializable {
 
     public void setUp(Grand_Exchange GX) {
         this.GX = GX;
-        
+        comboBoxCategory.getItems().setAll(CategoryEnum.values());
+    }
+    
+    public void searchProduct(){
+        this.products = GX.getProducts(textFieldProductName.getText(),this.selectedCategory);
         Pane allProducts = new Pane();
         allProducts.setPrefWidth(800);
-        allProducts.setPrefHeight(150 * GX.getProducts().size());
+        System.out.println(textFieldProductName.getText());
+        allProducts.setPrefHeight(150 * this.products.size());
         int i = 0;
-        for (Product p : GX.getProducts()) {
+        for (Product p : this.products) {
             Pane Product = new Pane();
             Product.setPrefWidth(800);
             Product.setPrefHeight(150);
@@ -111,6 +128,7 @@ public class QueuePurchaseController implements Initializable {
         int selected = lstCategory.getSelectionModel().getSelectedIndex();
         if (selected >= 0 && selected < lstCategory.getItems().size()) {
             lstCategory.getItems().remove(selected);
+            lstCategory.setUserData(lst);
         }
     }
 
@@ -124,5 +142,13 @@ public class QueuePurchaseController implements Initializable {
             Collections.sort(lstCategory.getItems());
         }
     }
+    
+    public void createQueuePurchase(){
+        
+    }
+    
+    public void handleComboBoxAction(ActionEvent event) {
+        selectedCategory = comboBoxCategory.getSelectionModel().getSelectedItem();
+ }
 
 }
