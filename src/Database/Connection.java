@@ -44,7 +44,7 @@ public class Connection {
     static final String GET_FROM_PRODUCT = "SELECT * FROM product WHERE id = ?";
     static final String SET_USER_NEW = "INSERT INTO user(bsn, username, password, alias, email, verified, imageURL, saldo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     static final String REMOVE_USER_BYBSN = "DELETE FROM user WHERE bsn = ?";
-
+    static final String GET_AUCTION_BY_ID = "SELECT * FROM auction WHERE id = ?";
     public Connection() {
 
     }
@@ -61,11 +61,93 @@ public class Connection {
             return false;
         }
     }
+    
+    public Auction getAuction(int id) {
+        User user;
+        Product product;
+        int quantity;
+        Timestamp date;
+        double price;
+        double instabuyprice;
+        double priceloweringAmount;
+        double priceloweringDelay;
+        double minprice;
+        StatusEnum status;
+        String description;
+        String imageURL;
 
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement(GET_AUCTION_BY_ID);
+            pstmt.setInt(1, id);
+
+            myRs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            myRs.next();
+                if (myRs.getString("type").equals("countdown")) {
+                    id = myRs.getInt("id");
+                    user = getUser((myRs.getInt("sellerID")));
+                    product = getProduct(myRs.getInt("productID"));
+                    quantity = myRs.getInt("productquantity");
+                    price = myRs.getDouble("currentprice");
+                    priceloweringAmount = myRs.getDouble("priceloweringAmount");
+                    priceloweringDelay = myRs.getDouble("priceloweringdelay");
+                    minprice = myRs.getDouble("minPrice");
+                    status = StatusEnum.values()[myRs.getInt("status")];
+                    description = myRs.getString("description");
+                    imageURL = myRs.getString("imageUrl");
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    date = myRs.getTimestamp("timecreated");
+                    
+                    auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
+                }
+
+                // In case of Direct 
+                if (myRs.getString("type").equals("direct")) {
+                    id = myRs.getInt("id");
+                    user = getUser(myRs.getInt("sellerID"));
+                    product = getProduct(myRs.getInt("productID"));
+                    price = myRs.getDouble("currentprice");
+                    quantity = myRs.getInt("productquantity");
+                    status = StatusEnum.values()[myRs.getInt("status")];
+                    description = myRs.getString("description");
+                    imageURL = myRs.getString("imageUrl");
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    auction = new Direct(id, user, product, price, quantity, status, description, imageURL, instabuyprice);
+                }
+
+                if (myRs.getString("type").equals("standard")) {
+                    id = myRs.getInt("id");
+                    user = getUser(myRs.getInt("sellerID"));
+                    product = getProduct(myRs.getInt("productID"));
+                    price = myRs.getDouble("currentprice");
+                    quantity = myRs.getInt("productquantity");
+                    date = myRs.getTimestamp("timeend");
+                    status = StatusEnum.values()[myRs.getInt("status")];
+                    description = myRs.getString("description");
+                    imageURL = myRs.getString("imageUrl");
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    auction = new Standard(id, user, product, price, quantity, date, status, description, imageURL, instabuyprice);
+                }
+                return auction;
+            
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Failed to get auction by ID");
+        }
+
+        closeConnection();
+        return null;
+    }
+    
     public ArrayList<Auction> getAuctions(String selectFrom, String where, String is) {
 
-        auctions = new ArrayList<Auction>() {
-        };
+        auctions = new ArrayList<Auction>() {};
         int id;
         User user;
         Product product;
