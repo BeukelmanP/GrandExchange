@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="countdownBuyButton" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.AuctionController">
+<AnchorPane id="AnchorPane" fx:id="countdownBuyButton" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Controllers.AuctionController">
   <children>
     <Pane layoutX="0.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">
       <children>
@@ -42,9 +47,9 @@
           </font>
         </Label>
         <Label fx:id="countdownAvailableUnits" layoutX="15.0" layoutY="104.0" text="units" />
-        <Button fx:id="countdownBuyBtn" layoutX="15.0" layoutY="237.0" mnemonicParsing="false" onMouseClicked="#countdownBuyButtonClick" text="Buy" />
-        <TextField fx:id="txtUnitstoBuy" layoutX="14.0" layoutY="215.0" prefWidth="76.0" />
-        <Label layoutX="18.0" layoutY="199.0" text="Units to buy:" />
+        <Button fx:id="countdownBuyBtn" layoutX="15.0" layoutY="237.0" mnemonicParsing="false" onMouseClicked="#countdownBuyButtonClick" prefWidth="76.0" text="Instabuy" />
+        <TextField fx:id="txtUnitstoBuy" layoutX="15.0" layoutY="210.0" prefWidth="76.0" />
+        <Label id="instabuyTextid" layoutX="18.0" layoutY="194.0" text="Units to buy:" />
         <Label fx:id="auctiontype" layoutX="14.0" layoutY="14.0" text="Auction">
           <font>
             <Font size="20.0" fx:id="x1" />
@@ -59,6 +64,11 @@
         </Label>
         <Label id="countdownAvailableUnits" layoutX="15.0" layoutY="120.0" text="Time To Go:" />
         <ProgressBar fx:id="minutesBar" layoutX="17.0" layoutY="168.0" prefHeight="26.6015625" prefWidth="366.999755859375" progress="0.0" visible="false" />
+        <Button id="countdownBidBuyBtn" layoutX="121.0" layoutY="237.0" mnemonicParsing="false" onMouseClicked="#countdownBuyButtonClick" prefWidth="76.0" text="Bid" />
+        <TextField id="txtUnitstoBuyBid" layoutX="121.0" layoutY="210.0" prefWidth="76.0" />
+        <Label id="BidTextid" layoutX="121.0" layoutY="194.0" text="Units to buy:" />
+        <TextField id="txtBidPrice" layoutX="208.0" layoutY="211.0" prefWidth="76.0" />
+        <Label id="instabuyTextid" layoutX="210.0" layoutY="195.0" text="Bid price:" />
       </children>
     </Pane>
     <Pane layoutX="800.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">

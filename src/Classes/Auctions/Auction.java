@@ -74,6 +74,10 @@ public abstract class Auction {
         bids = new ArrayList<>();
     }
 
+    public boolean isInstabuyable() {
+        return instabuyable;
+    }
+
     /**
      * returns the highest bid at the moment
      *
