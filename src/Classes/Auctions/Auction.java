@@ -12,6 +12,7 @@ public abstract class Auction {
 
     User seller;
     private int id;
+
     private double currentPrice;
     private double instabuyPrice;
     private boolean instabuyable;
@@ -159,5 +160,9 @@ public abstract class Auction {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+    
+    public int getId() {
+        return id;
     }
 }
