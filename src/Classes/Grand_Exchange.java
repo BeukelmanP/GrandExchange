@@ -23,8 +23,8 @@ public class Grand_Exchange implements Observer {
         //Gets all existing auctions.
         auctions = con.getAuctions("*", "auction", "''");
         
-        DatabaseListener dbListener = new DatabaseListener();
-        dbListener.addObserver(this);
+        //DatabaseListener dbListener = new DatabaseListener();
+        //dbListener.addObserver(this);
     }
 
     public void Load() {
@@ -169,4 +169,8 @@ public class Grand_Exchange implements Observer {
         
     }
 
+    
+    public void updateAuction(Auction auction){
+        con.updateAuction(auction);
+    }
 }

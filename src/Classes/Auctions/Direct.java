@@ -7,6 +7,7 @@ package Classes.Auctions;
 
 import Classes.Product;
 import Classes.User;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -15,12 +16,19 @@ import java.util.Date;
  */
 public class Direct extends Auction {
 
-    public Direct(int id,User seller, Product product, double price, int quantity,StatusEnum status, String description,String imageURLs, double instabuy) {
-        super(id, seller, product, price, quantity,status,description,imageURLs, instabuy);
+    private Timestamp creationDate;
 
+    public Direct(int id, User seller, Product product, double price, Timestamp beginTime, int quantity, StatusEnum status, String description, String imageURLs, double instabuy) {
+        super(id, seller, product, price, quantity, status, description, imageURLs, instabuy);
+        this.creationDate = beginTime;
     }
 
-    public Direct(User seller, Product product, double price, int quantity, double instabuyprice,StatusEnum status, String description,String imageURLs) {
-        super(seller, product, quantity, price, instabuyprice,status,description,imageURLs);
+    public Direct(User seller, Product product, double price, Timestamp beginTime, int quantity, double instabuyprice, StatusEnum status, String description, String imageURLs) {
+        super(seller, product, quantity, price, instabuyprice, status, description, imageURLs);
+        this.creationDate = beginTime;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
     }
 }

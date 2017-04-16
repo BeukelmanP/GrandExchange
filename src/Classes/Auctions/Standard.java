@@ -7,6 +7,7 @@ package Classes.Auctions;
 
 import Classes.Product;
 import Classes.User;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -15,17 +16,32 @@ import java.util.Date;
  */
 public class Standard extends Auction {
 
-    private Date timeEnd;
+    private Timestamp creationDate;
+    private Timestamp timeEnd;
 
-    public Standard(int id, User seller, Product product, double price, int quantity, Date timeEnd,StatusEnum status, String description,String imageURLs, double instabuy) {
+    public Standard(int id, User seller, Product product, double price, int quantity, Timestamp beginTime, Timestamp timeEnd,StatusEnum status, String description,String imageURLs, double instabuy) {
         super(id, seller, product, price, quantity,status,description,imageURLs,instabuy);
         this.timeEnd = timeEnd;
+        this.creationDate = beginTime;
 
     }
 
-    public Standard(User seller, Product product, int quantity, double price, double instabuyprice, Date timeEnd,StatusEnum status, String description,String imageURLs) {
+    public Standard(User seller, Product product, int quantity, double price, double instabuyprice, Timestamp beginTime, Timestamp timeEnd,StatusEnum status, String description,String imageURLs) {
         super(seller, product, quantity, price, instabuyprice,status,description,imageURLs);
         this.timeEnd = timeEnd;
-
+        this.creationDate = beginTime;
+    }
+    
+    /**
+     * Returns the remaining time of a standard auction in seconds.
+     * @return remaining time of a standard auction in seconds
+     */
+    public long getTimeRemaining(){
+    long diff = timeEnd.getTime() - creationDate.getTime();
+    return diff / 1000 % 60;
+    }
+    
+    public Timestamp getCreationDate() {
+        return creationDate;
     }
 }

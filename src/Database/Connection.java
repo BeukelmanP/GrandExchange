@@ -202,11 +202,12 @@ public class Connection {
                     product = getProduct(myRs.getInt("productID"));
                     price = myRs.getDouble("currentprice");
                     quantity = myRs.getInt("productquantity");
+                    Timestamp begin = myRs.getTimestamp("timecreated");
                     status = StatusEnum.values()[myRs.getInt("status")];
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
-                    auction = new Direct(id, user, product, price, quantity, status, description, imageURL, instabuyprice);
+                    auction = new Direct(id, user, product, price, begin, quantity, status, description, imageURL, instabuyprice);
                 }
 
                 if (myRs.getString("type").equals("standard")) {
@@ -215,12 +216,13 @@ public class Connection {
                     product = getProduct(myRs.getInt("productID"));
                     price = myRs.getDouble("currentprice");
                     quantity = myRs.getInt("productquantity");
+                    Timestamp begin = myRs.getTimestamp("timecreated");
                     date = myRs.getTimestamp("timeend");
                     status = StatusEnum.values()[myRs.getInt("status")];
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
-                    auction = new Standard(id, user, product, price, quantity, date, status, description, imageURL, instabuyprice);
+                    auction = new Standard(id, user, product, price, quantity, begin, date, status, description, imageURL, instabuyprice);
                 }
 
                 auctions.add(auction);
@@ -561,6 +563,11 @@ public class Connection {
             getProduct(productID);
         }
         return product;
+    }
+    
+    
+    public void updateAuction (Auction auction){
+
     }
 
     private boolean closeConnection() {
