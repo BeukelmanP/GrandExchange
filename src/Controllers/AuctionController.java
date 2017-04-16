@@ -16,7 +16,6 @@ import Classes.User;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -104,6 +103,8 @@ public class AuctionController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -168,7 +169,7 @@ public class AuctionController implements Initializable {
             long periods_passed = (long) Math.floor(((now - then) / 1000 / 60 / 20));
             long next_period_begin = ((periods_passed + 1) * 1000 * 60 * 20) + countdownAuction.getCreationDate().getTime();
             Timestamp newDate = new Timestamp(next_period_begin);
-            CreateDate.setText(newDate.getMonth() + "/" + newDate.getDay() + "  " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds());
+            CreateDate.setText(newDate.getMonth()+ "/" + newDate.getDay() + "  " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds());
             timeline = new Timeline();
             timeline.setCycleCount(Timeline.INDEFINITE);
             long duration = (next_period_begin - System.currentTimeMillis()) / 1000;

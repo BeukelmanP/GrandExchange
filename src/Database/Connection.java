@@ -370,6 +370,7 @@ public class Connection {
 
         return user;
     }
+    
 
     public boolean hasDuplicateBSN(int checkValue) {
         Boolean hasDuplicate = false;
