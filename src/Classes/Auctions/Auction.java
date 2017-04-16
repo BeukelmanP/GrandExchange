@@ -92,11 +92,19 @@ public abstract class Auction {
      *
      * @param bid
      */
-    public void addBid(Bid bid) {
-        if (bid == null) {
-            throw new IllegalArgumentException();
-        } else {
-            bids.add(bid);
+    public boolean addBid(Bid bid) {
+        try {
+            for (Bid item : bids) {
+                if (item.getAmount() > currentBid.getAmount()) {
+                    this.bids.add(item);
+                    this.currentBid = item;
+                    return true;
+                }
+            }
+            return false;
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex);
+            return false;
         }
     }
 

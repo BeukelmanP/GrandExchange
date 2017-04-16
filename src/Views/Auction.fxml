@@ -64,8 +64,8 @@
         </Label>
         <Label id="countdownAvailableUnits" layoutX="15.0" layoutY="120.0" text="Time To Go:" />
         <ProgressBar fx:id="minutesBar" layoutX="17.0" layoutY="168.0" prefHeight="26.6015625" prefWidth="366.999755859375" progress="0.0" visible="false" />
-        <Button id="countdownBidBuyBtn" layoutX="121.0" layoutY="237.0" mnemonicParsing="false" onMouseClicked="#countdownBuyButtonClick" prefWidth="76.0" text="Bid" />
-        <TextField id="txtUnitstoBuyBid" layoutX="121.0" layoutY="210.0" prefWidth="76.0" />
+        <Button id="countdownBidBuyBtn" fx:id="BidBtn" layoutX="121.0" layoutY="237.0" mnemonicParsing="false" onMouseClicked="#bidBuyButtonClick" prefWidth="76.0" text="Bid" />
+        <TextField fx:id="txtUnitstoBuyBid" layoutX="121.0" layoutY="210.0" prefWidth="76.0" />
         <Label id="BidTextid" layoutX="121.0" layoutY="194.0" text="Units to buy:" />
         <TextField id="txtBidPrice" layoutX="208.0" layoutY="211.0" prefWidth="76.0" />
         <Label id="instabuyTextid" layoutX="210.0" layoutY="195.0" text="Bid price:" />

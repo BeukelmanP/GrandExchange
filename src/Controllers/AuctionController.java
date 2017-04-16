@@ -311,7 +311,7 @@ public class AuctionController implements Initializable {
             if (reply == JOptionPane.YES_OPTION) {
                 for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
                     GX.InstabuyItem(Integer.valueOf(txtUnitstoBuy.getText()), auction.getId(), loggedInUser.getUserID());
-                    auction.addBid(new Bid(GX.loggedInUser, auction.getCurrentPrice()));
+                    
                 }
                 auction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));
                 setCountdownBuys(auction);
@@ -327,6 +327,46 @@ public class AuctionController implements Initializable {
                 JOptionPane.showMessageDialog(null, "Canceled");
             }
         } else if (Integer.parseInt(txtUnitstoBuy.getText()) <= 0) {
+            JOptionPane.showMessageDialog(null, "You can't buy less than 1 object");
+        } else {
+            JOptionPane.showMessageDialog(null, "You can't buy more objects than there are available");
+        }
+    }
+    
+    // TODO: aanpassen dat het het tweede textveld goed erin zet.
+    public void bidBuyButtonClick() throws SQLException {
+        Auction auction = null;
+        if(this.type == "countdown"){
+            auction = this.countdownAuction;
+        }else if(this.type == "standard"){
+            auction = this.standardAuction;
+        }else if(this.type == "direct"){
+            auction = this.directAuction;
+        }
+        
+        if (Integer.parseInt(txtUnitstoBuyBid.getText()) <= auction.getProductQuantity() && Integer.parseInt(txtUnitstoBuyBid.getText()) > 0 && auction != null) {
+            double totalPrice = Double.parseDouble(txtUnitstoBuyBid.getText()) * auction.getCurrentPrice();
+
+            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuyBid.getText() + "\nitems with the price of: €" + auction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                for (int i = 0; i < Integer.parseInt(txtUnitstoBuyBid.getText()); i++) {
+                    //Voegt bid to aan de auction
+                    auction.addBid(new Bid(GX.loggedInUser, auction.getCurrentPrice()));
+                }
+                auction.setProductQuantity(Integer.parseInt(txtUnitstoBuyBid.getText()));
+                setCountdownBuys(auction);
+                GX.updateAuction(auction);
+                if (auction.getProductQuantity() > 1) {
+                    countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
+                } else if (auction.getProductQuantity() == 1) {
+                    countdownAvailableUnits.setText("There is just 1 item left");
+                } else if (auction.getProductQuantity() == 0) {
+                    countdownAvailableUnits.setText("There are no items left, you missed it");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Canceled");
+            }
+        } else if (Integer.parseInt(txtUnitstoBuyBid.getText()) <= 0) {
             JOptionPane.showMessageDialog(null, "You can't buy less than 1 object");
         } else {
             JOptionPane.showMessageDialog(null, "You can't buy more objects than there are available");
