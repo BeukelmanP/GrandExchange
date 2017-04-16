@@ -146,10 +146,27 @@ public class Grand_Exchange implements Observer {
     public Collection<Auction> getAuctions() {
         return auctions;
     }
+    
+    public void updateAuctionsFromDB(ArrayList<Integer> newAuctionIDs) {
+        Auction tempAuction;
+        for (int i : newAuctionIDs)
+        {   
+            tempAuction = con.getAuction(i);
+            for(Auction A : auctions){
+                if(A.getId() == tempAuction.getId()){
+                    auctions.set(auctions.indexOf(A), tempAuction);
+                    System.out.println(A.getProduct().getName() + "Replaced in list.");
+                }
+            }
+        }
+    }
 
     @Override
     public void update(Observable o, Object arg) {
-        //TODO, receives list with auctions that have to be updated and retrieved from database.
+        ArrayList<Integer> tempList = (ArrayList<Integer>) arg;
+        System.out.println("New auctions found.");
+        updateAuctionsFromDB(tempList);
+        
     }
 
 }
