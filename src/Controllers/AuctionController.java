@@ -56,6 +56,8 @@ public class AuctionController implements Initializable {
     @FXML
     private Label productTitle;
     @FXML
+    private Label auctiontype;
+    @FXML
     private Label productStatus;
     @FXML
     private Label countdownCurrentPrice;
@@ -85,6 +87,7 @@ public class AuctionController implements Initializable {
     Standard standardAuction;
     private User loggedInUser;
     private Grand_Exchange GX;
+    private String type;
 
     Timeline timeline;
     int timeSeconds;
@@ -131,6 +134,8 @@ public class AuctionController implements Initializable {
         
         //Checks if auction is of instance Countdown
         if (auction instanceof Countdown) {
+            this.type = "countdown";
+            auctiontype.setText("Countdown Auction");
             countdownAuction = (Countdown) auction;
             countdownCurrentPrice.setText("€" + countdownAuction.getCurrentPrice());
             long now = System.currentTimeMillis();
@@ -182,6 +187,58 @@ public class AuctionController implements Initializable {
 
         }
 
+         if (auction instanceof Standard) {
+            this.type = "standard";
+            auctiontype.setText("Standard Auction");
+            standardAuction = (Standard) auction;
+            countdownCurrentPrice.setText("€" + standardAuction.getCurrentPrice());
+            
+           
+            Timestamp newDate = standardAuction.getCreationDate();
+            CreateDate.setText(newDate.getMonth() + "/" + newDate.getDay() + "  " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds());
+            
+
+            if (auction.getProductQuantity()
+                    > 1) {
+                countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
+            } else if (auction.getProductQuantity()
+                    == 1) {
+                countdownAvailableUnits.setText("There is just 1 item left");
+            } else if (auction.getProductQuantity()
+                    == 0) {
+                countdownAvailableUnits.setText("There are no items left, you missed it");
+            }
+
+            setCountdownBuys(auction);
+
+        }
+         
+         if (auction instanceof Direct) {
+            this.type = "direct";
+            auctiontype.setText("Direct Auction");
+            directAuction = (Direct) auction;
+            countdownCurrentPrice.setText("€" + directAuction.getCurrentPrice());
+            
+           
+            Timestamp newDate = directAuction.getCreationDate();
+            CreateDate.setText(newDate.getMonth() + "/" + newDate.getDay() + "  " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds());
+            
+
+            if (auction.getProductQuantity()
+                    > 1) {
+                countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
+            } else if (auction.getProductQuantity()
+                    == 1) {
+                countdownAvailableUnits.setText("There is just 1 item left");
+            } else if (auction.getProductQuantity()
+                    == 0) {
+                countdownAvailableUnits.setText("There are no items left, you missed it");
+            }
+
+            setCountdownBuys(auction);
+
+        }
+        
         txtUnitstoBuy.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -212,21 +269,31 @@ public class AuctionController implements Initializable {
     }
 
     public void countdownBuyButtonClick() {
-        if (Integer.parseInt(txtUnitstoBuy.getText()) <= countdownAuction.getProductQuantity() && Integer.parseInt(txtUnitstoBuy.getText()) > 0) {
-            double totalPrice = Double.parseDouble(txtUnitstoBuy.getText()) * countdownAuction.getCurrentPrice();
+        Auction auction = null;
+        if(this.type == "countdown"){
+            auction = this.countdownAuction;
+        }else if(this.type == "standard"){
+            auction = this.standardAuction;
+        }else if(this.type == "direct"){
+            auction = this.directAuction;
+        }
+        
+        if (Integer.parseInt(txtUnitstoBuy.getText()) <= auction.getProductQuantity() && Integer.parseInt(txtUnitstoBuy.getText()) > 0 && auction != null) {
+            double totalPrice = Double.parseDouble(txtUnitstoBuy.getText()) * auction.getCurrentPrice();
 
-            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + countdownAuction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
+            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + auction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
                 for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
-                    countdownAuction.addBid(new Bid(GX.loggedInUser, countdownAuction.getCurrentPrice()));
+                    auction.addBid(new Bid(GX.loggedInUser, auction.getCurrentPrice()));
                 }
-                countdownAuction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));
-                setCountdownBuys(countdownAuction);
-                if (countdownAuction.getProductQuantity() > 1) {
-                    countdownAvailableUnits.setText("There are " + countdownAuction.getProductQuantity() + " units available");
-                } else if (countdownAuction.getProductQuantity() == 1) {
+                auction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));
+                setCountdownBuys(auction);
+                GX.updateAuction(auction);
+                if (auction.getProductQuantity() > 1) {
+                    countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
+                } else if (auction.getProductQuantity() == 1) {
                     countdownAvailableUnits.setText("There is just 1 item left");
-                } else if (countdownAuction.getProductQuantity() == 0) {
+                } else if (auction.getProductQuantity() == 0) {
                     countdownAvailableUnits.setText("There are no items left, you missed it");
                 }
             } else {
