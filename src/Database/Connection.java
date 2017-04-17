@@ -78,6 +78,7 @@ public class Connection {
         double priceloweringAmount;
         double priceloweringDelay;
         double minprice;
+        boolean isInstabuyable;
         StatusEnum status;
         String description;
         String imageURL;
@@ -109,8 +110,9 @@ public class Connection {
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
                     date = myRs.getTimestamp("timecreated");
-                    
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 // In case of Direct 
@@ -125,7 +127,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Direct(id, user, product, price, begin, quantity, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 //In case of standard auction
@@ -141,7 +145,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Standard(id, user, product, price, quantity, begin, date, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
                 return auction;
             
@@ -174,6 +180,7 @@ public class Connection {
         double priceloweringAmount;
         double priceloweringDelay;
         double minprice;
+        boolean isInstabuyable;
         StatusEnum status;
         String description;
         String imageURL;
@@ -208,7 +215,9 @@ public class Connection {
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
                     date = myRs.getTimestamp("timecreated");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 // In case of Direct 
@@ -223,7 +232,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Direct(id, user, product, price, begin, quantity, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 if (myRs.getString("type").equals("standard")) {
@@ -238,7 +249,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Standard(id, user, product, price, quantity, begin, date, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 auctions.add(auction);

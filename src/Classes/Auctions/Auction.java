@@ -44,7 +44,7 @@ public abstract class Auction {
         DecimalFormat decim = new DecimalFormat("#.00");
         this.currentPrice = price;
         this.productQuantity = quantity;
-        this.instabuyable = false;
+        this.instabuyable = true;
         this.status = status;
         this.description = description;
         this.imageURLs = imageURLs.split(";");
@@ -83,6 +83,10 @@ public abstract class Auction {
     
     public boolean isInstabuyable() {
         return instabuyable;
+    }
+    
+    public void setInstabuyable(boolean value) {
+        this.instabuyable = value;
     }
 
     /**
