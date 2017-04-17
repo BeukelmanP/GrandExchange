@@ -12,6 +12,7 @@ import Classes.Auctions.Standard;
 import Classes.Auctions.StatusEnum;
 import Classes.Product;
 import Classes.User;
+import java.sql.CallableStatement;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,8 +20,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +35,7 @@ public class Connection {
     private ResultSet myRs = null;
     private Auction auction;
     ArrayList<Auction> auctions;
+    ArrayList<Product> products;
 
     static final String GET_FROM_AUCTIONS_SQL = "SELECT ? FROM auction WHERE ? = ?";
     static final String GET_FROM_AUCTIONS = "SELECT * FROM auction";
@@ -45,7 +45,8 @@ public class Connection {
     static final String SET_USER_NEW = "INSERT INTO user(bsn, username, password, alias, email, verified, imageURL, saldo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     static final String REMOVE_USER_BYBSN = "DELETE FROM user WHERE bsn = ?";
     static final String Update_Auction = "UPDATE auction SET currentprice = ?, instabuyprice = ?, productquantity = ?, description = ? WHERE id = ?";
-
+    static final String GET_AUCTION_BY_ID = "SELECT * FROM auction WHERE id = ?";
+    static final String GET_FROM_PRODUCTS = "SELECT * FROM product";
     public Connection() {
 
     }
@@ -62,11 +63,114 @@ public class Connection {
             return false;
         }
     }
+    
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Auction getAuction(int id) {
+        User user;
+        Product product;
+        int quantity;
+        Timestamp date;
+        double price;
+        double instabuyprice;
+        double priceloweringAmount;
+        double priceloweringDelay;
+        double minprice;
+        boolean isInstabuyable;
+        StatusEnum status;
+        String description;
+        String imageURL;
 
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement(GET_AUCTION_BY_ID);
+            pstmt.setInt(1, id);
+
+            myRs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            myRs.next();
+                if (myRs.getString("type").equals("countdown")) {
+                    id = myRs.getInt("id");
+                    user = getUser((myRs.getInt("sellerID")));
+                    product = getProduct(myRs.getInt("productID"));
+                    quantity = myRs.getInt("productquantity");
+                    price = myRs.getDouble("currentprice");
+                    priceloweringAmount = myRs.getDouble("priceloweringAmount");
+                    priceloweringDelay = myRs.getDouble("priceloweringdelay");
+                    minprice = myRs.getDouble("minPrice");
+                    status = StatusEnum.values()[myRs.getInt("status")];
+                    description = myRs.getString("description");
+                    imageURL = myRs.getString("imageUrl");
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    date = myRs.getTimestamp("timecreated");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
+                    auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
+                    auction.setInstabuyable(isInstabuyable);
+                }
+
+                // In case of Direct 
+                if (myRs.getString("type").equals("direct")) {
+                    id = myRs.getInt("id");
+                    user = getUser(myRs.getInt("sellerID"));
+                    product = getProduct(myRs.getInt("productID"));
+                    price = myRs.getDouble("currentprice");
+                    quantity = myRs.getInt("productquantity");
+                    Timestamp begin = myRs.getTimestamp("timecreated");
+                    status = StatusEnum.values()[myRs.getInt("status")];
+                    description = myRs.getString("description");
+                    imageURL = myRs.getString("imageUrl");
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
+                    auction = new Direct(id, user, product, price, begin, quantity, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
+                }
+
+                //In case of standard auction
+                if (myRs.getString("type").equals("standard")) {
+                    id = myRs.getInt("id");
+                    user = getUser(myRs.getInt("sellerID"));
+                    product = getProduct(myRs.getInt("productID"));
+                    price = myRs.getDouble("currentprice");
+                    quantity = myRs.getInt("productquantity");
+                    Timestamp begin = myRs.getTimestamp("timecreated");
+                    date = myRs.getTimestamp("timeend");
+                    status = StatusEnum.values()[myRs.getInt("status")];
+                    description = myRs.getString("description");
+                    imageURL = myRs.getString("imageUrl");
+                    instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
+                    auction = new Standard(id, user, product, price, quantity, begin, date, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
+                }
+                return auction;
+            
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Failed to get auction by ID");
+        }
+
+        closeConnection();
+        return null;
+    }
+    
+    /**
+     *
+     * @param selectFrom
+     * @param where
+     * @param is
+     * @return
+     */
     public ArrayList<Auction> getAuctions(String selectFrom, String where, String is) {
 
-        auctions = new ArrayList<Auction>() {
-        };
+        auctions = new ArrayList<Auction>() {};
         int id;
         User user;
         Product product;
@@ -77,6 +181,7 @@ public class Connection {
         double priceloweringAmount;
         double priceloweringDelay;
         double minprice;
+        boolean isInstabuyable;
         StatusEnum status;
         String description;
         String imageURL;
@@ -111,7 +216,9 @@ public class Connection {
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
                     date = myRs.getTimestamp("timecreated");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 // In case of Direct 
@@ -126,7 +233,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Direct(id, user, product, price, begin, quantity, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 if (myRs.getString("type").equals("standard")) {
@@ -141,7 +250,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Standard(id, user, product, price, quantity, begin, date, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 auctions.add(auction);
@@ -155,9 +266,57 @@ public class Connection {
         closeConnection();
         return auctions;
     }
+    
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Product> getProducts() {
 
+        this.products = new ArrayList<>();
+        Product product;
+        int id;
+        String name;
+        String description;
+        String gtin;
+
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement(GET_FROM_PRODUCTS);
+
+            myRs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            while (myRs.next()) {
+                    id = myRs.getInt("id");
+                    name = myRs.getString("name");
+                    description = myRs.getString("description");
+                    gtin = myRs.getString("gtin");
+                    product = new Product(gtin, name, description);
+                
+                products.add(product);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Product ding connection ophalen failed ofzo.");
+        }
+
+        closeConnection();
+        return products;
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
     public User getUser(int id) {
         User user = null;
+        int userID;
         int bsn;
         String username;
         String password;
@@ -182,6 +341,7 @@ public class Connection {
             }
 
             try {
+                userID = resultset.getInt("id");
                 bsn = resultset.getInt("bsn");
                 username = resultset.getString("username");
                 password = resultset.getString("password");
@@ -191,7 +351,7 @@ public class Connection {
                 saldo = resultset.getFloat("saldo");
                 String imgURL = resultset.getString("imageUrl");
 
-                user = new User(bsn, username, password, alias, email, verified, saldo, imgURL);
+                user = new User(userID,bsn, username, password, alias, email, verified, saldo, imgURL);
 
                 return user;
             } catch (SQLException ex) {
@@ -206,6 +366,12 @@ public class Connection {
         return user;
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @return
+     */
     public User getUser(String username, String password) {
         User user = null;
 
@@ -223,6 +389,7 @@ public class Connection {
         }
 
         try {
+            int userID = myRs.getInt("id");
             int bsn = myRs.getInt("bsn");
             String usernm = myRs.getString("username");
             String pass = myRs.getString("password");
@@ -232,7 +399,7 @@ public class Connection {
             double saldo = myRs.getDouble("saldo");
             String imgURL = myRs.getString("imageUrl");
 
-            user = new User(bsn, usernm, pass, alias, email, verified, saldo, imgURL);
+            user = new User(userID, bsn, usernm, pass, alias, email, verified, saldo, imgURL);
             closeConnection();
         } catch (SQLException ex) {
             System.out.println("User not found");
@@ -241,7 +408,12 @@ public class Connection {
 
         return user;
     }
-
+    
+    /**
+     *
+     * @param checkValue
+     * @return
+     */
     public boolean hasDuplicateBSN(int checkValue) {
         Boolean hasDuplicate = false;
         int count = 0;
@@ -274,6 +446,11 @@ public class Connection {
         return hasDuplicate;
     }
 
+    /**
+     *
+     * @param checkValue
+     * @return
+     */
     public boolean hasDuplicateUsername(String checkValue) {
         Boolean hasDuplicate = false;
         int count = 0;
@@ -306,6 +483,11 @@ public class Connection {
         return hasDuplicate;
     }
 
+    /**
+     *
+     * @param checkValue
+     * @return
+     */
     public boolean hasDuplicateEmail(String checkValue) {
         Boolean hasDuplicate = false;
         int count = 0;
@@ -338,6 +520,11 @@ public class Connection {
         return hasDuplicate;
     }
 
+    /**
+     *
+     * @param checkValue
+     * @return
+     */
     public boolean hasDuplicateAlias(String checkValue) {
         Boolean hasDuplicate = false;
         int count = 0;
@@ -369,6 +556,114 @@ public class Connection {
         return hasDuplicate;
     }
     
+    /**
+     * Instabuy on a auction. This will make a new transaction and lowers the amount of the items
+     * in the auction.
+     * @param amount The amount of items the User want to buy.
+     * @param auctionID The ID of the auction.
+     * @param userID The ID of the sser. 
+     * @return true if succesfully added to the database, false if it failed to add info to the database.
+     * @throws SQLException if statement failed to add info to the database.
+     */
+    public Boolean InstabuyItem(int amount, int auctionID, int userID) throws SQLException {
+        getConnection();
+        
+        
+        User user = getUser(userID);
+        Auction auction = getAuction(auctionID);
+        
+        // Checks if User exsists
+        if(user != null) {
+            // Checks if Saldo is high enough
+            if(user.getSaldo() >= auction.getCurrentPrice()) {
+                try {
+                    myConn = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/lesleya213_pts?noAccessToProcedureBodies=true", "lesleya213_pts", "wachtwoord123");
+                    CallableStatement myStmt = myConn.prepareCall("{call instabuy(?,?,?)}");
+                    myStmt.setInt(1, amount);
+                    myStmt.setInt(2, auctionID);
+                    myStmt.setInt(3, userID);
+                    
+                    myStmt.execute();
+                    System.out.println("GELUKT!!");
+                    closeConnection();
+                    return true;
+                } catch(SQLException ex) {
+                    closeConnection();
+                    
+                     System.out.println(ex);
+                    return false;
+                }
+            } else {
+                closeConnection();
+                 System.out.println("Te weinig Saldo!");
+                return false;
+            }
+        } else {
+             System.out.println("User is Null");
+            closeConnection();
+            return false;
+        }
+    }
+    
+    /**
+     *
+     * @param amount
+     * @param auctionID
+     * @param userID
+     * @param price
+     * @return
+     * @throws SQLException
+     */
+    public Boolean addBid(double amount, int auctionID, int userID, double price) throws SQLException {
+        getConnection();
+        User user = getUser(userID);
+        Auction auction = getAuction(auctionID);
+        
+        // Checks if User exsists
+        if(user != null) {
+            // Checks if Saldo is high enough
+            if(user.getSaldo() >= auction.getCurrentPrice()) {
+                try {
+                    myConn = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/lesleya213_pts?noAccessToProcedureBodies=true", "lesleya213_pts", "wachtwoord123");
+                    CallableStatement myStmt = myConn.prepareCall("{call bid(?,?,?,?)}");
+                    myStmt.setInt(1, auctionID);
+                    myStmt.setInt(2, userID);
+                    myStmt.setDouble(3, amount);
+                    myStmt.setDouble(4, price);
+                    
+                    myStmt.execute();
+                    System.out.println("GELUKT!!");
+                    closeConnection();
+                    return true;
+                } catch(SQLException ex) {
+                    closeConnection();
+                    
+                     System.out.println(ex);
+                    return false;
+                }
+            } else {
+                closeConnection();
+                 System.out.println("Te weinig Saldo!");
+                return false;
+            }
+        } else {
+             System.out.println("User is Null");
+            closeConnection();
+            return false;
+        }
+    }
+    
+    /**
+     *
+     * @param bsn
+     * @param username
+     * @param password
+     * @param alias
+     * @param email
+     * @param imageUrl
+     * @param saldo
+     * @return
+     */
     public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, String imageUrl, double saldo) {
         getConnection();
 
@@ -484,9 +779,11 @@ public class Connection {
         return product;
     }
     
-    
-    
 
+    /**
+     *
+     * @param auction
+     */
     public Boolean updateAuction(Auction auction) {
         getConnection();
 

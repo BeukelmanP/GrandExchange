@@ -14,8 +14,8 @@ import Classes.Bid;
 import Classes.Grand_Exchange;
 import Classes.User;
 import java.net.URL;
+import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -62,7 +62,11 @@ public class AuctionController implements Initializable {
     @FXML
     private Label countdownCurrentPrice;
     @FXML
+    private Label InstabuyCurrentPrice;
+    @FXML
     private Label countdownAvailableUnits;
+    @FXML
+    private Label InstabuyLabel;
     @FXML
     private Label CreateDate;
     @FXML
@@ -75,12 +79,19 @@ public class AuctionController implements Initializable {
     private Button countdownBuyBtn;
     @FXML
     private TextField txtUnitstoBuy;
-    @FXML
+    @FXML 
     private ScrollPane imagesPane;
     @FXML
     private ScrollPane recentPurchasesPane;
-    @FXML
+    @FXML 
     private ProgressBar minutesBar;
+    @FXML
+    private Button countdownBidBuyBtn;
+    @FXML
+    private TextField txtUnitstoBuyBid;
+    @FXML
+    private TextField txtPriceToBid;
+          
 
     Countdown countdownAuction;
     Direct directAuction;
@@ -94,14 +105,18 @@ public class AuctionController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        
     }
 
     public void setUp(Auction auction, Grand_Exchange GX) {
         this.GX = GX;
+        this.GX.login("BeukelmanP", "TEST123");
+        loggedInUser = GX.getLoggedInUser();
         productTitle.setText(auction.getProduct().getName());
         productDescription.setText(auction.getProduct().getDescription());
         auctionDescription.setText(auction.getDescription());
@@ -131,6 +146,9 @@ public class AuctionController implements Initializable {
         sellerImage.setImage(new Image(auction.getSeller().getImageURL()));
         sellerName.setText(auction.getSeller().getUsername());
         imagesPane.setContent(imagePane);
+
+       
+        
         
         //Checks if auction is of instance Countdown
         if (auction instanceof Countdown) {
@@ -138,12 +156,13 @@ public class AuctionController implements Initializable {
             auctiontype.setText("Countdown Auction");
             countdownAuction = (Countdown) auction;
             countdownCurrentPrice.setText("€" + countdownAuction.getCurrentPrice());
+            InstabuyCurrentPrice.setText("€" + countdownAuction.getInstabuyPrice());
             long now = System.currentTimeMillis();
             long then = countdownAuction.getCreationDate().getTime();
             long periods_passed = (long) Math.floor(((now - then) / 1000 / 60 / 20));
             long next_period_begin = ((periods_passed + 1) * 1000 * 60 * 20) + countdownAuction.getCreationDate().getTime();
             Timestamp newDate = new Timestamp(next_period_begin);
-            CreateDate.setText(newDate.getMonth() + "/" + newDate.getDay() + "  " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds());
+            CreateDate.setText(newDate.getMonth()+ "/" + newDate.getDay() + "  " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds());
             timeline = new Timeline();
             timeline.setCycleCount(Timeline.INDEFINITE);
             long duration = (next_period_begin - System.currentTimeMillis()) / 1000;
@@ -190,9 +209,12 @@ public class AuctionController implements Initializable {
          if (auction instanceof Standard) {
              this.minutesBar.setVisible(false);
             this.type = "standard";
+            this.minutesBar.setVisible(false);
             auctiontype.setText("Standard Auction");
             standardAuction = (Standard) auction;
+            
             countdownCurrentPrice.setText("€" + standardAuction.getCurrentPrice());
+            InstabuyCurrentPrice.setText("€" + standardAuction.getInstabuyPrice());
             
            
             Timestamp newDate = standardAuction.getCreationDate();
@@ -220,6 +242,7 @@ public class AuctionController implements Initializable {
             auctiontype.setText("Direct Auction");
             directAuction = (Direct) auction;
             countdownCurrentPrice.setText("€" + directAuction.getCurrentPrice());
+            InstabuyCurrentPrice.setText("€" + directAuction.getInstabuyPrice());
             
            
             Timestamp newDate = directAuction.getCreationDate();
@@ -249,6 +272,23 @@ public class AuctionController implements Initializable {
                 }
             }
         });
+        
+         // Checks if auction has instabuy.
+        if(auction.isInstabuyable() == true) {
+            countdownBuyBtn.setDisable(false);
+            txtUnitstoBuy.setDisable(false);       
+            InstabuyCurrentPrice.setDisable(false);
+            InstabuyLabel.setDisable(false);
+            
+        }
+        else
+        {
+            InstabuyCurrentPrice.setText("...");
+            countdownBuyBtn.setDisable(true);
+            txtUnitstoBuy.setDisable(true);
+            InstabuyCurrentPrice.setDisable(true);
+            InstabuyLabel.setDisable(true);
+        }
     }
 
     public String setStatus(StatusEnum status) {
@@ -270,7 +310,7 @@ public class AuctionController implements Initializable {
         }
     }
 
-    public void countdownBuyButtonClick() {
+    public void countdownBuyButtonClick() throws SQLException {
         Auction auction = null;
         if(this.type == "countdown"){
             auction = this.countdownAuction;
@@ -281,12 +321,14 @@ public class AuctionController implements Initializable {
         }
         
         if (Integer.parseInt(txtUnitstoBuy.getText()) <= auction.getProductQuantity() && Integer.parseInt(txtUnitstoBuy.getText()) > 0 && auction != null) {
-            double totalPrice = Double.parseDouble(txtUnitstoBuy.getText()) * auction.getCurrentPrice();
+            double totalPrice = Double.parseDouble(txtUnitstoBuy.getText()) * auction.getInstabuyPrice();
 
-            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + auction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
+            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + auction.getInstabuyPrice()+ " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
                 for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
-                    auction.addBid(new Bid(GX.loggedInUser, auction.getCurrentPrice()));
+                    GX.InstabuyItem(Integer.valueOf(txtUnitstoBuy.getText()), auction.getId(), loggedInUser.getUserID());
+
+                    
                 }
                 auction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));
                 setCountdownBuys(auction);
@@ -302,6 +344,58 @@ public class AuctionController implements Initializable {
                 JOptionPane.showMessageDialog(null, "Canceled");
             }
         } else if (Integer.parseInt(txtUnitstoBuy.getText()) <= 0) {
+            JOptionPane.showMessageDialog(null, "You can't buy less than 1 object");
+        } else {
+            JOptionPane.showMessageDialog(null, "You can't buy more objects than there are available");
+        }
+    }
+    
+    // TODO: aanpassen dat het het tweede textveld goed erin zet.
+    public void bidBuyButtonClick() throws SQLException {
+        Auction auction = null;
+        if(this.type == "countdown"){
+            auction = this.countdownAuction;
+        }else if(this.type == "standard"){
+            auction = this.standardAuction;
+        }else if(this.type == "direct"){
+            auction = this.directAuction;
+        }
+        
+        if (Integer.parseInt(txtUnitstoBuyBid.getText()) <= auction.getProductQuantity() && Integer.parseInt(txtUnitstoBuyBid.getText()) > 0 && auction != null) {
+            double totalPrice = Double.parseDouble(txtUnitstoBuyBid.getText()) * auction.getCurrentPrice();
+                double unitsToBuy = Double.parseDouble(txtUnitstoBuyBid.getText());
+                double bedrag = Double.parseDouble(txtPriceToBid.getText());
+
+                //int getal = Integer.parseInt(txtUnitstoBuy.getText());
+                if (Double.parseDouble(txtPriceToBid.getText()) > auction.getCurrentPrice()) {
+                    //auction.addBid(new Bid(GX.loggedInUser, Integer.valueOf(txtPriceToBid.getText()))); // adds bid to auction
+                    if(GX.addBid(unitsToBuy, auction.getId(), loggedInUser.getUserID(),bedrag)) {
+                        System.out.println("Correct geinsert");
+                    } else {
+                        System.out.println("FAILED");
+                    }
+                    System.out.println("Units To buy: " + unitsToBuy);
+                    System.out.println("Auction ID : " + auction.getId());
+                    System.out.println("User ID : " + loggedInUser.getUserID());
+                    System.out.println("Price To pay: " + bedrag);
+                    
+                }
+
+                //Voegt bid to aan de auction
+                //GX.addBid(Double.valueOf(txtUnitstoBuy.getText()), auction.getId(), loggedInUser.getUserID(),auction.getCurrentPrice());
+                
+                
+                auction.setProductQuantity(Integer.parseInt(txtUnitstoBuyBid.getText()));
+                setCountdownBuys(auction);
+                GX.updateAuction(auction);
+                if (auction.getProductQuantity() > 1) {
+                    countdownAvailableUnits.setText("There are " + auction.getProductQuantity() + " units available");
+                } else if (auction.getProductQuantity() == 1) {
+                    countdownAvailableUnits.setText("There is just 1 item left");
+                } else if (auction.getProductQuantity() == 0) {
+                    countdownAvailableUnits.setText("There are no items left, you missed it");
+                }
+        } else if (Integer.parseInt(txtUnitstoBuyBid.getText()) <= 0) {
             JOptionPane.showMessageDialog(null, "You can't buy less than 1 object");
         } else {
             JOptionPane.showMessageDialog(null, "You can't buy more objects than there are available");

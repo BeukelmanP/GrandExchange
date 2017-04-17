@@ -23,28 +23,32 @@ import java.util.ArrayList;
  */
 public class DatabaseListener extends Observable {
 
-    private java.sql.Connection myConn = null;
-    ArrayList<Integer> AuctionIdList;
+    ArrayList<Integer> auctionIdList;
+    ArrayList<Integer> queueIdList;
     private ResultSet myRs = null;
-    private boolean newAuctions = false;
-    Listener listen;
+    AuctionListener auctionlistener;
+    QueuePurchaseListener queueListener;
+    
 
     public DatabaseListener() {
-        this.AuctionIdList = new ArrayList<>();
-        if (getConnection()) {
+        this.auctionIdList = new ArrayList<>();
+        this.queueIdList = new ArrayList<>();
+        
             try {
-                listen = new Listener(myConn);
+                auctionlistener = new AuctionListener(getConnection());
+                queueListener = new QueuePurchaseListener(getConnection());
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
                 System.out.println("Can't create database listener Object.");
             }
-        }
-        listen.start();
+        
+        auctionlistener.start();
+        queueListener.start();
     }
 
-    private void updateList() {
+    private void updateAuctionList() {
         ResultSet tempResultSet;
-        java.sql.Connection tempCon = this.myConn;
+        java.sql.Connection tempCon = getConnection();
         CallableStatement tempStatement;
 
         try {
@@ -53,7 +57,7 @@ public class DatabaseListener extends Observable {
             tempResultSet = tempStatement.getResultSet();
             if (tempResultSet != null){
             while (tempResultSet.next()) {
-                AuctionIdList.add(tempResultSet.getInt("auctionID"));
+                auctionIdList.add(tempResultSet.getInt("auctionID"));
                 System.out.println(tempResultSet.getInt("auctionID"));
             }
             }
@@ -66,29 +70,58 @@ public class DatabaseListener extends Observable {
         }
     }
     
-    private ArrayList<Integer> getUpdateList(){
-        return this.AuctionIdList;
+    private void updateQueueList() {
+        ResultSet tempResultSet;
+        java.sql.Connection tempCon = getConnection();
+        CallableStatement tempStatement;
+
+        try {
+            tempStatement = tempCon.prepareCall("{call get_updated_queuepurchases()}");
+            tempStatement.execute();
+            tempResultSet = tempStatement.getResultSet();
+            if (tempResultSet != null){
+            while (tempResultSet.next()) {
+                queueIdList.add(tempResultSet.getInt("queueID"));
+            }
+            }
+            else{
+                System.out.println("resultSet of NEW queuepurchase id's is empty ?!");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseListener.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    private ArrayList<Integer> getUpdateAuctionList(){
+        return this.auctionIdList;
+    }
+    
+    private ArrayList<Integer> getUpdateQueuepurchaseList(){
+        return this.queueIdList;
     }
 
-    public boolean getConnection() {
+    public Connection getConnection() {
         try {
+            Connection tempConnection;
             Class.forName("com.mysql.jdbc.Driver");
-            myConn = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/lesleya213_pts?noAccessToProcedureBodies=true", "lesleya213_pts", "wachtwoord123");
+            tempConnection = DriverManager.getConnection("jdbc:mysql://vserver213.axc.nl:3306/lesleya213_pts?noAccessToProcedureBodies=true", "lesleya213_pts", "wachtwoord123");
             System.out.println("Database Listener connection succesfully started...");
-            return true;
+            return tempConnection;
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Database Listener failed to start connection to database...");
-            return false;
+            return null;
         }
     }
 
-    class Listener extends Thread {
+    class AuctionListener extends Thread {
 
         private java.sql.Connection conn;
         CallableStatement myStmt;
 
-        Listener(java.sql.Connection conn) throws SQLException {
+        AuctionListener(java.sql.Connection conn) throws SQLException {
 
             this.conn = conn;
             this.myStmt = conn.prepareCall("{call get_count(?)}");
@@ -99,21 +132,26 @@ public class DatabaseListener extends Observable {
         @Override
         public void run() {
             while (true) {
+                boolean execute = true;
                 try {
 
-                    boolean execute = myStmt.execute();
+                    if(execute == myStmt.execute()){
+                        System.out.println("resultSet Found !");
+                    }
 
                     if (myStmt.getInt(1) >= 1) {
-                        updateList();
+                        updateAuctionList();
                         setChanged();
-                        notifyObservers(getUpdateList());
+                        notifyObservers(getUpdateAuctionList());
+                        getUpdateAuctionList().clear();
                     } else {
+                        System.out.println(myStmt.getInt(1));
                         System.out.println("No new auctions !");
                     }
 
                     Thread.sleep(5000);
                 } catch (Exception exc) {
-                    exc.printStackTrace();
+                    System.out.println(exc.getMessage());
                     close(conn, myStmt);
                     System.out.println("Listener Thread interrupted.");
                 }
@@ -125,7 +163,7 @@ public class DatabaseListener extends Observable {
                 try {
                     myStmt.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AuctionListener.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -133,7 +171,70 @@ public class DatabaseListener extends Observable {
                 try {
                     myConn.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Listener.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AuctionListener.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+    }
+    
+    
+        class QueuePurchaseListener extends Thread {
+
+        private Connection conn;
+        CallableStatement myStmt;
+
+        QueuePurchaseListener(java.sql.Connection conn) throws SQLException {
+
+            this.conn = conn;
+            this.myStmt = conn.prepareCall("{call checkQueue(?)}");
+            myStmt.registerOutParameter(1, Types.INTEGER);
+
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                boolean execute = true;
+                try {
+
+                    if(execute == myStmt.execute()){
+                        System.out.println("resultSet Found !");
+                    }
+
+                    if (myStmt.getInt(1) >= 1) {
+                        updateQueueList();
+                        setChanged();
+                        notifyObservers(getUpdateQueuepurchaseList());
+                        getUpdateQueuepurchaseList().clear();
+                    } else {
+                        System.out.println(myStmt.getInt(1));
+                        System.out.println("No new queuePurchases !");
+                    }
+
+                    Thread.sleep(5000);
+                } catch (Exception exc) {
+                    System.out.println(exc.getMessage());
+                    close(conn, myStmt);
+                    System.out.println("Listener Thread interrupted.");
+                }
+            }
+        }
+
+        private void close(Connection myConn, Statement myStmt) {
+            if (myStmt != null) {
+                try {
+                    myStmt.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(AuctionListener.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if (myConn != null) {
+                try {
+                    myConn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(AuctionListener.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

@@ -16,12 +16,15 @@ import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -47,13 +50,15 @@ public class MainController implements Initializable {
     @FXML
     private ImageView loggedInUserImage;
     @FXML
-    private ComboBox comboBoxCategory;
+    private ComboBox<CategoryEnum> comboBoxCategory;
     @FXML
     private ListView lstCategory;
     @FXML
     private ScrollPane scrollPaneBiddedAuctions;
     @FXML
     private ScrollPane scrollPaneWonBought;
+    @FXML
+    private Button btnQueuePurchase;
 
     private Grand_Exchange GX;
 
@@ -164,5 +169,30 @@ public class MainController implements Initializable {
         if (selected >= 0 && selected < lstCategory.getItems().size()) {
             lstCategory.getItems().remove(selected);
         }
+    }
+    
+    @FXML
+    public void button_Logout() throws IOException {
+        GX.logout();
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Login.fxml"));
+        Parent root = loader.load();
+        Stage newStage = new Stage();
+        newStage.setScene(new Scene(root));
+        newStage.show();
+        Stage stage = (Stage) auctionsPane.getScene().getWindow();
+        stage.close();
+    }
+    
+    @FXML
+    public void queuePurchaseClicked() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/queuePurchase.fxml"));
+        Scene newScene;
+        newScene = new Scene(loader.load());
+        QueuePurchaseController controller = loader.<QueuePurchaseController>getController();
+        controller.setUp(GX);
+        Stage inputStage = new Stage();
+        inputStage.setScene(newScene);
+        inputStage.showAndWait();
     }
 }

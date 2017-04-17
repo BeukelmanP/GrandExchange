@@ -12,8 +12,11 @@ public abstract class Auction {
 
     User seller;
     private int id;
+
     private double currentPrice;
     private double instabuyPrice;
+
+    
     private boolean instabuyable;
     private int productQuantity;
     private Bid currentBid;
@@ -22,7 +25,6 @@ public abstract class Auction {
     private StatusEnum status;
     private String description;
     private String[] imageURLs;
-    private double instabuy;
 
     /**
      *
@@ -42,12 +44,12 @@ public abstract class Auction {
         DecimalFormat decim = new DecimalFormat("#.00");
         this.currentPrice = price;
         this.productQuantity = quantity;
-        this.instabuyable = false;
+        this.instabuyable = true;
         this.status = status;
         this.description = description;
         this.imageURLs = imageURLs.split(";");
         bids = new ArrayList<>();
-        this.instabuy = instabuy;
+        this.instabuyPrice = instabuy;
     }
 
     /**
@@ -74,6 +76,19 @@ public abstract class Auction {
         bids = new ArrayList<>();
     }
 
+    
+    public double getInstabuyPrice() {
+        return instabuyPrice;
+    }
+    
+    public boolean isInstabuyable() {
+        return instabuyable;
+    }
+    
+    public void setInstabuyable(boolean value) {
+        this.instabuyable = value;
+    }
+
     /**
      * returns the highest bid at the moment
      *
@@ -90,11 +105,19 @@ public abstract class Auction {
      *
      * @param bid
      */
-    public void addBid(Bid bid) {
-        if (bid == null) {
-            throw new IllegalArgumentException();
-        } else {
-            bids.add(bid);
+    public boolean addBid(Bid bid) {
+        try {
+            for (Bid item : bids) {
+                if (item.getAmount() > currentBid.getAmount()) {
+                    this.bids.add(item);
+                    this.currentBid = item;
+                    return true;
+                }
+            }
+            return false;
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex);
+            return false;
         }
     }
 
@@ -167,5 +190,6 @@ public abstract class Auction {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+    
 }
 

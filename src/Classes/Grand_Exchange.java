@@ -4,6 +4,7 @@ import Classes.Auctions.Auction;
 import Classes.User;
 import java.util.*;
 import Database.*;
+import java.sql.SQLException;
 
 public class Grand_Exchange implements Observer {
 
@@ -14,6 +15,10 @@ public class Grand_Exchange implements Observer {
 
     public User loggedInUser;// = new User("AAP","test","http://www.jamiemagazine.nl/upload/artikel/jm/banaan-vierkant.jpg");
 
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
+
     public Grand_Exchange() {
         products = new ArrayList<>();
         users = new ArrayList<>();
@@ -22,9 +27,10 @@ public class Grand_Exchange implements Observer {
 
         //Gets all existing auctions.
         auctions = con.getAuctions("*", "auction", "''");
-        
-        //DatabaseListener dbListener = new DatabaseListener();
-        //dbListener.addObserver(this);
+        products = con.getProducts();
+
+        DatabaseListener dbListener = new DatabaseListener();
+        dbListener.addObserver(this);
     }
 
     public void Load() {
@@ -139,21 +145,85 @@ public class Grand_Exchange implements Observer {
      *
      * @return List<Product>
      */
-    public Collection<Product> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
+    }
+    
+    public ArrayList<Product> getProducts(String name, CategoryEnum category) {
+        ArrayList<Product> tempList = new ArrayList<>();
+        String productName = name.toLowerCase();
+        for(Product p : products){
+            if(productName.equals("")){
+                if (p.getCategory().equals(category)){
+                    tempList.add(p);
+                }
+            }            
+            else if(p.getName().contains(productName) && p.getCategory().equals(category)){
+                tempList.add(p);
+            }
+            else if (p.getName().contains(productName)){
+                tempList.add(p);
+            }
+        }
+        
+        return tempList;
     }
 
     public Collection<Auction> getAuctions() {
         return auctions;
     }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        //TODO, receives list with auctions that have to be updated and retrieved from database.
+    
+    public boolean InstabuyItem(int amount, int auctionID, int buyerID) throws SQLException {
+        try {
+            System.out.println("amount :" + amount + " AID: " + auctionID + "BID: " + buyerID);
+            con.InstabuyItem(amount, auctionID, 1);
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+    
+    public boolean addBid(double amount, int auctionID, int buyerID, double price) {
+        try {
+            System.out.println("amount :" + amount + " AID: " + auctionID + " BID: " + buyerID + " Price: " + price);
+            con.addBid(amount, auctionID, 1, price);
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
     }
 
-    
-    public void updateAuction(Auction auction){
+    public void updateAuctionsFromDB(ArrayList<Integer> newAuctionIDs) {
+        Auction tempAuction;
+        for (int i : newAuctionIDs) {
+                tempAuction = con.getAuction(i);
+                
+                if (tempAuction == null) {
+                    System.out.println("Auction is null");
+                    }
+
+                for (Auction A : auctions) {
+                    if (A.getId() == tempAuction.getId()) {
+                        auctions.set(auctions.indexOf(A), tempAuction);
+                        System.out.println(tempAuction.getProduct().getName() + "Replaced in list.");
+                    }
+                }
+                if(!auctions.contains(tempAuction) && tempAuction != null){
+                    auctions.add(tempAuction);
+                    System.out.println(tempAuction.getProduct().getName() + "New Auction added to list.");
+                }
+            }
+        }
+
+        @Override
+        public void update (Observable o, Object arg) {
+            ArrayList<Integer> tempList = (ArrayList<Integer>) arg;
+            System.out.println("New auctions found.");
+            updateAuctionsFromDB(tempList);
+        }
+
+
+    public void updateAuction(Auction auction) {
         con.updateAuction(auction);
     }
 }
