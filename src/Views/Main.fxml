@@ -42,7 +42,8 @@
       </font>
     </Label>
     <Button layoutX="16.0" layoutY="203.0" mnemonicParsing="false" prefWidth="199.0" text="Sell an item" />
-      <Button layoutX="16.0" layoutY="47.0" mnemonicParsing="false" onAction="#button_Logout" prefHeight="25.0" prefWidth="113.0" text="Logout" />
-      <Button layoutX="16.0" layoutY="80.0" mnemonicParsing="false" onAction="#queuePurchaseClicked" prefWidth="113.0" text="Queue Purchase" />
+      <Button layoutX="172.0" layoutY="14.0" mnemonicParsing="false" onAction="#button_Logout" prefHeight="25.0" prefWidth="104.0" text="Logout" />
+      <Button layoutX="172.0" layoutY="47.0" mnemonicParsing="false" onAction="#button_viewMyFeedback" prefHeight="25.0" prefWidth="104.0" text="Feedback" />
+      <TextField fx:id="textField_usernameOfFeedbackOwner" layoutX="173.0" layoutY="80.0" prefHeight="25.0" prefWidth="104.0" promptText="nameFeedOwner" />
   </children>
 </AnchorPane>
