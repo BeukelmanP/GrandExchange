@@ -23,14 +23,16 @@ import java.util.ArrayList;
  */
 public class DatabaseListener extends Observable {
 
-    ArrayList<Integer> AuctionIdList;
+    ArrayList<Integer> auctionIdList;
+    ArrayList<Integer> queueIdList;
     private ResultSet myRs = null;
     AuctionListener auctionlistener;
     QueuePurchaseListener queueListener;
     
 
     public DatabaseListener() {
-        this.AuctionIdList = new ArrayList<>();
+        this.auctionIdList = new ArrayList<>();
+        this.queueIdList = new ArrayList<>();
         
             try {
                 auctionlistener = new AuctionListener(getConnection());
@@ -41,6 +43,7 @@ public class DatabaseListener extends Observable {
             }
         
         auctionlistener.start();
+        queueListener.start();
     }
 
     private void updateAuctionList() {
@@ -54,7 +57,7 @@ public class DatabaseListener extends Observable {
             tempResultSet = tempStatement.getResultSet();
             if (tempResultSet != null){
             while (tempResultSet.next()) {
-                AuctionIdList.add(tempResultSet.getInt("auctionID"));
+                auctionIdList.add(tempResultSet.getInt("auctionID"));
                 System.out.println(tempResultSet.getInt("auctionID"));
             }
             }
@@ -67,8 +70,36 @@ public class DatabaseListener extends Observable {
         }
     }
     
-    private ArrayList<Integer> getUpdateList(){
-        return this.AuctionIdList;
+    private void updateQueueList() {
+        ResultSet tempResultSet;
+        java.sql.Connection tempCon = getConnection();
+        CallableStatement tempStatement;
+
+        try {
+            tempStatement = tempCon.prepareCall("{call get_updated_queuepurchases()}");
+            tempStatement.execute();
+            tempResultSet = tempStatement.getResultSet();
+            if (tempResultSet != null){
+            while (tempResultSet.next()) {
+                queueIdList.add(tempResultSet.getInt("queueID"));
+            }
+            }
+            else{
+                System.out.println("resultSet of NEW queuepurchase id's is empty ?!");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseListener.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    private ArrayList<Integer> getUpdateAuctionList(){
+        return this.auctionIdList;
+    }
+    
+    private ArrayList<Integer> getUpdateQueuepurchaseList(){
+        return this.queueIdList;
     }
 
     public Connection getConnection() {
@@ -111,7 +142,8 @@ public class DatabaseListener extends Observable {
                     if (myStmt.getInt(1) >= 1) {
                         updateAuctionList();
                         setChanged();
-                        notifyObservers(getUpdateList());
+                        notifyObservers(getUpdateAuctionList());
+                        getUpdateAuctionList().clear();
                     } else {
                         System.out.println(myStmt.getInt(1));
                         System.out.println("No new auctions !");
@@ -155,7 +187,7 @@ public class DatabaseListener extends Observable {
         QueuePurchaseListener(java.sql.Connection conn) throws SQLException {
 
             this.conn = conn;
-            this.myStmt = conn.prepareCall("{call get_count(?)}");
+            this.myStmt = conn.prepareCall("{call checkQueue(?)}");
             myStmt.registerOutParameter(1, Types.INTEGER);
 
         }
@@ -171,12 +203,13 @@ public class DatabaseListener extends Observable {
                     }
 
                     if (myStmt.getInt(1) >= 1) {
-                        updateAuctionList();
+                        updateQueueList();
                         setChanged();
-                        notifyObservers(getUpdateList());
+                        notifyObservers(getUpdateQueuepurchaseList());
+                        getUpdateQueuepurchaseList().clear();
                     } else {
                         System.out.println(myStmt.getInt(1));
-                        System.out.println("No new auctions !");
+                        System.out.println("No new queuePurchases !");
                     }
 
                     Thread.sleep(5000);
