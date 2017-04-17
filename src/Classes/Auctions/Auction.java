@@ -97,7 +97,10 @@ public abstract class Auction {
     public Bid getBestBid() {
         return null;
     }
-
+    
+    public int getId(){
+        return this.id;
+    }
     /**
      *
      * @param bid
@@ -173,7 +176,11 @@ public abstract class Auction {
 
         return seller;
     }
-
+    
+    public double getInstaBuyPrice(){
+        return this.instabuyPrice;
+    }
+    
     public static double round(double value, int places) {
         if (places < 0) {
             throw new IllegalArgumentException();
@@ -184,7 +191,5 @@ public abstract class Auction {
         return bd.doubleValue();
     }
     
-    public int getId() {
-        return id;
-    }
 }
+

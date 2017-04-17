@@ -51,6 +51,7 @@ public class Connection {
     static final String GET_FROM_PRODUCT = "SELECT * FROM product WHERE id = ?";
     static final String SET_USER_NEW = "INSERT INTO user(bsn, username, password, alias, email, verified, imageURL, saldo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     static final String REMOVE_USER_BYBSN = "DELETE FROM user WHERE bsn = ?";
+    static final String Update_Auction = "UPDATE auction SET currentprice = ?, instabuyprice = ?, productquantity = ?, description = ? WHERE id = ?";
     static final String GET_AUCTION_BY_ID = "SELECT * FROM auction WHERE id = ?";
     static final String GET_FROM_PRODUCTS = "SELECT * FROM product";
     static final String GET_FROM_USER_ALLUSERS = "SELECT * FROM user";
@@ -947,14 +948,45 @@ public class Connection {
         return product;
     }
     
+
     /**
      *
      * @param auction
      */
-    public void updateAuction (Auction auction){
+    public Boolean updateAuction(Auction auction) {
+        getConnection();
 
+        if (myConn != null) {
+                try {
+                    getConnection();
+                    
+
+                    pstmt = myConn.prepareStatement(Update_Auction);
+                    pstmt.setDouble(1, auction.getCurrentPrice());
+                    pstmt.setDouble(2, auction.getInstaBuyPrice());
+                    pstmt.setInt(3, auction.getProductQuantity());
+                    pstmt.setString(4, auction.getDescription());
+                    pstmt.setInt(5, auction.getId());
+
+                    if (pstmt.executeUpdate() > 0) {
+                        System.out.println("succesfully updated auction with id: " + auction.getId());
+                        return true;
+                    } else {
+                        System.out.println("Couldn't update auction with id: " + auction.getId());
+                        return false;
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("failed to update auction. SQLException");
+                    ex.printStackTrace();
+                    closeConnection();
+                    return false;
+                }
+        } else {
+            System.out.println("failed update auction. No connection to database.");
+            return false;
+        }
     }
-
+    
     private boolean closeConnection() {
         try {
             myRs.close();
