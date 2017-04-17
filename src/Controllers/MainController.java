@@ -133,12 +133,9 @@ public class MainController implements Initializable {
         }
         auctionsPane.setContent(allAuctions);
 
-        try
-        {
+        try {
             loggedInUserImage.setImage(new Image(GX.loggedInUser.getImageURL()));
-        }
-        catch(NullPointerException ex)
-        {
+        } catch (NullPointerException ex) {
             System.out.println("LoggedInUser doesn't have an imageURL yet");
         }
         comboBoxCategory.getItems().setAll(CategoryEnum.values());
@@ -173,11 +170,11 @@ public class MainController implements Initializable {
             lstCategory.getItems().remove(selected);
         }
     }
-    
+
     @FXML
     public void button_Logout() throws IOException {
         GX.logout();
-        
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Login.fxml"));
         Parent root = loader.load();
         Stage newStage = new Stage();
@@ -186,9 +183,9 @@ public class MainController implements Initializable {
         Stage stage = (Stage) auctionsPane.getScene().getWindow();
         stage.close();
     }
-    
+
     @FXML
-    public void queuePurchaseClicked() throws IOException{
+    public void queuePurchaseClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/queuePurchase.fxml"));
         Scene newScene;
         newScene = new Scene(loader.load());
@@ -198,7 +195,7 @@ public class MainController implements Initializable {
         inputStage.setScene(newScene);
         inputStage.showAndWait();
     }
-    
+
     @FXML
     public void button_viewMyFeedback() throws IOException {
         if (!textField_usernameOfFeedbackOwner.getText().isEmpty()) {
@@ -221,11 +218,13 @@ public class MainController implements Initializable {
                 System.out.println("Failed to open feedback screen");
                 ex.printStackTrace();
             }
-        }
-        else
-        {
+        } else {
             System.out.println("textField_usernameOfFeedbackOwner may not be empty when trying to open profile feedback");
         }
-        
+    }
+
+    public void button_refreshGUI() {
+        System.out.println("refreshing GUI elements");
+        this.setUp(this.GX);
     }
 }
