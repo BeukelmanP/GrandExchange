@@ -88,7 +88,7 @@ public class AuctionController implements Initializable {
     @FXML
     private TextField txtUnitstoBuyBid;
     @FXML
-    private TextField txtBidPrice;
+    private TextField txtPriceToBid;
           
 
     Countdown countdownAuction;
@@ -150,6 +150,7 @@ public class AuctionController implements Initializable {
         if(auction.isInstabuyable() == true) {
             countdownBuyBtn.setDisable(false);
             txtUnitstoBuy.setDisable(false);
+            
         }
         else
         {
@@ -312,6 +313,7 @@ public class AuctionController implements Initializable {
             if (reply == JOptionPane.YES_OPTION) {
                 for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
                     GX.InstabuyItem(Integer.valueOf(txtUnitstoBuy.getText()), auction.getId(), loggedInUser.getUserID());
+
                     
                 }
                 auction.setProductQuantity(Integer.parseInt(txtUnitstoBuy.getText()));
@@ -347,13 +349,28 @@ public class AuctionController implements Initializable {
         
         if (Integer.parseInt(txtUnitstoBuyBid.getText()) <= auction.getProductQuantity() && Integer.parseInt(txtUnitstoBuyBid.getText()) > 0 && auction != null) {
             double totalPrice = Double.parseDouble(txtUnitstoBuyBid.getText()) * auction.getCurrentPrice();
+                double unitsToBuy = Double.parseDouble(txtUnitstoBuyBid.getText());
+                double bedrag = Double.parseDouble(txtPriceToBid.getText());
 
-            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuyBid.getText() + "\nitems with the price of: €" + auction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
-            if (reply == JOptionPane.YES_OPTION) {
-                for (int i = 0; i < Integer.parseInt(txtUnitstoBuyBid.getText()); i++) {
-                    //Voegt bid to aan de auction
-                    auction.addBid(new Bid(GX.loggedInUser, auction.getCurrentPrice()));
+                //int getal = Integer.parseInt(txtUnitstoBuy.getText());
+                if (Double.parseDouble(txtPriceToBid.getText()) > auction.getCurrentPrice()) {
+                    //auction.addBid(new Bid(GX.loggedInUser, Integer.valueOf(txtPriceToBid.getText()))); // adds bid to auction
+                    if(GX.addBid(unitsToBuy, auction.getId(), loggedInUser.getUserID(),bedrag)) {
+                        System.out.println("Correct geinsert");
+                    } else {
+                        System.out.println("FAILED");
+                    }
+                    System.out.println("Units To buy: " + unitsToBuy);
+                    System.out.println("Auction ID : " + auction.getId());
+                    System.out.println("User ID : " + loggedInUser.getUserID());
+                    System.out.println("Price To pay: " + bedrag);
+                    
                 }
+
+                //Voegt bid to aan de auction
+                //GX.addBid(Double.valueOf(txtUnitstoBuy.getText()), auction.getId(), loggedInUser.getUserID(),auction.getCurrentPrice());
+                
+                
                 auction.setProductQuantity(Integer.parseInt(txtUnitstoBuyBid.getText()));
                 setCountdownBuys(auction);
                 GX.updateAuction(auction);
@@ -364,9 +381,6 @@ public class AuctionController implements Initializable {
                 } else if (auction.getProductQuantity() == 0) {
                     countdownAvailableUnits.setText("There are no items left, you missed it");
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "Canceled");
-            }
         } else if (Integer.parseInt(txtUnitstoBuyBid.getText()) <= 0) {
             JOptionPane.showMessageDialog(null, "You can't buy less than 1 object");
         } else {

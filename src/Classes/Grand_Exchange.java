@@ -181,9 +181,16 @@ public class Grand_Exchange implements Observer {
         } catch (SQLException ex) {
             return false;
         }
-        
-        
-        
+    }
+    
+    public boolean addBid(double amount, int auctionID, int buyerID, double price) {
+        try {
+            System.out.println("amount :" + amount + " AID: " + auctionID + " BID: " + buyerID + " Price: " + price);
+            con.addBid(amount, auctionID, 1, price);
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
     }
 
     public void updateAuctionsFromDB(ArrayList<Integer> newAuctionIDs) {
