@@ -188,6 +188,7 @@ public class AuctionController implements Initializable {
         }
 
          if (auction instanceof Standard) {
+             this.minutesBar.setVisible(false);
             this.type = "standard";
             auctiontype.setText("Standard Auction");
             standardAuction = (Standard) auction;
@@ -214,6 +215,7 @@ public class AuctionController implements Initializable {
         }
          
          if (auction instanceof Direct) {
+             this.minutesBar.setVisible(false);
             this.type = "direct";
             auctiontype.setText("Direct Auction");
             directAuction = (Direct) auction;
