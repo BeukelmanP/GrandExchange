@@ -65,6 +65,11 @@ public class Connection {
         }
     }
     
+    /**
+     *
+     * @param id
+     * @return
+     */
     public Auction getAuction(int id) {
         User user;
         Product product;
@@ -151,6 +156,13 @@ public class Connection {
         return null;
     }
     
+    /**
+     *
+     * @param selectFrom
+     * @param where
+     * @param is
+     * @return
+     */
     public ArrayList<Auction> getAuctions(String selectFrom, String where, String is) {
 
         auctions = new ArrayList<Auction>() {};
@@ -243,6 +255,10 @@ public class Connection {
         return auctions;
     }
     
+    /**
+     *
+     * @return
+     */
     public ArrayList<Product> getProducts() {
 
         this.products = new ArrayList<>();
@@ -281,7 +297,11 @@ public class Connection {
         return products;
     }
 
-
+    /**
+     *
+     * @param id
+     * @return
+     */
     public User getUser(int id) {
         User user = null;
         int userID;
@@ -334,6 +354,12 @@ public class Connection {
         return user;
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @return
+     */
     public User getUser(String username, String password) {
         User user = null;
 
@@ -371,7 +397,11 @@ public class Connection {
         return user;
     }
     
-
+    /**
+     *
+     * @param checkValue
+     * @return
+     */
     public boolean hasDuplicateBSN(int checkValue) {
         Boolean hasDuplicate = false;
         int count = 0;
@@ -404,6 +434,11 @@ public class Connection {
         return hasDuplicate;
     }
 
+    /**
+     *
+     * @param checkValue
+     * @return
+     */
     public boolean hasDuplicateUsername(String checkValue) {
         Boolean hasDuplicate = false;
         int count = 0;
@@ -436,6 +471,11 @@ public class Connection {
         return hasDuplicate;
     }
 
+    /**
+     *
+     * @param checkValue
+     * @return
+     */
     public boolean hasDuplicateEmail(String checkValue) {
         Boolean hasDuplicate = false;
         int count = 0;
@@ -468,6 +508,11 @@ public class Connection {
         return hasDuplicate;
     }
 
+    /**
+     *
+     * @param checkValue
+     * @return
+     */
     public boolean hasDuplicateAlias(String checkValue) {
         Boolean hasDuplicate = false;
         int count = 0;
@@ -549,13 +594,13 @@ public class Connection {
     }
     
     /**
-     * Instabuy on a auction. This will make a new transaction and lowers the amount of the items
-     * in the auction.
-     * @param amount The amount of items the User want to buy.
-     * @param auctionID The ID of the auction.
-     * @param userID The ID of the sser. 
-     * @return true if succesfully added to the database, false if it failed to add info to the database.
-     * @throws SQLException if statement failed to add info to the database.
+     *
+     * @param amount
+     * @param auctionID
+     * @param userID
+     * @param price
+     * @return
+     * @throws SQLException
      */
     public Boolean addBid(double amount, int auctionID, int userID, double price) throws SQLException {
         getConnection();
@@ -596,6 +641,17 @@ public class Connection {
         }
     }
     
+    /**
+     *
+     * @param bsn
+     * @param username
+     * @param password
+     * @param alias
+     * @param email
+     * @param imageUrl
+     * @param saldo
+     * @return
+     */
     public Boolean setUser_REGISTER(int bsn, String username, String password, String alias, String email, String imageUrl, double saldo) {
         getConnection();
 
@@ -711,7 +767,10 @@ public class Connection {
         return product;
     }
     
-    
+    /**
+     *
+     * @param auction
+     */
     public void updateAuction (Auction auction){
 
     }

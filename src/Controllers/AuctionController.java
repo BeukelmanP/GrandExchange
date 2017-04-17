@@ -62,6 +62,8 @@ public class AuctionController implements Initializable {
     @FXML
     private Label countdownCurrentPrice;
     @FXML
+    private Label InstabuyCurrentPrice;
+    @FXML
     private Label countdownAvailableUnits;
     @FXML
     private Label instabuyTextid;
@@ -77,11 +79,11 @@ public class AuctionController implements Initializable {
     private Button countdownBuyBtn;
     @FXML
     private TextField txtUnitstoBuy;
-    @FXML
+    @FXML 
     private ScrollPane imagesPane;
     @FXML
     private ScrollPane recentPurchasesPane;
-    @FXML
+    @FXML 
     private ProgressBar minutesBar;
     @FXML
     private Button countdownBidBuyBtn;
@@ -165,6 +167,7 @@ public class AuctionController implements Initializable {
             auctiontype.setText("Countdown Auction");
             countdownAuction = (Countdown) auction;
             countdownCurrentPrice.setText("€" + countdownAuction.getCurrentPrice());
+            InstabuyCurrentPrice.setText("€" + countdownAuction.getInstabuyPrice());
             long now = System.currentTimeMillis();
             long then = countdownAuction.getCreationDate().getTime();
             long periods_passed = (long) Math.floor(((now - then) / 1000 / 60 / 20));
@@ -220,6 +223,7 @@ public class AuctionController implements Initializable {
             auctiontype.setText("Standard Auction");
             standardAuction = (Standard) auction;
             countdownCurrentPrice.setText("€" + standardAuction.getCurrentPrice());
+            InstabuyCurrentPrice.setText("€" + standardAuction.getInstabuyPrice());
             
            
             Timestamp newDate = standardAuction.getCreationDate();
@@ -246,6 +250,7 @@ public class AuctionController implements Initializable {
             auctiontype.setText("Direct Auction");
             directAuction = (Direct) auction;
             countdownCurrentPrice.setText("€" + directAuction.getCurrentPrice());
+            InstabuyCurrentPrice.setText("€" + directAuction.getInstabuyPrice());
             
            
             Timestamp newDate = directAuction.getCreationDate();
@@ -307,9 +312,9 @@ public class AuctionController implements Initializable {
         }
         
         if (Integer.parseInt(txtUnitstoBuy.getText()) <= auction.getProductQuantity() && Integer.parseInt(txtUnitstoBuy.getText()) > 0 && auction != null) {
-            double totalPrice = Double.parseDouble(txtUnitstoBuy.getText()) * auction.getCurrentPrice();
+            double totalPrice = Double.parseDouble(txtUnitstoBuy.getText()) * auction.getInstabuyPrice();
 
-            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + auction.getCurrentPrice() + " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
+            int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to buy " + txtUnitstoBuy.getText() + "\nitems with the price of: €" + auction.getInstabuyPrice()+ " a item \nand a total of: €" + totalPrice, "Are you sure?", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
                 for (int i = 0; i < Integer.parseInt(txtUnitstoBuy.getText()); i++) {
                     GX.InstabuyItem(Integer.valueOf(txtUnitstoBuy.getText()), auction.getId(), loggedInUser.getUserID());

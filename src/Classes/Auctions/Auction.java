@@ -15,6 +15,8 @@ public abstract class Auction {
 
     private double currentPrice;
     private double instabuyPrice;
+
+    
     private boolean instabuyable;
     private int productQuantity;
     private Bid currentBid;
@@ -23,7 +25,6 @@ public abstract class Auction {
     private StatusEnum status;
     private String description;
     private String[] imageURLs;
-    private double instabuy;
 
     /**
      *
@@ -48,7 +49,7 @@ public abstract class Auction {
         this.description = description;
         this.imageURLs = imageURLs.split(";");
         bids = new ArrayList<>();
-        this.instabuy = instabuy;
+        this.instabuyPrice = instabuy;
     }
 
     /**
@@ -75,6 +76,11 @@ public abstract class Auction {
         bids = new ArrayList<>();
     }
 
+    
+    public double getInstabuyPrice() {
+        return instabuyPrice;
+    }
+    
     public boolean isInstabuyable() {
         return instabuyable;
     }

@@ -38,12 +38,12 @@
       <children>
         <Label layoutX="15.0" layoutY="51.0" text="Current Price:">
           <font>
-            <Font size="15.0" />
+            <Font size="15.0" fx:id="x2" />
           </font>
         </Label>
         <Label id="currentPrice" fx:id="countdownCurrentPrice" layoutX="15.0" layoutY="71.0" text="...">
           <font>
-            <Font size="25.0" />
+            <Font size="25.0" fx:id="x3" />
           </font>
         </Label>
         <Label fx:id="countdownAvailableUnits" layoutX="15.0" layoutY="104.0" text="units" />
@@ -69,6 +69,8 @@
         <Label id="BidTextid" layoutX="121.0" layoutY="194.0" text="Units to buy:" />
         <TextField id="txtBidPrice" fx:id="txtPriceToBid" layoutX="208.0" layoutY="211.0" prefWidth="76.0" />
         <Label id="instabuyTextid" layoutX="210.0" layoutY="195.0" text="Bid price:" />
+        <Label font="$x2" layoutX="197.0" layoutY="51.0" text="Instabuy price:" />
+        <Label id="instabuyPrice" fx:id="InstabuyCurrentPrice" font="$x3" layoutX="197.0" layoutY="71.0" text="..." />
       </children>
     </Pane>
     <Pane layoutX="800.0" layoutY="0.0" prefHeight="800.0" prefWidth="400.0" style="-fx-background-color: lightgrey;">
