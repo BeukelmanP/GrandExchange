@@ -51,6 +51,23 @@ public class Grand_Exchange implements Observer {
     }
 
     /**
+     * gets user from collection of users with given username
+     *
+     * @param userName
+     */
+    public User getUser(String userName) {
+        User missingUser = null;
+        for (User u : this.users)
+        {
+            if (u.getUsername().equals(userName))
+            {
+                missingUser = u;
+            }
+        }
+        return missingUser;
+    }
+    
+    /**
      * removes user from collection of users
      *
      * @param user : may not be null
@@ -215,6 +232,15 @@ public class Grand_Exchange implements Observer {
             }
         }
 
+        public void updateUsers()
+        {
+            this.users.clear();
+            for (User u : this.con.getAllUsers())
+            {
+                this.addUser(u);
+            }
+        }
+    
         @Override
         public void update (Observable o, Object arg) {
             ArrayList<Integer> tempList = (ArrayList<Integer>) arg;
