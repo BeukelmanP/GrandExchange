@@ -95,7 +95,7 @@ public class Profile_FeedbackController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Main.fxml"));
         Parent root = loader.load();
 
-        MainController controller = (MainController) loader.getController();
+        MainController controller = (MainController)loader.getController();
         controller.setUp(GX);
 
         Stage newStage = new Stage();
@@ -104,5 +104,11 @@ public class Profile_FeedbackController implements Initializable {
         newStage.show();
         Stage stage = (Stage) currentPane.getScene().getWindow();
         stage.close();
+    }
+    
+    @FXML
+    public void button_cancelFeedbackSubmit() throws IOException {
+        this.slider_rating.setValue(1);
+        this.textfield_description.setText("");
     }
 }
