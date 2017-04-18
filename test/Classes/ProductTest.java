@@ -22,7 +22,7 @@ public class ProductTest {
     
     @Before
     public void setUp() {
-        testProduct = new Product("5035223116370","FIFA 17 - Deluxe Edition - PS4", "De Deluxe Edtion met daarin 20 FIFA Ultimate Team Premium Jumbo Goud-pakketten en Team van de week FUT-leenspelers voor 3 wedstrijden. Dit is beide maximaal 1 gedurende 20 weken.");
+        testProduct = new Product(1,"5035223116370","FIFA 17 - Deluxe Edition - PS4", "De Deluxe Edtion met daarin 20 FIFA Ultimate Team Premium Jumbo Goud-pakketten en Team van de week FUT-leenspelers voor 3 wedstrijden. Dit is beide maximaal 1 gedurende 20 weken.");
     }
     
     @After
