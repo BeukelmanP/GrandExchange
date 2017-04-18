@@ -57,7 +57,8 @@ public class User {
     }
     
     /**
-     * constructor for a user that gets initialized by supplying his name and password.
+     * constructor for a user that gets initialized by supplying his name and password imageURL
+     * this constructor doesn't do anything with the database, so use this as a stub for more or less 'empty' users (for e.g. testing)
      * @param username
      * @param password
      * @param imageURL

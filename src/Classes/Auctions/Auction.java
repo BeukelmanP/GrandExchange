@@ -44,7 +44,7 @@ public abstract class Auction {
         DecimalFormat decim = new DecimalFormat("#.00");
         this.currentPrice = price;
         this.productQuantity = quantity;
-        this.instabuyable = false;
+        this.instabuyable = true;
         this.status = status;
         this.description = description;
         this.imageURLs = imageURLs.split(";");
@@ -84,6 +84,10 @@ public abstract class Auction {
     public boolean isInstabuyable() {
         return instabuyable;
     }
+    
+    public void setInstabuyable(boolean value) {
+        this.instabuyable = value;
+    }
 
     /**
      * returns the highest bid at the moment
@@ -93,7 +97,10 @@ public abstract class Auction {
     public Bid getBestBid() {
         return null;
     }
-
+    
+    public int getId(){
+        return this.id;
+    }
     /**
      *
      * @param bid
@@ -169,7 +176,11 @@ public abstract class Auction {
 
         return seller;
     }
-
+    
+    public double getInstaBuyPrice(){
+        return this.instabuyPrice;
+    }
+    
     public static double round(double value, int places) {
         if (places < 0) {
             throw new IllegalArgumentException();
@@ -180,7 +191,5 @@ public abstract class Auction {
         return bd.doubleValue();
     }
     
-    public int getId() {
-        return id;
-    }
 }
+

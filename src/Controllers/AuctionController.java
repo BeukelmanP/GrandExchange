@@ -66,7 +66,7 @@ public class AuctionController implements Initializable {
     @FXML
     private Label countdownAvailableUnits;
     @FXML
-    private Label instabuyTextid;
+    private Label InstabuyLabel;
     @FXML
     private Label CreateDate;
     @FXML
@@ -146,19 +146,8 @@ public class AuctionController implements Initializable {
         sellerImage.setImage(new Image(auction.getSeller().getImageURL()));
         sellerName.setText(auction.getSeller().getUsername());
         imagesPane.setContent(imagePane);
-        
-        
-        // Checks if auction has instabuy.
-        if(auction.isInstabuyable() == true) {
-            countdownBuyBtn.setDisable(false);
-            txtUnitstoBuy.setDisable(false);
-            
-        }
-        else
-        {
-            //countdownBuyBtn.setDisable(true);
-            //txtUnitstoBuy.setDisable(true);
-        }
+
+       
         
         
         //Checks if auction is of instance Countdown
@@ -218,10 +207,12 @@ public class AuctionController implements Initializable {
         }
 
          if (auction instanceof Standard) {
+             this.minutesBar.setVisible(false);
             this.type = "standard";
             this.minutesBar.setVisible(false);
             auctiontype.setText("Standard Auction");
             standardAuction = (Standard) auction;
+            
             countdownCurrentPrice.setText("€" + standardAuction.getCurrentPrice());
             InstabuyCurrentPrice.setText("€" + standardAuction.getInstabuyPrice());
             
@@ -246,6 +237,7 @@ public class AuctionController implements Initializable {
         }
          
          if (auction instanceof Direct) {
+             this.minutesBar.setVisible(false);
             this.type = "direct";
             auctiontype.setText("Direct Auction");
             directAuction = (Direct) auction;
@@ -280,6 +272,23 @@ public class AuctionController implements Initializable {
                 }
             }
         });
+        
+         // Checks if auction has instabuy.
+        if(auction.isInstabuyable() == true) {
+            countdownBuyBtn.setDisable(false);
+            txtUnitstoBuy.setDisable(false);       
+            InstabuyCurrentPrice.setDisable(false);
+            InstabuyLabel.setDisable(false);
+            
+        }
+        else
+        {
+            InstabuyCurrentPrice.setText("...");
+            countdownBuyBtn.setDisable(true);
+            txtUnitstoBuy.setDisable(true);
+            InstabuyCurrentPrice.setDisable(true);
+            InstabuyLabel.setDisable(true);
+        }
     }
 
     public String setStatus(StatusEnum status) {

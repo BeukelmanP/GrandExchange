@@ -14,6 +14,9 @@ import Classes.Feedback;
 import Classes.Product;
 import Classes.Queue_Purchase;
 import Classes.User;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.CallableStatement;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -22,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -48,6 +52,7 @@ public class Connection {
     static final String GET_FROM_PRODUCT = "SELECT * FROM product WHERE id = ?";
     static final String SET_USER_NEW = "INSERT INTO user(bsn, username, password, alias, email, verified, imageURL, saldo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     static final String REMOVE_USER_BYBSN = "DELETE FROM user WHERE bsn = ?";
+    static final String Update_Auction = "UPDATE auction SET currentprice = ?, instabuyprice = ?, productquantity = ?, description = ? WHERE id = ?";
     static final String GET_AUCTION_BY_ID = "SELECT * FROM auction WHERE id = ?";
     static final String GET_FROM_PRODUCTS = "SELECT * FROM product";
     static final String GET_FROM_USER_ALLUSERS = "SELECT * FROM user";
@@ -91,6 +96,7 @@ public class Connection {
         double priceloweringAmount;
         double priceloweringDelay;
         double minprice;
+        boolean isInstabuyable;
         StatusEnum status;
         String description;
         String imageURL;
@@ -122,8 +128,9 @@ public class Connection {
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
                     date = myRs.getTimestamp("timecreated");
-                    
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 // In case of Direct 
@@ -138,7 +145,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Direct(id, user, product, price, begin, quantity, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 //In case of standard auction
@@ -154,7 +163,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Standard(id, user, product, price, quantity, begin, date, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
                 return auction;
             
@@ -187,6 +198,7 @@ public class Connection {
         double priceloweringAmount;
         double priceloweringDelay;
         double minprice;
+        boolean isInstabuyable;
         StatusEnum status;
         String description;
         String imageURL;
@@ -221,7 +233,9 @@ public class Connection {
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
                     date = myRs.getTimestamp("timecreated");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Countdown(id, user, product, quantity, price, priceloweringAmount, priceloweringDelay, minprice, status, description, imageURL, instabuyprice, date);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 // In case of Direct 
@@ -236,7 +250,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Direct(id, user, product, price, begin, quantity, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 if (myRs.getString("type").equals("standard")) {
@@ -251,7 +267,9 @@ public class Connection {
                     description = myRs.getString("description");
                     imageURL = myRs.getString("imageUrl");
                     instabuyprice = myRs.getDouble("instabuyprice");
+                    isInstabuyable = myRs.getBoolean("instabuyable");
                     auction = new Standard(id, user, product, price, quantity, begin, date, status, description, imageURL, instabuyprice);
+                    auction.setInstabuyable(isInstabuyable);
                 }
 
                 auctions.add(auction);
@@ -612,7 +630,6 @@ public class Connection {
         }
     }
 
-    
     /**
      *
      * @param checkValue
@@ -1089,10 +1106,40 @@ public class Connection {
      *
      * @param auction
      */
-    public void updateAuction (Auction auction){
+    public Boolean updateAuction(Auction auction) {
+        getConnection();
 
+        if (myConn != null) {
+                try {
+                    getConnection();
+                    
+
+                    pstmt = myConn.prepareStatement(Update_Auction);
+                    pstmt.setDouble(1, auction.getCurrentPrice());
+                    pstmt.setDouble(2, auction.getInstaBuyPrice());
+                    pstmt.setInt(3, auction.getProductQuantity());
+                    pstmt.setString(4, auction.getDescription());
+                    pstmt.setInt(5, auction.getId());
+
+                    if (pstmt.executeUpdate() > 0) {
+                        System.out.println("succesfully updated auction with id: " + auction.getId());
+                        return true;
+                    } else {
+                        System.out.println("Couldn't update auction with id: " + auction.getId());
+                        return false;
+                    }
+                } catch (SQLException ex) {
+                    System.out.println("failed to update auction. SQLException");
+                    ex.printStackTrace();
+                    closeConnection();
+                    return false;
+                }
+        } else {
+            System.out.println("failed update auction. No connection to database.");
+            return false;
+        }
     }
-
+    
     private boolean closeConnection() {
         try {
             myRs.close();
