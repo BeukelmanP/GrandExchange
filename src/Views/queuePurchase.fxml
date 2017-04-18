@@ -38,8 +38,8 @@
       </Label>
       <TextField fx:id="textFieldProductName" layoutX="85.0" layoutY="12.0" prefHeight="25.0" prefWidth="156.0" />
       <ScrollPane fx:id="productsPane" content="$null" hbarPolicy="NEVER" layoutX="301.0" prefHeight="680.0" prefWidth="426.0" />
-      <Button layoutX="15.0" layoutY="404.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="147.0" text="Create queue Purchase" />
-      <TextField layoutX="87.0" layoutY="271.0" prefHeight="25.0" prefWidth="147.0" />
+      <Button layoutX="15.0" layoutY="404.0" mnemonicParsing="false" onAction="#createQueuePurchase" prefHeight="25.0" prefWidth="147.0" text="Create queue Purchase" />
+      <TextField fx:id="txtQuantity" layoutX="87.0" layoutY="271.0" prefHeight="25.0" prefWidth="147.0" />
       <Label layoutX="16.0" layoutY="273.0" prefHeight="21.0" prefWidth="71.0" text="Quantity">
          <font>
             <Font size="15.0" fx:id="x1111" />
@@ -50,19 +50,19 @@
             <Font size="15.0" fx:id="x11111" />
          </font>
       </Label>
-      <TextField layoutX="87.0" layoutY="305.0" prefHeight="25.0" prefWidth="147.0" />
+      <TextField fx:id="txtMinPrice" layoutX="87.0" layoutY="305.0" prefHeight="25.0" prefWidth="147.0" />
       <Label layoutX="16.0" layoutY="341.0" prefHeight="21.0" prefWidth="71.0" text="Max Price">
          <font>
             <Font size="15.0" fx:id="x11112" />
          </font>
       </Label>
-      <TextField layoutX="87.0" layoutY="339.0" prefHeight="25.0" prefWidth="147.0" />
-      <Label layoutX="16.0" layoutY="373.0" prefHeight="21.0" prefWidth="71.0" text="Product">
+      <TextField fx:id="txtMaxPrice" layoutX="87.0" layoutY="339.0" prefHeight="25.0" prefWidth="147.0" />
+      <Label layoutX="16.0" layoutY="373.0" prefHeight="21.0" prefWidth="71.0" text="Product :">
          <font>
             <Font size="15.0" fx:id="x11113" />
          </font>
       </Label>
-      <Label fx:id="lblProductName" layoutX="87.0" layoutY="373.0" prefHeight="21.0" prefWidth="156.0" text="Selected Product Name">
+      <Label fx:id="lblProductName" layoutX="87.0" layoutY="373.0" prefHeight="21.0" prefWidth="156.0">
          <font>
             <Font size="15.0" fx:id="x111131" />
          </font>

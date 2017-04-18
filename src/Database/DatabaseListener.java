@@ -21,13 +21,14 @@ import java.util.ArrayList;
  *
  * @author SwekLord420
  */
-public class DatabaseListener extends Observable {
+public class DatabaseListener extends Observable{
 
     ArrayList<Integer> auctionIdList;
     ArrayList<Integer> queueIdList;
     private ResultSet myRs = null;
     AuctionListener auctionlistener;
     QueuePurchaseListener queueListener;
+    public String type;
     
 
     public DatabaseListener() {
@@ -94,11 +95,11 @@ public class DatabaseListener extends Observable {
     }
     
     
-    private ArrayList<Integer> getUpdateAuctionList(){
+    public ArrayList<Integer> getUpdateAuctionList(){
         return this.auctionIdList;
     }
     
-    private ArrayList<Integer> getUpdateQueuepurchaseList(){
+    public ArrayList<Integer> getUpdateQueuepurchaseList(){
         return this.queueIdList;
     }
 
@@ -116,7 +117,7 @@ public class DatabaseListener extends Observable {
         }
     }
 
-    class AuctionListener extends Thread {
+    class AuctionListener extends Thread  {
 
         private java.sql.Connection conn;
         CallableStatement myStmt;
@@ -140,9 +141,10 @@ public class DatabaseListener extends Observable {
                     }
 
                     if (myStmt.getInt(1) >= 1) {
+                        type = "Auction";
                         updateAuctionList();
                         setChanged();
-                        notifyObservers(getUpdateAuctionList());
+                        notifyObservers(type);
                         getUpdateAuctionList().clear();
                     } else {
                         System.out.println(myStmt.getInt(1));
@@ -203,9 +205,10 @@ public class DatabaseListener extends Observable {
                     }
 
                     if (myStmt.getInt(1) >= 1) {
+                        type = "Queue";
                         updateQueueList();
                         setChanged();
-                        notifyObservers(getUpdateQueuepurchaseList());
+                        notifyObservers(type);
                         getUpdateQueuepurchaseList().clear();
                     } else {
                         System.out.println(myStmt.getInt(1));

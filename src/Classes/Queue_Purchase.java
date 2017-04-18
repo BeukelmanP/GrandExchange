@@ -6,6 +6,26 @@ public class Queue_Purchase {
     private int quantity;
     private double minPrice;
     private double maxPrice;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public double getMinPrice() {
+        return minPrice;
+    }
+
+    public double getMaxPrice() {
+        return maxPrice;
+    }
+
+    public int getProductID() {
+        return productID;
+    }
+
+    public int getPlacerID() {
+        return placerID;
+    }
     private int productID;
     private int placerID;
 
@@ -22,7 +42,7 @@ public class Queue_Purchase {
             this.id = id;
         }
         
-        public void getID(int id){
-            this.id = id;
+        public int getID(){
+            return this.id;
         }
 }

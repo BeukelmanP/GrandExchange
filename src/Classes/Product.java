@@ -4,13 +4,17 @@ import java.util.Random;
 
 public class Product {
 
+    private int id;
+
+
     private String GTIN;
     private String name;
     private String description;
     private CategoryEnum category;
 
     
-    public Product(String GTIN, String name, String description) {
+    public Product(int id, String GTIN, String name, String description) {
+        this.id = id;
         this.GTIN = GTIN;
         this.name = name.toLowerCase();
         this.description = description;
@@ -31,6 +35,10 @@ public class Product {
     
     public CategoryEnum getCategory(){
         return this.category;
+    }
+    
+    public int getId() {
+        return id;
     }
     
     public void randomEnum(){

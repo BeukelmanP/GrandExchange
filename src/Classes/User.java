@@ -27,6 +27,8 @@ public class User {
     private List<Auction> placedAuctions;
     private List<Queue_Purchase> placedOrders;
     private List<Transaction> transactions;
+    private List<Feedback> feedbacklist;
+
 
     /**
      * constructor for a user that gets initialized by supplying his name and password.
@@ -51,6 +53,7 @@ public class User {
         this.placedAuctions = myUser.placedAuctions;
         this.placedOrders = myUser.placedOrders;
         this.transactions = myUser.transactions;
+        this.feedbacklist = myUser.feedbacklist;
     }
     
     /**
@@ -84,6 +87,35 @@ public class User {
         this.placedAuctions = new ArrayList<Auction>();
         this.placedOrders = new ArrayList<Queue_Purchase>();
         this.transactions = new ArrayList<Transaction>();
+        this.feedbacklist = new ArrayList<Feedback>();
+    }   
+    
+    /**
+     * User with everything manually inputted except for the lists. 
+     * The list initialization still needs to be properly implemented.
+     * @param BSN
+     * @param username
+     * @param password
+     * @param alias
+     * @param email
+     * @param verified
+     * @param saldo
+     * @param imageURL 
+     */
+    public User(int BSN, String username, String password, String alias, String email, boolean verified, double saldo, String imageURL) {
+        this.BSN = BSN;
+        this.username = username;
+        this.password = password;
+        this.alias = alias;
+        this.email = email;
+        this.verified = verified;
+        this.saldo = saldo;
+        this.imageURL = imageURL;
+        this.bids = new ArrayList<Bid>();
+        this.placedAuctions = new ArrayList<Auction>();
+        this.placedOrders = new ArrayList<Queue_Purchase>();
+        this.transactions = new ArrayList<Transaction>();
+        this.feedbacklist = new ArrayList<Feedback>();
     }   
     
     public int getUserID() {
@@ -212,5 +244,79 @@ public class User {
     
     public String getImageURL() {
         return imageURL;
+    }
+    
+    public void addFeedback(Feedback feedback)
+    {
+        if (!this.feedbacklist.contains(feedback))
+        {
+            this.feedbacklist.add(feedback);
+        }
+    }
+
+    public void removeFeedback(Feedback feedback)
+    {
+        this.feedbacklist.remove(feedback);
+    }
+    
+    
+    /**
+     * Receives the list with feedback addressed to user object
+     *
+     * @return a list with feedback objects
+     */
+    public List<Feedback> getFeedbackToMe() {
+        List<Feedback> feedbackToMeList = new ArrayList<Feedback>();
+        for (Feedback f : this.feedbacklist)
+        {
+           if (f.getUserTo_Username().equals(this.username))
+            {
+                feedbackToMeList.add(f);
+            }
+        }
+        
+        return feedbackToMeList;
+    }
+    
+    /**
+     * Receives the list with feedback sended by user object
+     *
+     * @return a list with feedback objects
+     */
+    public List<Feedback> getFeedbackFromMe() {
+        List<Feedback> feedbackFromMeList = new ArrayList<Feedback>();
+        for (Feedback f : this.feedbacklist)
+        {
+            if (f.getUserFrom_Username().equals(this.username))
+            {
+                feedbackFromMeList.add(f);
+            }
+        }
+        
+        return feedbackFromMeList;
+    }
+    
+    /**
+     * Receives the list with all feedback related to user object
+     *
+     * @return a list with feedback objects
+     */
+    public List<Feedback> getFeedbacklist() {
+        return this.feedbacklist;
+    }
+    
+    public void updateFeedbacklist()
+    {
+        Connection conn = new Connection();
+        conn.getConnection();
+        this.feedbacklist.clear();
+        for (Feedback f : conn.getFeedbackToSeller(this.username))
+        {
+            this.addFeedback(f);
+        }
+        for (Feedback f : conn.getFeedbackFromBuyer(this.username))
+        {
+            this.addFeedback(f);
+        }
     }
 }

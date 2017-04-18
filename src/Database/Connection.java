@@ -10,7 +10,9 @@ import Classes.Auctions.Countdown;
 import Classes.Auctions.Direct;
 import Classes.Auctions.Standard;
 import Classes.Auctions.StatusEnum;
+import Classes.Feedback;
 import Classes.Product;
+import Classes.Queue_Purchase;
 import Classes.User;
 import java.sql.CallableStatement;
 import java.sql.DriverManager;
@@ -20,6 +22,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,6 +50,15 @@ public class Connection {
     static final String REMOVE_USER_BYBSN = "DELETE FROM user WHERE bsn = ?";
     static final String GET_AUCTION_BY_ID = "SELECT * FROM auction WHERE id = ?";
     static final String GET_FROM_PRODUCTS = "SELECT * FROM product";
+    static final String GET_FROM_USER_ALLUSERS = "SELECT * FROM user";
+    static final String GET_FROM_FEEDBACK_TOSELLER = "SELECT * FROM feedback WHERE sellerid = ?";
+    static final String GET_FROM_FEEDBACK_FROMBUYER = "SELECT * FROM feedback WHERE buyerid = ?";
+    static final String SET_QUEUEPURCHASE_NEW = "INSERT INTO queuepurchase(quantity, minprice, maxprice, productid, placerID) VALUES (?,?,?,?,?)";
+    static final String GET_QUEUEPURCHASE = "SELECT * FROM queuepurchase WHERE id = ?";
+    static final String GET_ALL_QUEUEPURCHASE = "SELECT * FROM queuepurchase";
+    static final String DELETE_QUEUEPURCHASE = "DELETE FROM queuepurchase WHERE id = ?";
+    static final String SET_FEEDBACK_TOSELLER = "INSERT INTO feedback(timeCreated, rating, description, sellerid, buyerid) VALUES(CURRENT_TIMESTAMP, ?, ?, ?, ?)";
+    
     public Connection() {
 
     }
@@ -282,7 +295,7 @@ public class Connection {
                     name = myRs.getString("name");
                     description = myRs.getString("description");
                     gtin = myRs.getString("gtin");
-                    product = new Product(gtin, name, description);
+                    product = new Product(id, gtin, name, description);
                 
                 products.add(product);
             }
@@ -293,6 +306,52 @@ public class Connection {
 
         closeConnection();
         return products;
+    }
+    
+    public ArrayList<Queue_Purchase> getQueuePurchases() {
+
+        ArrayList<Queue_Purchase> queuepurchases = new ArrayList<>();
+        Queue_Purchase queuepurchase = null;
+        int id;
+        int quantity;
+        double minPrice;
+        double maxPrice;
+        int productID;
+        int placerID;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultset = null;
+
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement(GET_ALL_QUEUEPURCHASE);
+
+            myRs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            while (myRs.next()) {
+                id = resultset.getInt("id");
+                quantity = resultset.getInt("quantity");
+                minPrice = resultset.getDouble("minprice");
+                maxPrice = resultset.getDouble("maxprice");
+                productID = resultset.getInt("productid");
+                placerID = resultset.getInt("placerID");
+
+                queuepurchase = new Queue_Purchase(quantity, minPrice, maxPrice, productID, placerID);
+                queuepurchase.setID(id);
+                
+                queuepurchases.add(queuepurchase);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            System.out.println("Product ding connection ophalen failed ofzo.");
+        }
+
+        closeConnection();
+        return queuepurchases;
     }
 
     /**
@@ -394,6 +453,165 @@ public class Connection {
 
         return user;
     }
+
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> users = new ArrayList<User>();
+
+        int bsn;
+        String username;
+        String password;
+        String alias;
+        String email;
+        boolean verified;
+        float saldo;
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultset = null;
+
+        if (myConn != null) {
+
+            try {
+                getConnection();
+                preparedStatement = myConn.prepareStatement(GET_FROM_USER_ALLUSERS);
+                resultset = preparedStatement.executeQuery();
+
+                while (resultset.next()) {
+                    
+                    bsn = resultset.getInt("bsn");
+                    username = resultset.getString("username");
+                    password = resultset.getString("password");
+                    alias = resultset.getString("alias");
+                    email = resultset.getString("email");
+                    verified = resultset.getBoolean("verified");
+                    saldo = resultset.getFloat("saldo");
+                    String imgURL = resultset.getString("imageUrl");
+
+                    User foundUser = new User(bsn, username, password, alias, email, verified, saldo, imgURL);
+                    users.add(foundUser);
+                }
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            System.out.println("There is no existing connection");
+        }
+        return users;
+    }
+    
+    public List<Feedback> getFeedbackToSeller(String sellerid) {
+        List<Feedback> feedbackToSeller = new ArrayList<Feedback>();
+
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement(GET_FROM_FEEDBACK_TOSELLER);
+            pstmt.setString(1, sellerid);
+            myRs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            while (myRs.next()) {
+                String sellerUsername = myRs.getString("sellerid");
+                String buyerUsername = myRs.getString("buyerid"); //in tabel user is id nu varchar(20) ipv int. met username wordt nu het id ingevuld
+                int rating = myRs.getInt("rating");
+                String description = myRs.getString("description");
+
+                //gets date from 
+                Date timeCreated = null;
+                timeCreated = myRs.getDate("timeCreated");
+                Timestamp timestamp = myRs.getTimestamp("timeCreated");
+                if (timestamp != null) {
+                    timeCreated = new Date(timestamp.getTime());
+                }
+
+                Feedback f = new Feedback(timeCreated, buyerUsername, sellerUsername, rating, description);
+                feedbackToSeller.add(f);
+            }
+            closeConnection();
+        } catch (SQLException ex) {
+            System.out.println("SQLException at getFeedbackToSeller");
+            ex.printStackTrace();
+            closeConnection();
+        }
+
+        return feedbackToSeller;
+    }
+
+    public List<Feedback> getFeedbackFromBuyer(String buyerid) {
+        List<Feedback> feedbackFromBuyer = new ArrayList<Feedback>();
+
+        try {
+            getConnection();
+            pstmt = myConn.prepareStatement(GET_FROM_FEEDBACK_FROMBUYER);
+            pstmt.setString(1, buyerid);
+            myRs = pstmt.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            while (myRs.next()) {
+                String sellerUsername = myRs.getString("sellerid");
+                String buyerUsername = myRs.getString("buyerid"); //in tabel user is id nu varchar(20) ipv int. met username wordt nu het id ingevuld
+                int rating = myRs.getInt("rating");
+                String description = myRs.getString("description");
+
+                //gets date from 
+                Date timeCreated = null;
+                timeCreated = myRs.getDate("timeCreated");
+                Timestamp timestamp = myRs.getTimestamp("timeCreated");
+                if (timestamp != null) {
+                    timeCreated = new Date(timestamp.getTime());
+                }
+
+                Feedback f = new Feedback(timeCreated, buyerUsername, sellerUsername, rating, description);
+                feedbackFromBuyer.add(f);
+            }
+            closeConnection();
+        } catch (SQLException ex) {
+            System.out.println("SQLException at getFeedbackToSeller");
+            ex.printStackTrace();
+            closeConnection();
+        }
+
+        return feedbackFromBuyer;
+    }
+
+    public Boolean submitFeedback(int rating, String description, String sellerid, String buyerid) {
+        getConnection();
+
+        if (myConn != null) {
+            try {
+                getConnection();
+                pstmt = myConn.prepareStatement(SET_FEEDBACK_TOSELLER);
+                pstmt.setInt(1, rating);
+                pstmt.setString(2, description);
+                pstmt.setString(3, sellerid);
+                pstmt.setString(4, buyerid);
+
+                if (pstmt.executeUpdate() > 0) {
+                    System.out.println("succesfully submitted new feedback from " + buyerid + " to " + sellerid);
+                    return true;
+                } else {
+                    System.out.println("Couldn't insert new feedback from " + buyerid + " to " + sellerid + ". Rows are unaffected.");
+                    return false;
+                }
+            } catch (SQLException ex) {
+                System.out.println("failed to submit new feedback from " + buyerid + " to " + sellerid + ". SQLException");
+                ex.printStackTrace();
+                closeConnection();
+                return false;
+            }
+        } else {
+            System.out.println("Registration of duplicate user isn't allowed.");
+            return false;
+        }
+    }
+
     
     /**
      *
@@ -551,7 +769,7 @@ public class Connection {
      * @return true if succesfully added to the database, false if it failed to add info to the database.
      * @throws SQLException if statement failed to add info to the database.
      */
-    public Boolean InstabuyItem(int amount, int auctionID, int userID) throws SQLException {
+    public Boolean InstabuyItem(int amount, int auctionID, int userID) {
         getConnection();
         
         
@@ -690,6 +908,36 @@ public class Connection {
             return false;
         }
     }
+    
+        public Boolean insertQueuePurchase(int quantity, double minprice, double maxprice, int productid, int placerid) {
+        getConnection();
+        
+                try {
+                    //INSERT INTO queuepurchase(quantity, minprice, maxprice, productid, placerID
+                    pstmt = myConn.prepareStatement(SET_QUEUEPURCHASE_NEW);
+                    pstmt.setInt(1, quantity);
+                    pstmt.setDouble(2, minprice);
+                    pstmt.setDouble(3, maxprice);
+                    pstmt.setInt(4, productid);
+                    pstmt.setInt(5, placerid);
+
+                    if (pstmt.executeUpdate() > 0) {
+                        System.out.println("succesfully registered new queuePurchase: ");
+                        closeConnection();
+                        return true;
+                    } else {
+                        System.out.println("Couldn't insert new queuePurchase. Rows are unaffected.");
+                        closeConnection();
+                        return false;
+                    }
+                } catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                    closeConnection();
+                    return false;
+                }
+            
+
+    }
 
     /**
      * removes a user with given bsn note: doesn't delete any objects yet that
@@ -728,6 +976,7 @@ public class Connection {
     private Product getProduct(int productID) {
 
         Product product = null;
+        int id;
         String name;
         String description;
         String gtin;
@@ -747,11 +996,12 @@ public class Connection {
             }
 
             try {
+                id = resultset.getInt("id");
                 name = resultset.getString("name");
                 description = resultset.getString("description");
                 gtin = resultset.getString("gtin");
 
-                product = new Product(gtin, name, description);
+                product = new Product(id, gtin, name, description);
 
                 return product;
             } catch (SQLException ex) {
@@ -764,6 +1014,76 @@ public class Connection {
         }
         return product;
     }
+    
+    public Queue_Purchase deleteQueuePurchase(int queueID) {
+        
+        getConnection();
+        Queue_Purchase queuepurchase = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultset = null;
+
+            try {
+                preparedStatement = myConn.prepareStatement(GET_QUEUEPURCHASE);
+                preparedStatement.setInt(1, queueID);
+                resultset = preparedStatement.executeQuery();
+                resultset.next();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            getConnection();
+            getQueuePurchase(queueID);
+        
+        return queuepurchase;
+    }
+    
+    
+    public Queue_Purchase getQueuePurchase(int queueID) {
+        
+        getConnection();
+        Queue_Purchase queuepurchase = null;
+        int id;
+        int quantity;
+        double minPrice;
+        double maxPrice;
+        int productID;
+        int placerID;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultset = null;
+
+            try {
+                preparedStatement = myConn.prepareStatement(GET_QUEUEPURCHASE);
+                preparedStatement.setInt(1, queueID);
+                resultset = preparedStatement.executeQuery();
+                resultset.next();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            try {
+                id = resultset.getInt("id");
+                quantity = resultset.getInt("quantity");
+                minPrice = resultset.getDouble("minprice");
+                maxPrice = resultset.getDouble("maxprice");
+                productID = resultset.getInt("productid");
+                placerID = resultset.getInt("placerID");
+
+                queuepurchase = new Queue_Purchase(quantity, minPrice, maxPrice, productID, placerID);
+                queuepurchase.setID(id);
+                closeConnection();
+                return queuepurchase;
+            } catch (SQLException ex) {
+                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            getConnection();
+            getQueuePurchase(queueID);
+        
+        return queuepurchase;
+    }
+
     
     /**
      *

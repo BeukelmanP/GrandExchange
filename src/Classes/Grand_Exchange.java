@@ -11,7 +11,9 @@ public class Grand_Exchange implements Observer {
     ArrayList<Product> products;
     ArrayList<User> users;
     ArrayList<Auction> auctions;
+    ArrayList<Queue_Purchase> queuepurchases;
     Connection con;
+    DatabaseListener dbListener;
 
     public User loggedInUser;// = new User("AAP","test","http://www.jamiemagazine.nl/upload/artikel/jm/banaan-vierkant.jpg");
 
@@ -23,13 +25,15 @@ public class Grand_Exchange implements Observer {
         products = new ArrayList<>();
         users = new ArrayList<>();
         auctions = new ArrayList<>();
+        queuepurchases = new ArrayList<>();
         con = new Connection();
 
         //Gets all existing auctions.
         auctions = con.getAuctions("*", "auction", "''");
         products = con.getProducts();
-
-        DatabaseListener dbListener = new DatabaseListener();
+        queuepurchases = con.getQueuePurchases();
+        
+        dbListener = new DatabaseListener();
         dbListener.addObserver(this);
     }
 
@@ -90,6 +94,10 @@ public class Grand_Exchange implements Observer {
         } else {
             products.add(product);
         }
+    }
+    
+    public void addQueuePurchase(int quantity, double minprice, double maxprice, int productid, int placerid) {
+        con.insertQueuePurchase(quantity, minprice, maxprice, productid, placerid);
     }
 
     /**
@@ -178,7 +186,7 @@ public class Grand_Exchange implements Observer {
             System.out.println("amount :" + amount + " AID: " + auctionID + "BID: " + buyerID);
             con.InstabuyItem(amount, auctionID, 1);
             return true;
-        } catch (SQLException ex) {
+        } catch (Exception Ex) {
             return false;
         }
     }
@@ -192,6 +200,28 @@ public class Grand_Exchange implements Observer {
             return false;
         }
     }
+    
+        public void updateQueuePurchaseFromDB(ArrayList<Integer> newQueuePurchases) {
+        Queue_Purchase tempQueuePurchase;
+        for (int i : newQueuePurchases) {
+                tempQueuePurchase = con.getQueuePurchase(i);
+                
+                if (tempQueuePurchase == null) {
+                    System.out.println("QueuePurchase is null");
+                    }
+
+                for (Queue_Purchase QP : queuepurchases) {
+                    if (QP.getID() == tempQueuePurchase.getID()) {
+                        queuepurchases.set(queuepurchases.indexOf(QP), tempQueuePurchase);
+                        System.out.println("Queue purchase replaced with ID : " + tempQueuePurchase.getID());
+                    }
+                }
+                if(!queuepurchases.contains(tempQueuePurchase) && tempQueuePurchase != null){
+                    queuepurchases.add(tempQueuePurchase);
+                    System.out.println("New queue purchase added with ID: " + tempQueuePurchase.getID());
+                }
+            }
+        }
 
     public void updateAuctionsFromDB(ArrayList<Integer> newAuctionIDs) {
         Auction tempAuction;
@@ -209,18 +239,37 @@ public class Grand_Exchange implements Observer {
                     }
                 }
                 if(!auctions.contains(tempAuction) && tempAuction != null){
+                    
+                    for(Queue_Purchase QP : queuepurchases){
+                        if(tempAuction.getProduct().getId() == QP.getProductID()){
+                            if (tempAuction.getInstabuyPrice() < QP.getMaxPrice()){
+                                if(tempAuction.getProductQuantity() >= QP.getQuantity()){
+                                    con.InstabuyItem(QP.getQuantity(),tempAuction.getId(),QP.getPlacerID());
+                                    //TODO Queuepurchase has to be dropped from database, AND displayed in the GUI
+                                }
+                            }
+                        }
+                    }
+                    
                     auctions.add(tempAuction);
                     System.out.println(tempAuction.getProduct().getName() + "New Auction added to list.");
                 }
             }
         }
 
-        @Override
-        public void update (Observable o, Object arg) {
-            ArrayList<Integer> tempList = (ArrayList<Integer>) arg;
+    @Override
+    public void update (Observable o, Object arg) {
+        String type = arg.toString();
+        if (type.equals("Auction")){
             System.out.println("New auctions found.");
-            updateAuctionsFromDB(tempList);
+            updateAuctionsFromDB(dbListener.getUpdateAuctionList());
         }
+        else if(type.equals("Queue")){
+            System.out.println("New QueuePurchase found.");
+            updateQueuePurchaseFromDB(dbListener.getUpdateQueuepurchaseList());
+        }
+        
+    }
 
 
     public void updateAuction(Auction auction) {

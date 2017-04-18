@@ -20,6 +20,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -52,9 +54,18 @@ public class QueuePurchaseController implements Initializable {
     private TextField textFieldProductName;
     
     @FXML
+    private TextField txtQuantity;
+    
+    @FXML
+    private TextField txtMinPrice;
+    
+    @FXML
+    private TextField txtMaxPrice;
+    
+    @FXML
     private ComboBox<CategoryEnum> comboBoxCategory;
     
-
+    public static int selectedProductID;
     private Grand_Exchange GX;
     private ArrayList<Product> products;
     private CategoryEnum selectedCategory;
@@ -112,6 +123,8 @@ public class QueuePurchaseController implements Initializable {
                 public void handle(MouseEvent e) {
                     ImageView i = (ImageView) e.getSource();
                     lblProductName.setText(p.getName() + " " + p.getGTIN());
+                    selectedProductID = p.getId();
+                    System.out.println(p.getId());
                 }
             });
 
@@ -142,9 +155,23 @@ public class QueuePurchaseController implements Initializable {
             Collections.sort(lstCategory.getItems());
         }
     }
-    
+
     public void createQueuePurchase(){
         
+        if (txtQuantity.getText().equals("") || txtMinPrice.getText().equals("") || txtMaxPrice.getText().equals("") || selectedProductID == 0){
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Wat de F doe jij nou weer");
+            alert.setHeaderText("This is a header WOO !");
+            alert.setContentText("There are still empty fields ! fgt");
+
+            alert.showAndWait();
+        }
+        else{
+            int quantity = Integer.parseInt(txtQuantity.getText());
+            double minAmount = Double.parseDouble(txtMinPrice.getText());
+            double maxAmount = Double.parseDouble(txtMaxPrice.getText());
+            GX.addQueuePurchase(quantity, minAmount, maxAmount, selectedProductID, GX.getLoggedInUser().getUserID());
+        }
     }
     
     public void handleComboBoxAction(ActionEvent event) {
